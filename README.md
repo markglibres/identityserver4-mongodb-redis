@@ -435,7 +435,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
     ```csharp
     services.AddIdentityServer(options =>
     {
-        options.IssuerUri = issuer;
+        options.IssuerUri = issuer; //url of your identity server
     })
     // codes removed for brevity
     .AddAspNetIdentity<ApplicationUser>();
@@ -498,7 +498,7 @@ This service will let developers add custom claims to the identity token
     
     services.AddIdentityServer(options =>
     {
-        options.IssuerUri = issuer;
+        options.IssuerUri = issuer; //url of your identity server
     })
     // codes removed for brevity
     .AddAspNetIdentity<ApplicationUser>()
@@ -525,7 +525,7 @@ Make sure ```AddProfileService<>``` comes after ```AddAspNetIdentity<>``` to ove
     ```csharp
     services.AddIdentityServer(options =>
     {
-        options.IssuerUri = issuer;
+        options.IssuerUri = issuer; //url of your identity server
     })
     // codes removed for brevity
     .AddOperationalStore(options =>
@@ -573,7 +573,7 @@ This is an API project that will use our newly created IdentityServer as our Aut
           .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
           {
               //url of your identityserver
-              options.Authority = "http://localhost:8989"; 
+              options.Authority = authority; 
               //value of the api resource setup from identityserver
               options.Audience = "myapi"; 
               //set to true if you require https for your identityserver
@@ -597,7 +597,7 @@ This is an API project that will use our newly created IdentityServer as our Aut
         }).AddOAuth2Introspection("introspection", options =>
         {
             //url of your identityserver
-            options.Authority = "http://localhost:8989"; 
+            options.Authority = authority; 
             //value of the api resource from identityserver
             options.ClientId = "myapi"; 
             //value of the api resource secret from identityserver
