@@ -216,7 +216,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
     
         public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-	    cancellationToken.ThrowIfCancellationRequested();
+	    	cancellationToken.ThrowIfCancellationRequested();
             if(string.IsNullOrWhiteSpace(user.UserName)) return IdentityResult.Failed();
             var result = await FindByNameAsync(user.UserName, CancellationToken.None);
             if (result != null) return IdentityResult.Failed();
