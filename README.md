@@ -17,11 +17,12 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 
 1.  Create a C# empty web api project    
 2.  Add NuGet packages for    
-    1.  IdentityServer4        
-    2.  IdentityServer4.AspNetIdentity        
-    3.  MongoDB.Driver
+	```csharp
+	1. IdentityServer4
+	2. IdentityServer4.AspNetIdentity 
+	3. IdentityServer4.AspNetIdentity 
+	```
         
-
 ## Setup Clients, Api resources and Scopes
 
 1.  Create Config.cs and add resources    
