@@ -63,7 +63,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
                 {
                     "myapi.access"
                 },
-                ApiSecrets = { new Secret("secret".Sha256()) }
+                ApiSecrets = { new Secret("hardtoguess".Sha256()) }
             }
         };
     }
@@ -78,11 +78,11 @@ Logout is not supported with ROPG, but token revocation is supported but not for
         {
             new Client
             {
-                ClientId = "reactWeb",
+                ClientId = "spaWeb",
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets =
                 {
-                    new Secret("secret".Sha256())
+                    new Secret("hardtoguess".Sha256())
                 },
                 AllowedScopes = 
                 { 
@@ -216,7 +216,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
     
         public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-		    cancellationToken.ThrowIfCancellationRequested();
+	    cancellationToken.ThrowIfCancellationRequested();
             if(string.IsNullOrWhiteSpace(user.UserName)) return IdentityResult.Failed();
             var result = await FindByNameAsync(user.UserName, CancellationToken.None);
             if (result != null) return IdentityResult.Failed();
@@ -601,7 +601,7 @@ This is an API project that will use our newly created IdentityServer as our Aut
             //value of the api resource from identityserver
             options.ClientId = "myapi"; 
             //value of the api resource secret from identityserver
-            options.ClientSecret = "secret"; 
+            options.ClientSecret = "hardtoguess"; 
             options.DiscoveryPolicy = new DiscoveryPolicy
             {
                 //set to true if you require https for your identityserver
@@ -781,9 +781,9 @@ To create a user, we need to use the injected services for:
             new ApplicationUser
             {
                 Id = Guid.NewGuid().ToString(),
-                UserName = "dev",
-                PasswordHash = _passwordHasher.HashPassword(null, "secret"),
-                Firstname = "dev",
+                UserName = "devUser",
+                PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess"),
+                Firstname = "Dev",
                 Lastname = "eloper",
                 IsActive = true
             }
@@ -831,11 +831,11 @@ To create a user, we need to use the injected services for:
         -   Authorization: Bearer Token
     -   body (x-www-form-urlencoded) :
         -   grant_type = “password” 
-        -   username = “dev”
-        -   password = “secret”            
+        -   username = “devUser”
+        -   password = “hardtoguess”            
         -   scope = “myapi.access offline_access openid”            
-        -   client_id = “reactWeb”            
-        -   client_secret = “secret”
+        -   client_id = “spaWeb”            
+        -   client_secret = “hardtoguess”
             
     -   response:        
         -   access_token = this is your reference token            
@@ -846,8 +846,8 @@ To create a user, we need to use the injected services for:
     -   method: POST        
     -   header:        
         -   Authorization: Basic Auth            
-            -   user: “reactWeb”                
-            -   password: “secret”                
+            -   user: “spaWeb”                
+            -   password: “hardtoguess”                
     -   body (x-www-form-urlencoded) :        
         -   token: {{value of your reference token}}            
         -   token_type_hint: “access_token”
@@ -857,8 +857,8 @@ To create a user, we need to use the injected services for:
     -   method: POST        
     -   body (x-www-form-urlencoded):        
         -   grant_type = “refresh_token”            
-        -   client_id = “reactWeb”            
-        -   client_secret = “secret”            
+        -   client_id = “spaWeb”            
+        -   client_secret = “hardtoguess”            
         -   refresh_token = {{value of your refresh token as per response from get token}}           
     -   returns        
         -   access_token = your new reference token            
