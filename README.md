@@ -544,7 +544,7 @@ This service will let developers add custom claims to the identity token
 	```
 	</details>    
 
-Make sure ```AddProfileService<>``` comes after ```AddAspNetIdentity<>``` to override some service registration, otherwise your custom profile service won’t work.
+	Make sure ```AddProfileService<>``` comes after ```AddAspNetIdentity<>``` to override some service registration, otherwise your custom profile service won’t work.
 
 ## Setup IdentityServer with Redis cache
 
