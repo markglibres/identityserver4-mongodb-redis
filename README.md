@@ -110,7 +110,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	```
 	</details>
 
-NOTE: If you want to use JWT, use this instead
+	NOTE: If you want to use JWT, use this instead
 	```csharp
 	AccessTokenType = AccessTokenType.Reference
 	```
