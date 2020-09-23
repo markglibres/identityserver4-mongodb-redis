@@ -23,527 +23,526 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	3. IdentityServer4.AspNetIdentity 
 	```
         
-## Setup Clients, Api resources and Scopes
-
+## Setup Clients, Api resources and Scopes    
 1.  Create Config.cs and add resources
-<details>
-	<summary>Click to show code</summary>
-	
-```csharp
-public static IEnumerable<IdentityResource> GetIdentityResources()
-{
-    return new List<IdentityResource>
-    {
-    	new IdentityResources.OpenId(),
-		new IdentityResources.Profile(),
-		new IdentityResources.Email()
-    };
-}
-```
-</details>    
-2.  Create api scope
-<details>
-	<summary>Click to show code</summary>
-	    
-```csharp
-public static IEnumerable<ApiScope> GetApiScopes()
-{
-    return new[]
-    {
-    	new ApiScope(name: "myapi.access",   displayName: "Access API Backend")
-    };
-}
-```
-</details>    
-3.  Add API resources with scopes. Add an api secret that will be used by the API to get the token from IdentityServer using the supplied reference token from their client app.
-<details>
-	<summary>Click to show code</summary>
-	    
-```csharp
-public static IEnumerable<ApiResource> GetApiResources()
-{
-    return new List<ApiResource>
-    {
-        new ApiResource("myapi", "My API")
-        {
-            Scopes = new List<string>()
-            {
-                "myapi.access"
-            },
-            ApiSecrets = { new Secret("hardtoguess".Sha256()) }
-         }
-     };
-}
-```
-</details>   
-4.  Create an API client with allowed scopes
-<details>
-	<summary>Click to show code</summary>
-	    
-```csharp
-public static IEnumerable<Client> GetClients()
-{
-    return new List<Client>
-    {
-	new Client
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	public static IEnumerable<IdentityResource> GetIdentityResources()
 	{
-	    ClientId = "spaWeb",
-	    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-		ClientSecrets =
+	    return new List<IdentityResource>
+	    {
+		new IdentityResources.OpenId(),
+			new IdentityResources.Profile(),
+			new IdentityResources.Email()
+	    };
+	}
+	```
+	</details>    
+2.  Create api scope
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	public static IEnumerable<ApiScope> GetApiScopes()
+	{
+	    return new[]
+	    {
+		new ApiScope(name: "myapi.access",   displayName: "Access API Backend")
+	    };
+	}
+	```
+	</details>    
+3.  Add API resources with scopes. Add an api secret that will be used by the API to get the token from IdentityServer using the supplied reference token from their client app.
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	public static IEnumerable<ApiResource> GetApiResources()
+	{
+	    return new List<ApiResource>
+	    {
+		new ApiResource("myapi", "My API")
 		{
-			new Secret("hardtoguess".Sha256())
-		},
-		AllowedScopes = 
-		{ 
-			IdentityServerConstants.StandardScopes.OpenId,
-			IdentityServerConstants.StandardScopes.Profile,
-			IdentityServerConstants.StandardScopes.Email,
-			"myapi.access" 
-		},
-		AllowOfflineAccess = true, // this to allow SPA,
-		AlwaysSendClientClaims = true,
-		AlwaysIncludeUserClaimsInIdToken = true,
-		// this will generate reference tokens instead of access tokens
-		AccessTokenType = AccessTokenType.Reference 
-        }
-    };
-}
-```
-</details>
+		    Scopes = new List<string>()
+		    {
+			"myapi.access"
+		    },
+		    ApiSecrets = { new Secret("hardtoguess".Sha256()) }
+		 }
+	     };
+	}
+	```
+	</details>   
+4.  Create an API client with allowed scopes
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	public static IEnumerable<Client> GetClients()
+	{
+	    return new List<Client>
+	    {
+		new Client
+		{
+		    ClientId = "spaWeb",
+		    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+			ClientSecrets =
+			{
+				new Secret("hardtoguess".Sha256())
+			},
+			AllowedScopes = 
+			{ 
+				IdentityServerConstants.StandardScopes.OpenId,
+				IdentityServerConstants.StandardScopes.Profile,
+				IdentityServerConstants.StandardScopes.Email,
+				"myapi.access" 
+			},
+			AllowOfflineAccess = true, // this to allow SPA,
+			AlwaysSendClientClaims = true,
+			AlwaysIncludeUserClaimsInIdToken = true,
+			// this will generate reference tokens instead of access tokens
+			AccessTokenType = AccessTokenType.Reference 
+		}
+	    };
+	}
+	```
+	</details>
 
 NOTE: If you want to use JWT, use this instead
-```csharp
-AccessTokenType = AccessTokenType.Reference
-```
+	```csharp
+	AccessTokenType = AccessTokenType.Reference
+	```
     
 5.  In Startup.cs, configure IdentityServer
-<details>
-	<summary>Click to show code</summary>
-	    
-```csharp
-services.AddIdentityServer(options =>
-	{
-		options.IssuerUri = issuer;
-	})
-   .AddDeveloperSigningCredential() // use a valid signing cert in production
-   .AddInMemoryIdentityResources(Config.GetIdentityResources())    
-   .AddInMemoryApiResources(Config.GetApiResources())
-   .AddInMemoryApiScopes(Config.GetApiScopes())
-   .AddInMemoryClients(Config.GetClients());
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	services.AddIdentityServer(options =>
+		{
+			options.IssuerUri = issuer;
+		})
+	   .AddDeveloperSigningCredential() // use a valid signing cert in production
+	   .AddInMemoryIdentityResources(Config.GetIdentityResources())    
+	   .AddInMemoryApiResources(Config.GetApiResources())
+	   .AddInMemoryApiScopes(Config.GetApiScopes())
+	   .AddInMemoryClients(Config.GetClients());
+	```
+	</details>    
 6.  In Startup.cs, set the COR policy. For this tutorial, we will allow anyone
-<details>
-	<summary>Click to show code</summary>
-	    
-```csharp
-services.AddSingleton<ICorsPolicyService>(serviceProvider =>
-	new DefaultCorsPolicyService(serviceProvider.GetService<ILogger<DefaultCorsPolicyService>>())
-	{
-		AllowAll = true
-	});
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	services.AddSingleton<ICorsPolicyService>(serviceProvider =>
+		new DefaultCorsPolicyService(serviceProvider.GetService<ILogger<DefaultCorsPolicyService>>())
+		{
+			AllowAll = true
+		});
+	```
+	</details>    
 7.  In Startup.cs, configure the HTTP pipeline   
 
-```csharp
-app.UseIdentityServer();
-```
+	```csharp
+	app.UseIdentityServer();
+	```
 
 ## Setup Custom User Storage with MongoDb
 
 1.  Create ApplicationUser.cs and inherit from IdentityUser
-<details>
-    <summary>Click to show code</summary>
-	
-```csharp
-public class ApplicationUser : IdentityUser
-{
-    //add your custom user properties here
-    public string Firstname { get; set; }
-    public string Lastname { get; set; }
-}
-```
-</details>    
+	<details>
+	    <summary>Click to show code</summary>
+
+	```csharp
+	public class ApplicationUser : IdentityUser
+	{
+	    //add your custom user properties here
+	    public string Firstname { get; set; }
+	    public string Lastname { get; set; }
+	}
+	```
+	</details>    
 2.  Create ApplicationRole and inherit from IdentityRole
-<details>
-	<summary>Click to show code</summary>
-	
-```csharp
-public class ApplicationRole : IdentityRole, IEntity
-{
-}
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	public class ApplicationRole : IdentityRole, IEntity
+	{
+	}
+	```
+	</details>    
 3.  Create a generic MongoDb repository
-<details>
-	<summary>Click to show code</summary>
-	    
-```csharp
-public class MongoRepository<T> : IRepository<T>
-    where T: class, new()
-{
-    private readonly IMongoDatabase _database;
+	<details>
+		<summary>Click to show code</summary>
 
-    public MongoRepository(IOptions<IdentitySection> options)
-    {
-		var optionsValue = options.Value;
-		var client = new MongoClient(optionsValue.Mongo.ConnectionString);
-		_database = client.GetDatabase(optionsValue.Mongo.IdentityServerDatabase);
-    }
+	```csharp
+	public class MongoRepository<T> : IRepository<T>
+	    where T: class, new()
+	{
+	    private readonly IMongoDatabase _database;
 
-    private IMongoCollection<T> Collection() => _database.GetCollection<T>(typeof(T).Name.Camelize());
+	    public MongoRepository(IOptions<IdentitySection> options)
+	    {
+			var optionsValue = options.Value;
+			var client = new MongoClient(optionsValue.Mongo.ConnectionString);
+			_database = client.GetDatabase(optionsValue.Mongo.IdentityServerDatabase);
+	    }
 
-    public IQueryable<T> Where(Expression<Func<T, bool>> expression) => Collection().AsQueryable().Where(expression);
+	    private IMongoCollection<T> Collection() => _database.GetCollection<T>(typeof(T).Name.Camelize());
 
-    public async Task Delete(Expression<Func<T, bool>> predicate) => await Collection().DeleteManyAsync(predicate);
+	    public IQueryable<T> Where(Expression<Func<T, bool>> expression) => Collection().AsQueryable().Where(expression);
 
-    public async Task<T> Single(Expression<Func<T, bool>> expression)
-    {
-		var result = await Collection().FindAsync(expression);
+	    public async Task Delete(Expression<Func<T, bool>> predicate) => await Collection().DeleteManyAsync(predicate);
 
-		return result?.SingleOrDefault();
-    }
+	    public async Task<T> Single(Expression<Func<T, bool>> expression)
+	    {
+			var result = await Collection().FindAsync(expression);
 
-    public async Task Update(T item, Expression<Func<T, bool>> expression) => await Collection().FindOneAndReplaceAsync(expression, item);
+			return result?.SingleOrDefault();
+	    }
 
-    public async Task Insert(T item) => await Collection().InsertOneAsync(item);
+	    public async Task Update(T item, Expression<Func<T, bool>> expression) => await Collection().FindOneAndReplaceAsync(expression, item);
 
-    public async Task Insert(IEnumerable<T> items) => await Collection().InsertManyAsync(items);
-}
-```
-</details>    
+	    public async Task Insert(T item) => await Collection().InsertOneAsync(item);
+
+	    public async Task Insert(IEnumerable<T> items) => await Collection().InsertManyAsync(items);
+	}
+	```
+	</details>    
 4.  Create classes that implements the following:
-    ```csharp
-    1. IUserStore<ApplicationUser>
-    2. IUserPasswordStore<ApplicationUser>
-    3. IPasswordHasher<ApplicationUser>
-    4. IRoleStore<ApplicationRole>
-    ```
-<details>
-	<summary>Click to show UserStore</summary>
-	
-```csharp
-public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
-{
-	private readonly IRepository<ApplicationUser> _repository;
-	public UserStore(IRepository<ApplicationUser> repository)
+	```csharp
+	1. IUserStore<ApplicationUser>
+	2. IUserPasswordStore<ApplicationUser>
+	3. IPasswordHasher<ApplicationUser>
+	4. IRoleStore<ApplicationRole>
+	```
+	<details>
+		<summary>Click to show UserStore</summary>
+
+	```csharp
+	public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
 	{
-		_repository = repository;
+		private readonly IRepository<ApplicationUser> _repository;
+		public UserStore(IRepository<ApplicationUser> repository)
+		{
+			_repository = repository;
+		}
+
+		public void Dispose()
+		{
+		}
+
+		public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if(string.IsNullOrWhiteSpace(user.UserName)) return IdentityResult.Failed();
+			var result = await FindByNameAsync(user.UserName, CancellationToken.None);
+			if (result != null) return IdentityResult.Failed();
+			await _repository.Insert(user);
+			return IdentityResult.Success;
+		}
+
+		public async Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
+		{
+		   cancellationToken.ThrowIfCancellationRequested();
+		   var result = await FindByIdAsync(user.Id, CancellationToken.None);
+		   if (result == null) return IdentityResult.Failed();
+		   await _repository.Delete(u => u.Id == user.Id);
+		   return IdentityResult.Success;
+		}
+
+		public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (string.IsNullOrWhiteSpace(userId)) throw new RequiredArgumentException(nameof(userId));
+			var result = await _repository.Single(u => u.Id == userId);
+			return result;
+		}
+
+		public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (string.IsNullOrWhiteSpace(normalizedUserName)) throw new RequiredArgumentException(nameof(normalizedUserName));
+			var result = await _repository.Single(u =>
+			u.UserName.ToLowerInvariant() == normalizedUserName.ToLowerInvariant());
+			return result;
+		 }
+
+		 public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+		 {
+			 cancellationToken.ThrowIfCancellationRequested();
+			 if (user == null) throw new RequiredArgumentException(nameof(user));
+			 var normalizedUsername = user.NormalizedUserName ?? user.UserName.ToUpperInvariant();
+			 return Task.FromResult(normalizedUsername);
+		 }
+
+		 public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
+		 {
+			 cancellationToken.ThrowIfCancellationRequested();
+			 if (user == null) throw new RequiredArgumentException(nameof(user));
+			 return Task.FromResult(user.Id);
+		 }
+
+		public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (user == null) throw new RequiredArgumentException(nameof(user));
+			return Task.FromResult(user.UserName);
+		}
+
+		public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (user == null) throw new RequiredArgumentException(nameof(user));
+			if (normalizedName == null) throw new RequiredArgumentException(nameof(normalizedName));
+			user.NormalizedUserName = normalizedName;
+			return Task.CompletedTask;
+		}
+
+		public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (user == null) throw new RequiredArgumentException(nameof(user));
+			if (userName == null) throw new RequiredArgumentException(nameof(userName));
+			user.UserName = userName;
+			return Task.CompletedTask;
+		}
+
+		public async Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (user == null) return IdentityResult.Failed();
+			var result = await FindByIdAsync(user.Id, CancellationToken.None);
+			if (result == null) IdentityResult.Failed();
+			await _repository.Update(user, u => u.Id == user.Id);
+			return IdentityResult.Success;
+		}
+
+		public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(user.PasswordHash);
+		}
+
+		public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(string.IsNullOrWhiteSpace(user.PasswordHash));
+		}
+
+		public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
+		{
+			user.PasswordHash = passwordHash;
+			return Task.CompletedTask;
+		}
 	}
+	```
+	</details>
+	<details>
+		<summary>Click to show UserPasswordHasher</summary>
 
-	public void Dispose()
-	{
-	}
-
-	public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if(string.IsNullOrWhiteSpace(user.UserName)) return IdentityResult.Failed();
-		var result = await FindByNameAsync(user.UserName, CancellationToken.None);
-		if (result != null) return IdentityResult.Failed();
-		await _repository.Insert(user);
-		return IdentityResult.Success;
-	}
-
-	public async Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
-	{
-	   cancellationToken.ThrowIfCancellationRequested();
-	   var result = await FindByIdAsync(user.Id, CancellationToken.None);
-	   if (result == null) return IdentityResult.Failed();
-	   await _repository.Delete(u => u.Id == user.Id);
-	   return IdentityResult.Success;
-	}
-
-	public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (string.IsNullOrWhiteSpace(userId)) throw new RequiredArgumentException(nameof(userId));
-		var result = await _repository.Single(u => u.Id == userId);
-		return result;
-	}
-
-	public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (string.IsNullOrWhiteSpace(normalizedUserName)) throw new RequiredArgumentException(nameof(normalizedUserName));
-		var result = await _repository.Single(u =>
-		u.UserName.ToLowerInvariant() == normalizedUserName.ToLowerInvariant());
-		return result;
-	 }
-
-	 public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-	 {
-		 cancellationToken.ThrowIfCancellationRequested();
-		 if (user == null) throw new RequiredArgumentException(nameof(user));
-		 var normalizedUsername = user.NormalizedUserName ?? user.UserName.ToUpperInvariant();
-		 return Task.FromResult(normalizedUsername);
-	 }
-
-	 public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
-	 {
-		 cancellationToken.ThrowIfCancellationRequested();
-		 if (user == null) throw new RequiredArgumentException(nameof(user));
-		 return Task.FromResult(user.Id);
-	 }
-
-	public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (user == null) throw new RequiredArgumentException(nameof(user));
-		return Task.FromResult(user.UserName);
-	}
-
-	public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (user == null) throw new RequiredArgumentException(nameof(user));
-		if (normalizedName == null) throw new RequiredArgumentException(nameof(normalizedName));
-		user.NormalizedUserName = normalizedName;
-		return Task.CompletedTask;
-	}
-
-	public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (user == null) throw new RequiredArgumentException(nameof(user));
-		if (userName == null) throw new RequiredArgumentException(nameof(userName));
-		user.UserName = userName;
-		return Task.CompletedTask;
-	}
-
-	public async Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (user == null) return IdentityResult.Failed();
-		var result = await FindByIdAsync(user.Id, CancellationToken.None);
-		if (result == null) IdentityResult.Failed();
-		await _repository.Update(user, u => u.Id == user.Id);
-		return IdentityResult.Success;
-	}
-
-	public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
-	{
-		return Task.FromResult(user.PasswordHash);
-	}
-
-	public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
-	{
-		return Task.FromResult(string.IsNullOrWhiteSpace(user.PasswordHash));
-	}
-
-	public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
-	{
-		user.PasswordHash = passwordHash;
-		return Task.CompletedTask;
-	}
-}
-```
-</details>
-<details>
-	<summary>Click to show UserPasswordHasher</summary>
-	
-```csharp
-public class UserPasswordHasher : PasswordHasher<ApplicationUser>
-{
-}
-```
-</details>
-<details>
-	<summary>Click to show RoleStore</summary>
-	
-```csharp
-public class RoleStore : IRoleStore<ApplicationRole>
-{
-	private readonly IRepository<ApplicationRole> _repository;
-	public RoleStore(IRepository<ApplicationRole> repository)
-	{
-		_repository = repository;
-	}
-
-	public void Dispose()
+	```csharp
+	public class UserPasswordHasher : PasswordHasher<ApplicationUser>
 	{
 	}
+	```
+	</details>
+	<details>
+		<summary>Click to show RoleStore</summary>
 
-	public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+	```csharp
+	public class RoleStore : IRoleStore<ApplicationRole>
 	{
-		cancellationToken.ThrowIfCancellationRequested();
-		var result = await FindByNameAsync(role.Name, CancellationToken.None);
-		if (result != null) return IdentityResult.Failed();
-		await _repository.Insert(role);
-		return IdentityResult.Success;
-	}
+		private readonly IRepository<ApplicationRole> _repository;
+		public RoleStore(IRepository<ApplicationRole> repository)
+		{
+			_repository = repository;
+		}
 
-	public async Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		var result = await FindByIdAsync(role.Id, CancellationToken.None);
-		if (result == null) return IdentityResult.Failed();
-		await _repository.Delete(r => r.Id == role.Id);
-		return IdentityResult.Success;
-	}
+		public void Dispose()
+		{
+		}
 
-	public async Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (string.IsNullOrWhiteSpace(roleId)) throw new RequiredArgumentException(nameof(roleId));
-		var result = await _repository.Single(r => r.Id == roleId);
-		return result;
-	}
+		public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			var result = await FindByNameAsync(role.Name, CancellationToken.None);
+			if (result != null) return IdentityResult.Failed();
+			await _repository.Insert(role);
+			return IdentityResult.Success;
+		}
 
-	public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (string.IsNullOrWhiteSpace(normalizedRoleName)) throw new RequiredArgumentException(nameof(normalizedRoleName));
-		var result = await _repository.Single(r => r.NormalizedName == normalizedRoleName);
-		return result;
-	}
+		public async Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			var result = await FindByIdAsync(role.Id, CancellationToken.None);
+			if (result == null) return IdentityResult.Failed();
+			await _repository.Delete(r => r.Id == role.Id);
+			return IdentityResult.Success;
+		}
 
-	public Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (role == null) throw new RequiredArgumentException(nameof(role));
-		return Task.FromResult(role.NormalizedName ?? role.Name.ToUpperInvariant());
-	}
+		public async Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (string.IsNullOrWhiteSpace(roleId)) throw new RequiredArgumentException(nameof(roleId));
+			var result = await _repository.Single(r => r.Id == roleId);
+			return result;
+		}
 
-	public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (role == null) throw new RequiredArgumentException(nameof(role));
-		return Task.FromResult(role.Id);
-	}
+		public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (string.IsNullOrWhiteSpace(normalizedRoleName)) throw new RequiredArgumentException(nameof(normalizedRoleName));
+			var result = await _repository.Single(r => r.NormalizedName == normalizedRoleName);
+			return result;
+		}
 
-	public Task<string> GetRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (role == null) throw new RequiredArgumentException(nameof(role));
-		return Task.FromResult(role.Name);
-	}
+		public Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (role == null) throw new RequiredArgumentException(nameof(role));
+			return Task.FromResult(role.NormalizedName ?? role.Name.ToUpperInvariant());
+		}
 
-	public Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (role == null) throw new RequiredArgumentException(nameof(role));
-		if (string.IsNullOrWhiteSpace(normalizedName)) throw new RequiredArgumentException(nameof(normalizedName));
-		role.NormalizedName = normalizedName;
-		return Task.CompletedTask;
-	}
+		public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (role == null) throw new RequiredArgumentException(nameof(role));
+			return Task.FromResult(role.Id);
+		}
 
-	public Task SetRoleNameAsync(ApplicationRole role, string roleName, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (role == null) throw new RequiredArgumentException(nameof(role));
-		if (string.IsNullOrWhiteSpace(roleName)) throw new RequiredArgumentException(nameof(roleName));
-		role.Name = roleName;
-		return Task.CompletedTask;
-	}
+		public Task<string> GetRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (role == null) throw new RequiredArgumentException(nameof(role));
+			return Task.FromResult(role.Name);
+		}
 
-	public async Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-		if (role == null) return IdentityResult.Failed();
-		var result = await FindByIdAsync(role.Id, CancellationToken.None);
-		if (result == null) IdentityResult.Failed();
-		await _repository.Update(role, r => r.Id == role.Id);
-		return IdentityResult.Success;
+		public Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (role == null) throw new RequiredArgumentException(nameof(role));
+			if (string.IsNullOrWhiteSpace(normalizedName)) throw new RequiredArgumentException(nameof(normalizedName));
+			role.NormalizedName = normalizedName;
+			return Task.CompletedTask;
+		}
+
+		public Task SetRoleNameAsync(ApplicationRole role, string roleName, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (role == null) throw new RequiredArgumentException(nameof(role));
+			if (string.IsNullOrWhiteSpace(roleName)) throw new RequiredArgumentException(nameof(roleName));
+			role.Name = roleName;
+			return Task.CompletedTask;
+		}
+
+		public async Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			if (role == null) return IdentityResult.Failed();
+			var result = await FindByIdAsync(role.Id, CancellationToken.None);
+			if (result == null) IdentityResult.Failed();
+			await _repository.Update(role, r => r.Id == role.Id);
+			return IdentityResult.Success;
+		}
 	}
-}
-```    
-</details>        
+	```    
+	</details>        
 5.  In Startup.cs, register services:
-<details>
-	<summary>Click to show code</summary>
-	
-```csharp
-services.AddIdentity<ApplicationUser, ApplicationRole>().AddDefaultTokenProviders();
-services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
-services.AddTransient<IUserPasswordStore<ApplicationUser>, UserStore>();
-services.AddTransient<IPasswordHasher<ApplicationUser>, UserPasswordHasher>();
-services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
-services.AddTransient(typeof(IRepository<>), typeof(MongoRepository<>));
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>
+
+	```csharp
+	services.AddIdentity<ApplicationUser, ApplicationRole>().AddDefaultTokenProviders();
+	services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
+	services.AddTransient<IUserPasswordStore<ApplicationUser>, UserStore>();
+	services.AddTransient<IPasswordHasher<ApplicationUser>, UserPasswordHasher>();
+	services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
+	services.AddTransient(typeof(IRepository<>), typeof(MongoRepository<>));
+	```
+	</details>    
 6.  In Startup.cs, register Identity User
-<details>
-	<summary>Click to show code</summary>   
-	
-```csharp
-services.AddIdentityServer(options =>
-{
-	options.IssuerUri = issuer; //url of your identity server
-})
-// codes removed for brevity
-.AddAspNetIdentity<ApplicationUser>();
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>   
+
+	```csharp
+	services.AddIdentityServer(options =>
+	{
+		options.IssuerUri = issuer; //url of your identity server
+	})
+	// codes removed for brevity
+	.AddAspNetIdentity<ApplicationUser>();
+	```
+	</details>    
 
 ## Setup custom profile service
 
 This service will let developers add custom claims to the identity token
 
 1.  Create ProfileService and inherit from IProfileService
-<details>
-	<summary>Click to show ProfileService</summary>    
-	
-```csharp
-public class ProfileService : IProfileService
-{
-	private readonly UserManager<ApplicationUser> _userManager;
+	<details>
+		<summary>Click to show ProfileService</summary>    
 
-	public ProfileService(UserManager<ApplicationUser> userManager)
+	```csharp
+	public class ProfileService : IProfileService
 	{
-		_userManager = userManager;
-	}
+		private readonly UserManager<ApplicationUser> _userManager;
 
-	public async Task GetProfileDataAsync(ProfileDataRequestContext context)
-	{
-		var user = await GetUser(context.Subject);
-		context.IssuedClaims = GetClaims(user).ToList();
-	}
-
-	public async Task IsActiveAsync(IsActiveContext context)
-	{
-		var user = await GetUser(context.Subject);
-		context.IsActive = user?.IsActive ?? false;
-	}
-
-	private async Task<ApplicationUser> GetUser(IPrincipal principal)
-	{
-		var userId = principal.GetSubjectId();
-		return await _userManager.FindByIdAsync(userId);
-	}
-
-	private static IEnumerable<Claim> GetClaims(ApplicationUser user)
-	{
-		return new List<Claim>
+		public ProfileService(UserManager<ApplicationUser> userManager)
 		{
-			new Claim(JwtClaimTypes.Subject, user.Id),
-			new Claim("firstname", user.Firstname),
-			new Claim("lastname", user.Lastname)
-		};
-	}
-}
+			_userManager = userManager;
+		}
 
-```
-</details>          
+		public async Task GetProfileDataAsync(ProfileDataRequestContext context)
+		{
+			var user = await GetUser(context.Subject);
+			context.IssuedClaims = GetClaims(user).ToList();
+		}
+
+		public async Task IsActiveAsync(IsActiveContext context)
+		{
+			var user = await GetUser(context.Subject);
+			context.IsActive = user?.IsActive ?? false;
+		}
+
+		private async Task<ApplicationUser> GetUser(IPrincipal principal)
+		{
+			var userId = principal.GetSubjectId();
+			return await _userManager.FindByIdAsync(userId);
+		}
+
+		private static IEnumerable<Claim> GetClaims(ApplicationUser user)
+		{
+			return new List<Claim>
+			{
+				new Claim(JwtClaimTypes.Subject, user.Id),
+				new Claim("firstname", user.Firstname),
+				new Claim("lastname", user.Lastname)
+			};
+		}
+	}
+
+	```
+	</details>          
     NOTE: The injected UserManager<ApplicationUser> will use the custom user storage we have created from previous steps
     
 2.  In Startup.cs, register the profile service
-<details>
-	<summary>Click to show code</summary>   
-  
-```csharp
-services.AddTransient<IProfileService, ProfileService>();
+	<details>
+		<summary>Click to show code</summary>   
 
-services.AddIdentityServer(options =>
-{
-	options.IssuerUri = issuer; //url of your identity server
-})
-// codes removed for brevity
-.AddAspNetIdentity<ApplicationUser>()
-.AddProfileService<ProfileService>();
-```
-</details>    
+	```csharp
+	services.AddTransient<IProfileService, ProfileService>();
+
+	services.AddIdentityServer(options =>
+	{
+		options.IssuerUri = issuer; //url of your identity server
+	})
+	// codes removed for brevity
+	.AddAspNetIdentity<ApplicationUser>()
+	.AddProfileService<ProfileService>();
+	```
+	</details>    
 
 Make sure ```AddProfileService<>``` comes after ```AddAspNetIdentity<>``` to override some service registration, otherwise your custom profile service won’t work.
 
@@ -553,34 +552,34 @@ Make sure ```AddProfileService<>``` comes after ```AddAspNetIdentity<>``` to ove
     
 2.  Set connection string for redis on appsettings.json
     
-```csharp
-"ConnectionStrings": {
-  "Redis": "localhost"
-}
-```
+	```csharp
+	"ConnectionStrings": {
+	  "Redis": "localhost"
+	}
+	```
     
 3.  In Startup.cs, setup operational and caching store
-<details>
-	<summary>Click to show code</summary>   
-    
-```csharp
-services.AddIdentityServer(options =>
-{
-	options.IssuerUri = issuer; //url of your identity server
-})
-// codes removed for brevity
-.AddOperationalStore(options =>
-{
-	options.RedisConnectionString = redisConnection;
-	options.Db = 1;
-})
-.AddRedisCaching(options =>
-{
-	options.RedisConnectionString = redisConnection;
-	options.KeyPrefix = "prefix";
-});
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>   
+
+	```csharp
+	services.AddIdentityServer(options =>
+	{
+		options.IssuerUri = issuer; //url of your identity server
+	})
+	// codes removed for brevity
+	.AddOperationalStore(options =>
+	{
+		options.RedisConnectionString = redisConnection;
+		options.Db = 1;
+	})
+	.AddRedisCaching(options =>
+	{
+		options.RedisConnectionString = redisConnection;
+		options.KeyPrefix = "prefix";
+	});
+	```
+	</details>    
 
 ## Setup API resource
 
@@ -589,122 +588,122 @@ This is an API project that will use our newly created IdentityServer as our Aut
 1.  Create an empty C# API project
     
 2.  Install the following NuGet packages:
-```csharp
-1. Microsoft.AspNetCore.Authentication.JwtBearer
-2. IdentityModel.AspNetCore.OAuth2Introspection
-3. IdentityModel.AspNetCore
-```            
+	```csharp
+	1. Microsoft.AspNetCore.Authentication.JwtBearer
+	2. IdentityModel.AspNetCore.OAuth2Introspection
+	3. IdentityModel.AspNetCore
+	```            
 3.  In Startup.cs → ConfigureService, register controllers
-<details>
-	<summary>Click to show code</summary>   
-    
-```csharp
-services.AddControllers()
-//this is optional..
-//will use Enum keys instead of values on json responses
-.AddJsonOptions(options =>
-{
-	options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-	options.JsonSerializerOptions.IgnoreNullValues = true;
-});
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>   
+
+	```csharp
+	services.AddControllers()
+	//this is optional..
+	//will use Enum keys instead of values on json responses
+	.AddJsonOptions(options =>
+	{
+		options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+		options.JsonSerializerOptions.IgnoreNullValues = true;
+	});
+	```
+	</details>    
 4.  In Startup.cs → ConfigureService, add Authentication for JWT token and set it as the default
-<details>
-	<summary>Click to show code</summary>   
-   
-```csharp
- services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	  .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-	  {
-		  //url of your identityserver
-		  options.Authority = authority; 
-		  //value of the api resource setup from identityserver
-		  options.Audience = "myapi"; 
-		  //set to true if you require https for your identityserver
-		  options.RequireHttpsMetadata = false; 
-		  // if token does not contain a dot, it is a reference token
-		  // if it's a reference token, will forward it to introspection
-		  options.ForwardDefaultSelector = Selector.ForwardReferenceToken(apiGatewayConfiguration.Identity.Scheme.Introspection);
-		})
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>   
+
+	```csharp
+	 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		  .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+		  {
+			  //url of your identityserver
+			  options.Authority = authority; 
+			  //value of the api resource setup from identityserver
+			  options.Audience = "myapi"; 
+			  //set to true if you require https for your identityserver
+			  options.RequireHttpsMetadata = false; 
+			  // if token does not contain a dot, it is a reference token
+			  // if it's a reference token, will forward it to introspection
+			  options.ForwardDefaultSelector = Selector.ForwardReferenceToken(apiGatewayConfiguration.Identity.Scheme.Introspection);
+			})
+	```
+	</details>    
     NOTE: If the token passed is a reference token, the default Authentication will forward it to introspection. See below
     
 5.  In Startup.cs → ConfigureService, add Authentication for reference token (introspection)
-<details>
-	<summary>Click to show code</summary>   	
-    
-```csharp
-services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-	{
-		//code removed for brevity
+	<details>
+		<summary>Click to show code</summary>   	
 
-	}).AddOAuth2Introspection("introspection", options =>
-	{
-		//url of your identityserver
-		options.Authority = authority; 
-		//value of the api resource from identityserver
-		options.ClientId = "myapi"; 
-		//value of the api resource secret from identityserver
-		options.ClientSecret = "hardtoguess"; 
-		options.DiscoveryPolicy = new DiscoveryPolicy
+	```csharp
+	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 		{
-			//set to true if you require https for your identityserver
-			RequireHttps = false 
-		};
-	});
-```
-</details>    
+			//code removed for brevity
+
+		}).AddOAuth2Introspection("introspection", options =>
+		{
+			//url of your identityserver
+			options.Authority = authority; 
+			//value of the api resource from identityserver
+			options.ClientId = "myapi"; 
+			//value of the api resource secret from identityserver
+			options.ClientSecret = "hardtoguess"; 
+			options.DiscoveryPolicy = new DiscoveryPolicy
+			{
+				//set to true if you require https for your identityserver
+				RequireHttps = false 
+			};
+		});
+	```
+	</details>    
 6.  In Startup.cs → ConfigureService, set the CORS policy
-<details>
-	<summary>Click to show code</summary>   
-    
-```csharp
-//configure CORS policy for production. this is only for development
-services.AddCors(o => o.AddPolicy("LocalPolicy", builder =>
-{
-	builder
-		.AllowAnyOrigin()
-		.AllowAnyMethod()
-		.AllowAnyHeader();
-}));
-```
-</details>    
+	<details>
+		<summary>Click to show code</summary>   
+
+	```csharp
+	//configure CORS policy for production. this is only for development
+	services.AddCors(o => o.AddPolicy("LocalPolicy", builder =>
+	{
+		builder
+			.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader();
+	}));
+	```
+	</details>    
 7.  In Startup.cs → Configure, apply the CORS policy
     
-```csharp
-if (env.IsDevelopment())
-{
-	...//code removed for brevity
-	app.UseCors("LocalPolicy");
-}
-```
+	```csharp
+	if (env.IsDevelopment())
+	{
+		...//code removed for brevity
+		app.UseCors("LocalPolicy");
+	}
+	```
     
 8.  In Startup.cs → Configure, use Authentication and Authorization
     
-```csharp
-app.UseAuthentication();
-app.UseAuthorization();
-```
+	```csharp
+	app.UseAuthentication();
+	app.UseAuthorization();
+	```
     
 9.  On your controller class, decorate it with Authorize attribute    
-<details>
-	<summary>Click to show code</summary>   	
+	<details>
+		<summary>Click to show code</summary>   	
 
-```csharp
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class MyAuthenticatedController : ControllerBase
-{
-	public MyAuthenticatedController()
+	```csharp
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public class MyAuthenticatedController : ControllerBase
 	{
-		//access the authenticated user and its claims
-		var user = this.User;
+		public MyAuthenticatedController()
+		{
+			//access the authenticated user and its claims
+			var user = this.User;
+		}
 	}
-}
-```
-</details>        
+	```
+	</details>        
 
 ## Setup Signing Certificate
 
@@ -713,173 +712,173 @@ IdentityServer needs an assymetric key pair - a public and private keys for encr
 On a cluster environment, all instances of the IdentityServer should use the same signing certificate. (i.e. store on a secure location or shared s3 bucket). For signing rotation - where an expired certificate has to be replaced by a new one - follow the steps [here](https://brockallen.com/2019/08/09/identityserver-and-signing-key-rotation/).
 
 1.  Create a shell script generator.sh and save it somewhere
-<details>
-	<summary>Click to show generator.sh</summary>
-	
-```bash
-#!/bin/bash
+	<details>
+		<summary>Click to show generator.sh</summary>
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-mkdir $DIR/values
-PRIVATE_PEM=$DIR/values/private.pem
-PUBLIC_PEM=$DIR/values/public.pem
-PFX=$DIR/values/mycert.pfx
-PASSWD=$1
+	```bash
+	#!/bin/bash
 
-if [ -z "$PASSWD" ]
-then
-	PASSWD="hardtoguess"
-fi
+	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+	mkdir $DIR/values
+	PRIVATE_PEM=$DIR/values/private.pem
+	PUBLIC_PEM=$DIR/values/public.pem
+	PFX=$DIR/values/mycert.pfx
+	PASSWD=$1
 
-echo "Creating Private Key"
-openssl genrsa 4096 > $PRIVATE_PEM
+	if [ -z "$PASSWD" ]
+	then
+		PASSWD="hardtoguess"
+	fi
 
-echo "Creating Public Key"
-echo """AU
-NSW
-Sydney
-bizzposolutions
-D1C3
-d1c3@bizzposolutions.com.au
-""" | openssl req -x509 -days 1825 -new -key $PRIVATE_PEM -out $PUBLIC_PEM
+	echo "Creating Private Key"
+	openssl genrsa 4096 > $PRIVATE_PEM
 
-echo ""
-echo "Creating Certificate"
+	echo "Creating Public Key"
+	echo """AU
+	NSW
+	Sydney
+	bizzposolutions
+	D1C3
+	d1c3@bizzposolutions.com.au
+	""" | openssl req -x509 -days 1825 -new -key $PRIVATE_PEM -out $PUBLIC_PEM
 
-openssl pkcs12 -export -in $PUBLIC_PEM -inkey $PRIVATE_PEM -out $PFX -password pass:$PASSWD
-```
-</details>
+	echo ""
+	echo "Creating Certificate"
+
+	openssl pkcs12 -export -in $PUBLIC_PEM -inkey $PRIVATE_PEM -out $PFX -password pass:$PASSWD
+	```
+	</details>
 2.  Execute the script and it should create a folder called values with mycert.pfx
     
 3.  Copy the generated file mycert.pfx and store it somewhere safe. For this tutorial, copy it on the root directory of the api project.
     
 4.  In the api project → , load the signing certificate and update the registered signing credential
     
-```csharp
-var cert = new X509Certificate2("mycert.pfx", "hardtoguess");
+	```csharp
+	var cert = new X509Certificate2("mycert.pfx", "hardtoguess");
 
-//FROM 
-services.AddIdentityServer(...)
-	 .AddDeveloperSigningCredential()
+	//FROM 
+	services.AddIdentityServer(...)
+		 .AddDeveloperSigningCredential()
 
-//CHANGE TO
-services.AddIdentityServer(...)
-	 .AddSigningCredential(cert)
-```
+	//CHANGE TO
+	services.AddIdentityServer(...)
+		 .AddSigningCredential(cert)
+	```
     
 
 ## Seed users (for testing)
 
 To create a user, we need to use the injected services for:
-```csharp
-* IPasswordHasher<ApplicationUser>
-* IUserStore<ApplicationUser>
-```
+	```csharp
+	* IPasswordHasher<ApplicationUser>
+	* IUserStore<ApplicationUser>
+	```
 
 1.  Create an interface for ISeed
-<details>
-	<summary>Click to show ISeeder</summary> 
-	
-```csharp
-public interface ISeeder
-{
-	Task EnsureSeed(CancellationToken cancellationToken = default);
-}
-```
-</details>    
-2.  Create a class to seed users and inherit from ISeeder
-<details>
-	<summary>Click to show SeedUsers</summary>    
-	
-```csharp
-public class SeedUsers : ISeeder
-{
-	private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
-	private readonly IUserStore<ApplicationUser> _userStore;
-	private readonly ILogger<SeedUsers> _logger;
+	<details>
+		<summary>Click to show ISeeder</summary> 
 
-	public SeedUsers(
-		IUserStore<ApplicationUser> userStore,
-		IPasswordHasher<ApplicationUser> passwordHasher,
-		ILogger<SeedUsers> logger)
+	```csharp
+	public interface ISeeder
 	{
-		_userStore = userStore;
-		_passwordHasher = passwordHasher;
-		_logger = logger;
+		Task EnsureSeed(CancellationToken cancellationToken = default);
 	}
+	```
+	</details>    
+2.  Create a class to seed users and inherit from ISeeder
+	<details>
+		<summary>Click to show SeedUsers</summary>    
 
-	public async Task EnsureSeed(CancellationToken cancellationToken = default)
+	```csharp
+	public class SeedUsers : ISeeder
 	{
-		_logger.LogInformation("Ensuring User Seed Data");
+		private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
+		private readonly IUserStore<ApplicationUser> _userStore;
+		private readonly ILogger<SeedUsers> _logger;
 
-		foreach (var user in SeedData)
+		public SeedUsers(
+			IUserStore<ApplicationUser> userStore,
+			IPasswordHasher<ApplicationUser> passwordHasher,
+			ILogger<SeedUsers> logger)
 		{
-			var exists = await Exists(user.UserName, cancellationToken);
-			if(exists)
-				_logger.LogDebug("User {UserName} already exist.", user.UserName);
-			else
+			_userStore = userStore;
+			_passwordHasher = passwordHasher;
+			_logger = logger;
+		}
+
+		public async Task EnsureSeed(CancellationToken cancellationToken = default)
+		{
+			_logger.LogInformation("Ensuring User Seed Data");
+
+			foreach (var user in SeedData)
 			{
-				var result = await _userStore.CreateAsync(user, cancellationToken);
-				if (!result.Succeeded)
-					_logger.LogError("Can not create seed user: {SeedErrors}", string.Join(",", result.Errors.Select(r => $"{r.Code}: {r.Description}")));
+				var exists = await Exists(user.UserName, cancellationToken);
+				if(exists)
+					_logger.LogDebug("User {UserName} already exist.", user.UserName);
 				else
-					_logger.LogInformation("Seed user {UserName} created successfully.", user);
+				{
+					var result = await _userStore.CreateAsync(user, cancellationToken);
+					if (!result.Succeeded)
+						_logger.LogError("Can not create seed user: {SeedErrors}", string.Join(",", result.Errors.Select(r => $"{r.Code}: {r.Description}")));
+					else
+						_logger.LogInformation("Seed user {UserName} created successfully.", user);
+				}
 			}
 		}
-	}
 
-	private async Task<bool> Exists(string username, CancellationToken cancellationToken)
-	{
-		var result = await _userStore.FindByNameAsync(username, cancellationToken);
-		return result != null;
-	}
-
-	private IList<ApplicationUser> SeedData => new List<ApplicationUser>
-	{
-		new ApplicationUser
+		private async Task<bool> Exists(string username, CancellationToken cancellationToken)
 		{
-			Id = Guid.NewGuid().ToString(),
-			UserName = "devUser",
-			PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess"),
-			Firstname = "Dev",
-			Lastname = "eloper",
-			IsActive = true
+			var result = await _userStore.FindByNameAsync(username, cancellationToken);
+			return result != null;
 		}
-	};
-}
-```
-</details>    
-3.  Create a class extension for IServiceProvider to execute seeders
-<details>
-	<summary>Click to show Seed</summary>    
-	
-```csharp
-public static async Task Seed(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
-{
-	using var scope = serviceProvider.CreateScope();
 
-	var seeders = scope
-		.ServiceProvider
-		.GetServices<ISeeder>()
-		.ToList();
-
-	foreach (var seeder in seeders)
-	{
-		await seeder.EnsureSeed(cancellationToken);
+		private IList<ApplicationUser> SeedData => new List<ApplicationUser>
+		{
+			new ApplicationUser
+			{
+				Id = Guid.NewGuid().ToString(),
+				UserName = "devUser",
+				PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess"),
+				Firstname = "Dev",
+				Lastname = "eloper",
+				IsActive = true
+			}
+		};
 	}
-}
-```
-</details>    
+	```
+	</details>    
+3.  Create a class extension for IServiceProvider to execute seeders
+	<details>
+		<summary>Click to show Seed</summary>    
+
+	```csharp
+	public static async Task Seed(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+	{
+		using var scope = serviceProvider.CreateScope();
+
+		var seeders = scope
+			.ServiceProvider
+			.GetServices<ISeeder>()
+			.ToList();
+
+		foreach (var seeder in seeders)
+		{
+			await seeder.EnsureSeed(cancellationToken);
+		}
+	}
+	```
+	</details>    
 4.  In Program.cs, update the entry point to execute the seeders
     
-```csharp
-public static Task Main(string[] args)
-{
-	var host = CreateHostBuilder(args).Build();
-	await host.Services.Seed();
-	await host.RunAsync();
-}
-```
+	```csharp
+	public static Task Main(string[] args)
+	{
+		var host = CreateHostBuilder(args).Build();
+		await host.Services.Seed();
+		await host.RunAsync();
+	}
+	```
     
 
 ## IdentityServer Endpoints
