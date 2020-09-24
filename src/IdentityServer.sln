@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Web", "IdentityServer.Web\IdentityServer.Web.csproj", "{EFB6A565-4C81-437A-B1D2-969658342470}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{F7F2108D-6E0C-4C46-871B-DD870DB97BED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFB6A565-4C81-437A-B1D2-969658342470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB6A565-4C81-437A-B1D2-969658342470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB6A565-4C81-437A-B1D2-969658342470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB6A565-4C81-437A-B1D2-969658342470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F2108D-6E0C-4C46-871B-DD870DB97BED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7F2108D-6E0C-4C46-871B-DD870DB97BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7F2108D-6E0C-4C46-871B-DD870DB97BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7F2108D-6E0C-4C46-871B-DD870DB97BED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
