@@ -20,7 +20,6 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	```csharp
 	1. IdentityServer4
 	2. IdentityServer4.AspNetIdentity 
-	3. IdentityServer4.AspNetIdentity 
 	```
         
 ## Setup Clients, Api resources and Scopes    
@@ -150,8 +149,11 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	```
 
 ## Setup Custom User Storage with MongoDb
-
-1.  Create ApplicationUser.cs and inherit from IdentityUser
+1.  Add NuGet packages for    
+	```csharp
+	1. MongoDB.Driver 
+	```
+2.  Create ApplicationUser.cs and inherit from IdentityUser
 	<details>
 	    <summary>Click to show code</summary>
 
@@ -164,7 +166,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	}
 	```
 	</details>    
-2.  Create ApplicationRole and inherit from IdentityRole
+3.  Create ApplicationRole and inherit from IdentityRole
 	<details>
 		<summary>Click to show code</summary>
 
@@ -174,7 +176,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	}
 	```
 	</details>    
-3.  Create a generic MongoDb repository
+4.  Create a generic MongoDb repository
 	<details>
 		<summary>Click to show code</summary>
 
@@ -212,7 +214,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	}
 	```
 	</details>    
-4.  Create classes that implements the following:
+5.  Create classes that implements the following:
 	```csharp
 	1. IUserStore<ApplicationUser>
 	2. IUserPasswordStore<ApplicationUser>
@@ -449,7 +451,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	}
 	```    
 	</details>        
-5.  In Startup.cs, register services:
+6.  In Startup.cs, register services:
 	<details>
 		<summary>Click to show code</summary>
 
@@ -462,7 +464,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	services.AddTransient(typeof(IRepository<>), typeof(MongoRepository<>));
 	```
 	</details>    
-6.  In Startup.cs, register Identity User
+7.  In Startup.cs, register Identity User
 	<details>
 		<summary>Click to show code</summary>   
 
