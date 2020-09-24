@@ -30,6 +30,7 @@ namespace IdentityServer
             services.AddTransient<IPasswordHasher<TUser>, UserPasswordHasher<TUser>>();
             services.AddTransient<IRoleStore<TRole>, RoleStore<TRole>>();
             services.AddTransient(typeof(IRepository<>), typeof(MongoRepository<>));
+            services.AddTransient<IUserService<TUser>, UserService<TUser>>();
 
             var builder = services.AddIdentityServer(options);
             identityBuilder(builder);
@@ -51,16 +52,13 @@ namespace IdentityServer
             
             if(users == null) return;
             
-            var userStore = scope
+            var userService = scope
                 .ServiceProvider
-                .GetService<IUserStore<TUser>>();
+                .GetService<IUserService<TUser>>();
 
             foreach (var user in users)
             {
-                var foundUser = await userStore.FindByNameAsync(user.UserName, cancellationToken);
-                if(foundUser != null) continue;
-                
-                await userStore.CreateAsync(user, cancellationToken);
+                await userService.Create(user, cancellationToken);
             }
         } 
         
