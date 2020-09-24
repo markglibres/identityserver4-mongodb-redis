@@ -22,7 +22,7 @@ namespace IdentityServer.Web
                 Id = Guid.NewGuid().ToString(),
                 UserName = "dev",
                 PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess"),
-                IsActive = true
+                EmailConfirmed = true
             }
         };
     }

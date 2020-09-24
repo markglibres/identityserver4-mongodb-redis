@@ -21,7 +21,7 @@ namespace IdentityServer.Web
         {
             services.AddSingleton<ISeedUsers<ApplicationUser>, SeedUsers>();
 
-            services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole>(options =>
+            services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(options =>
             {
                 options.IssuerUri = "http://localhost:5000";
             }, provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())

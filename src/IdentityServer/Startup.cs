@@ -12,12 +12,13 @@ namespace IdentityServer
 {
     public static class Startup
     {
-        public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole>(this IServiceCollection services, 
+        public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole, TProfile>(this IServiceCollection services, 
             Action<IdentityServerOptions> options,
             Func<IServiceProvider, ICorsPolicyService> policy,
             Action<IIdentityServerBuilder> identityBuilder)
             where TUser: IdentityUser
             where TRole: IdentityRole
+            where TProfile: ProfileService<TUser>
         {
             var provider = services.BuildServiceProvider();
             var configuration = provider.GetRequiredService<IConfiguration>();
@@ -34,7 +35,9 @@ namespace IdentityServer
 
             var builder = services.AddIdentityServer(options);
             identityBuilder(builder);
-            builder.AddAspNetIdentity<TUser>();
+            builder
+                .AddAspNetIdentity<TUser>()
+                .AddProfileService<TProfile>();
             services.AddSingleton(policy);
 
             return builder;
