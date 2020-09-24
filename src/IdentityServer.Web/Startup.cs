@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using IdentityServer_ApplicationUser = IdentityServer.Web.ApplicationUser;
 
 namespace IdentityServer.Web
 {
@@ -18,18 +19,23 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IApiResources, InMemoryConfig>();
-            services.AddSingleton<IApiScopes, InMemoryConfig>();
-            services.AddSingleton<IClients, InMemoryConfig>();
-            services.AddSingleton<IIdentityResource, InMemoryConfig>();
-            
-            services.AddInMemoryIdentityServer(options =>
+            services.AddSingleton<ISeedUsers<ApplicationUser>, SeedUsers>();
+
+            services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole>(options =>
             {
                 options.IssuerUri = "http://localhost:5000";
             }, provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
             {
                 AllowAll = true
+            }, builder =>
+            {
+                builder.AddDeveloperSigningCredential() // use a valid signing cert in production
+                    .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                    .AddInMemoryApiResources(Config.GetApiResources())
+                    .AddInMemoryApiScopes(Config.GetApiScopes())
+                    .AddInMemoryClients(Config.GetClients());
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

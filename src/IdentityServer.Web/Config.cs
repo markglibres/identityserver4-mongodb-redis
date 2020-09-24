@@ -4,9 +4,9 @@ using IdentityServer4.Models;
 
 namespace IdentityServer.Web
 {
-    public class InMemoryConfig : IIdentityResource, IApiResources, IApiScopes, IClients
+    public static class Config
     {
-        public IEnumerable<ApiResource> GetApiResources()
+        public static IEnumerable<ApiResource> GetApiResources()
         {
             return new List<ApiResource>
             {
@@ -21,7 +21,7 @@ namespace IdentityServer.Web
             };
         }
 
-        public IEnumerable<ApiScope> GetApiScopes()
+        public static IEnumerable<ApiScope> GetApiScopes()
         {
             return new[]
             {
@@ -29,7 +29,7 @@ namespace IdentityServer.Web
             };
         }
 
-        public IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients()
         {
             return new List<Client>
             {
@@ -52,7 +52,7 @@ namespace IdentityServer.Web
                 new Client
                 {
                     ClientId = "spaWeb",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
                     {
                         new Secret("hardtoguess".Sha256())
@@ -73,7 +73,7 @@ namespace IdentityServer.Web
             };
         }
 
-        public IEnumerable<IdentityResource> GetIdentityResources()
+        public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
             {
