@@ -57,9 +57,8 @@ then
     exit 0;
 fi
 
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:5000/.well-known/openid-configuration)" != "200" ]]
+while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:5000)" != "200" ]]
 do 
-    echo "reply from api.. $(curl -s -o /dev/null -w ''%{http_code}'' localhost:5000/.well-known/openid-configuration)"
     echo 'waiting for api...'
     sleep 5
 done 
