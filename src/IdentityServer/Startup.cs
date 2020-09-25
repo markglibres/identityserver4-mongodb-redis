@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using IdentityServer.Repositories;
 using IdentityServer.Services;
@@ -10,10 +9,8 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Conventions;
 
 namespace IdentityServer
 {
@@ -31,13 +28,13 @@ namespace IdentityServer
         {
             var mongoConfig = new MongoOptions();
             mongoOptions(mongoConfig);
-            
+
             services.Configure<MongoOptions>(m =>
             {
                 m.Database = mongoConfig.Database;
                 m.ConnectionString = mongoConfig.ConnectionString;
             });
-            
+
             services.AddTransient<ISeedService<TUser>, UserService<TUser>>();
             services.AddTransient<ISeedService<Client>, ClientService>();
             services.AddTransient<ISeedService<ApiResource>, ResourceService<ApiResource>>();
@@ -63,7 +60,7 @@ namespace IdentityServer
 
             return builder;
         }
-        
+
         public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole, TProfile>(
             this IServiceCollection services,
             Action<IdentityServerOptions> options,
@@ -85,6 +82,45 @@ namespace IdentityServer
 
             return builder;
         }
+        
+        public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole, TProfile>(
+            this IServiceCollection services,
+            Func<IServiceProvider, ICorsPolicyService> policy,
+            Action<IIdentityServerBuilder> identityBuilder)
+            where TUser : IdentityUser
+            where TRole : IdentityRole
+            where TProfile : ProfileService<TUser>
+        {
+            var provider = services.BuildServiceProvider();
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            var configSection = configuration.GetSection("Identity")?.Get<IdentityOptions>();
+            
+            var builder = services.AddMongoDbIdentityServer<TUser, TRole, TProfile>(options =>
+            {
+                options.IssuerUri = configSection?.Uri ?? "http://localhost:5000";
+                
+            }, policy, identityBuilder);
+            return builder;
+        }
+        
+        public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole, TProfile>(
+            this IServiceCollection services,
+            Action<IIdentityServerBuilder> identityBuilder)
+            where TUser : IdentityUser
+            where TRole : IdentityRole
+            where TProfile : ProfileService<TUser>
+        {
+            var provider = services.BuildServiceProvider();
+            var defaultPolicy = new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
+            {
+                AllowAll = true
+            };
+            
+            var builder = services.AddMongoDbIdentityServer<TUser, TRole, TProfile>(
+                policy => defaultPolicy
+                , identityBuilder);
+            return builder;
+        }
 
         public static IIdentityServerBuilder AddMongoDbClientStore(this IIdentityServerBuilder identityServerBuilder)
         {
@@ -96,7 +132,7 @@ namespace IdentityServer
             identityServerBuilder.AddClientStore<ClientStore>();
             return identityServerBuilder;
         }
-        
+
         public static IIdentityServerBuilder AddMongoDbResources(this IIdentityServerBuilder identityServerBuilder)
         {
             SetupDocument<IdentityResource>();
@@ -107,7 +143,7 @@ namespace IdentityServer
             SetupDocument<IdentityResources.Profile>();
             SetupDocument<IdentityResources.Address>();
             SetupDocument<IdentityResources.Phone>();
-            
+
             identityServerBuilder.AddResourceStore<ResourceStore>();
             return identityServerBuilder;
         }
@@ -118,7 +154,7 @@ namespace IdentityServer
         {
             var config = new RedisOptions();
             redisOptions?.Invoke(config);
-            
+
             identityServerBuilder
                 .AddOperationalStore(options =>
                 {
@@ -132,14 +168,14 @@ namespace IdentityServer
 
             return identityServerBuilder;
         }
-        
+
         public static IIdentityServerBuilder AddRedisCaching(this IIdentityServerBuilder identityServerBuilder)
         {
             var config = new RedisOptions();
-            
+
             var provider = identityServerBuilder.Services.BuildServiceProvider();
             var configuration = provider.GetRequiredService<IConfiguration>();
-            var configSection = configuration.GetSection("Identity:Redis").Get<RedisOptions>();
+            var configSection = configuration.GetSection("Identity:Redis")?.Get<RedisOptions>();
 
             if (configSection != null)
             {
@@ -150,7 +186,7 @@ namespace IdentityServer
 
                 if (!string.IsNullOrWhiteSpace(configSection.Prefix)) config.Prefix = configSection.Prefix;
             }
-            
+
             identityServerBuilder
                 .AddOperationalStore(options =>
                 {
@@ -185,7 +221,7 @@ namespace IdentityServer
             identityServerBuilder.AddInMemoryClients(items);
             return identityServerBuilder;
         }
-        
+
         public static IIdentityServerBuilder AddInMemoryResources(this IIdentityServerBuilder identityServerBuilder)
         {
             identityServerBuilder.Services.AddTransient<IInMemorySettings<Resource>, InMemorySettings<Resource>>();
@@ -196,8 +232,9 @@ namespace IdentityServer
 
             if (apiResources?.Any() ?? false) identityServerBuilder.AddInMemoryApiResources(apiResources);
             if (apiScopes?.Any() ?? false) identityServerBuilder.AddInMemoryApiScopes(apiScopes);
-            if (identityResources?.Any() ?? false) identityServerBuilder.AddInMemoryIdentityResources(identityResources);
-            
+            if (identityResources?.Any() ?? false)
+                identityServerBuilder.AddInMemoryIdentityResources(identityResources);
+
             return identityServerBuilder;
         }
     }

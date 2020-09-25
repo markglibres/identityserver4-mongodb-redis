@@ -24,12 +24,6 @@ namespace IdentityServer.Web
             services.AddSingleton<ISeeder<IdentityResource>, SeedIdentityResources>();
 
             services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(
-                options => { options.IssuerUri = "http://localhost:5000"; },
-                provider =>
-                    new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
-                    {
-                        AllowAll = true
-                    }, 
                 builder =>
                 {
                     builder.AddDeveloperSigningCredential() // use a valid signing cert in production
