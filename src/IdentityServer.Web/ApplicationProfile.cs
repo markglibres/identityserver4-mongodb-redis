@@ -1,3 +1,4 @@
+using IdentityServer.Stores;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Web

@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 
-namespace IdentityServer
+namespace IdentityServer.Services
 {
     public interface IClientService
     {

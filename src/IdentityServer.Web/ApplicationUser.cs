@@ -4,6 +4,5 @@ namespace IdentityServer.Web
 {
     public class ApplicationUser : IdentityUser
     {
-        
     }
 }

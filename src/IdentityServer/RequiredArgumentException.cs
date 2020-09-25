@@ -12,9 +12,8 @@ namespace IdentityServer
             [CallerLineNumber] int sourceLineNumber = 0)
             : base(GetMessage($"Argument {nameof(field)} is required", memberName, sourceFilePath, sourceLineNumber))
         {
-
         }
-        
+
         private static string GetMessage(
             string message,
             string memberName,
@@ -31,15 +30,13 @@ namespace IdentityServer
 
             return JsonConvert.SerializeObject(error);
         }
-        
     }
 
-    internal class RequiredArgumentMessage 
+    internal class RequiredArgumentMessage
     {
         public string Message { get; set; }
         public string ClassName { get; set; }
         public string FilePath { get; set; }
         public int FileNumber { get; set; }
     }
-    
 }

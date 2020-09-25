@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using IdentityServer4;
-using IdentityServer4.Models;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Web
@@ -14,16 +13,19 @@ namespace IdentityServer.Web
         {
             _passwordHasher = passwordHasher;
         }
-        
-        public IEnumerable<ApplicationUser> GetSeeds() => new List<ApplicationUser>
+
+        public IEnumerable<ApplicationUser> GetSeeds()
         {
-            new ApplicationUser
+            return new List<ApplicationUser>
             {
-                Id = Guid.NewGuid().ToString(),
-                UserName = "dev",
-                PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess"),
-                EmailConfirmed = true
-            }
-        };
+                new ApplicationUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = "dev",
+                    PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess"),
+                    EmailConfirmed = true
+                }
+            };
+        }
     }
 }

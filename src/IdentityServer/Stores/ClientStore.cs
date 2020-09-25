@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
+using IdentityServer.Repositories;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 
-namespace IdentityServer
+namespace IdentityServer.Stores
 {
     public class ClientStore : IClientStore
     {
@@ -12,7 +13,7 @@ namespace IdentityServer
         {
             _repository = repository;
         }
-        
+
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
             return await _repository.SingleOrDefault(client => client.ClientId == clientId);

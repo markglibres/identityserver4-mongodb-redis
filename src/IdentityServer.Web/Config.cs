@@ -47,7 +47,7 @@ namespace IdentityServer.Web
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
                         "myapi.access"
-                    },
+                    }
                 },
                 new Client
                 {

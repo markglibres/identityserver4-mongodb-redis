@@ -8,10 +8,10 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer
+namespace IdentityServer.Stores
 {
     public abstract class ProfileService<T> : IProfileService
-        where T: IdentityUser
+        where T : IdentityUser
     {
         protected readonly UserManager<T> UserManager;
 
@@ -38,6 +38,9 @@ namespace IdentityServer
             return await UserManager.FindByIdAsync(userId);
         }
 
-        protected virtual IEnumerable<Claim> GetClaims(T user) => new List<Claim>();
+        protected virtual IEnumerable<Claim> GetClaims(T user)
+        {
+            return new List<Claim>();
+        }
     }
 }

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Humanizer;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace IdentityServer
+namespace IdentityServer.Repositories
 {
     public class MongoRepository<T> : IRepository<T>
         where T : class, new()
@@ -20,7 +19,10 @@ namespace IdentityServer
             _database = client.GetDatabase(options.Value.Database);
         }
 
-        public async Task<IList<T>> Find(Expression<Func<T, bool>> expression) => await Collection().Find(expression).ToListAsync();
+        public async Task<IList<T>> Find(Expression<Func<T, bool>> expression)
+        {
+            return await Collection().Find(expression).ToListAsync();
+        }
 
         public async Task Delete(Expression<Func<T, bool>> predicate)
         {
@@ -53,6 +55,5 @@ namespace IdentityServer
         {
             return _database.GetCollection<T>(typeof(T).Name.Camelize());
         }
-
     }
 }

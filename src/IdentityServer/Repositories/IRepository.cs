@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace IdentityServer
+namespace IdentityServer.Repositories
 {
     public interface IRepository<T> where T : class
     {

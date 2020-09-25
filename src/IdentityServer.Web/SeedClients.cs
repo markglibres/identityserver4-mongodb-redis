@@ -1,52 +1,54 @@
-using System;
 using System.Collections.Generic;
+using IdentityServer.Services;
 using IdentityServer4;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Web
 {
     public class SeedClients : ISeeder<Client>
     {
-        public IEnumerable<Client> GetSeeds() => new List<Client>
+        public IEnumerable<Client> GetSeeds()
         {
-            new Client
+            return new List<Client>
             {
-                ClientId = "spaService",
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets =
+                new Client
                 {
-                    new Secret("hardtoguess".Sha256())
+                    ClientId = "spaService",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("hardtoguess".Sha256())
+                    },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "myapi.access"
+                    }
                 },
-                AllowedScopes =
+                new Client
                 {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email,
-                    "myapi.access"
-                },
-            },
-            new Client
-            {
-                ClientId = "spaWeb",
-                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                ClientSecrets =
-                {
-                    new Secret("hardtoguess".Sha256())
-                },
-                AllowedScopes =
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email,
-                    "myapi.access"
-                },
-                AllowOfflineAccess = true, // this to allow SPA,
-                AlwaysSendClientClaims = true,
-                AlwaysIncludeUserClaimsInIdToken = true,
-                // this will generate reference tokens instead of access tokens
-                AccessTokenType = AccessTokenType.Reference
-            }
-        };
+                    ClientId = "spaWeb",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets =
+                    {
+                        new Secret("hardtoguess".Sha256())
+                    },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "myapi.access"
+                    },
+                    AllowOfflineAccess = true, // this to allow SPA,
+                    AlwaysSendClientClaims = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    // this will generate reference tokens instead of access tokens
+                    AccessTokenType = AccessTokenType.Reference
+                }
+            };
+        }
     }
 }

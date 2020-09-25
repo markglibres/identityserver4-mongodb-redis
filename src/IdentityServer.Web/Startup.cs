@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using IdentityServer.Services;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
@@ -23,31 +20,26 @@ namespace IdentityServer.Web
             services.AddSingleton<ISeeder<ApplicationUser>, SeedUsers>();
             services.AddSingleton<ISeeder<Client>, SeedClients>();
 
-            services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(options =>
-            {
-                options.IssuerUri = "http://localhost:5000";
-            }, provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
-            {
-                AllowAll = true
-            }, builder =>
-            {
-                builder.AddDeveloperSigningCredential() // use a valid signing cert in production
-                    .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                    .AddInMemoryApiResources(Config.GetApiResources())
-                    .AddInMemoryApiScopes(Config.GetApiScopes())
-                    .AddMongoDbClientStore();
-                //.AddInMemoryClients();
-            });
-
+            services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(
+                options => { options.IssuerUri = "http://localhost:5000"; }, provider =>
+                    new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
+                    {
+                        AllowAll = true
+                    }, builder =>
+                {
+                    builder.AddDeveloperSigningCredential() // use a valid signing cert in production
+                        .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                        .AddInMemoryApiResources(Config.GetApiResources())
+                        .AddInMemoryApiScopes(Config.GetApiScopes())
+                        .AddMongoDbClientStore();
+                    //.AddInMemoryClients();
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseRouting();
             app.UseIdentityServer();
