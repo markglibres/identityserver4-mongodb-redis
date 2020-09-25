@@ -28,6 +28,9 @@ namespace IdentityServer
             
             services.Configure<MongoOptions>(configuration.GetSection("Identity:Mongo"));
             
+            services.AddTransient<ISeedService<TUser>, UserService<TUser>>();
+            services.AddTransient<ISeedService<Client>, ClientService>();
+
             services.AddIdentity<TUser, TRole>().AddDefaultTokenProviders();
             services.AddTransient<IUserStore<TUser>, UserStore<TUser>>();
             services.AddTransient<IUserPasswordStore<TUser>, UserStore<TUser>>();
@@ -36,7 +39,7 @@ namespace IdentityServer
             services.AddTransient(typeof(IRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IUserService<TUser>, UserService<TUser>>();
             services.AddTransient<IClientService, ClientService>();
-
+            
             var builder = services.AddIdentityServer(options);
             
             identityBuilder(builder);
@@ -62,7 +65,7 @@ namespace IdentityServer
         public static IIdentityServerBuilder AddInMemoryClients(this IIdentityServerBuilder identityServerBuilder)
         {
             var provider = identityServerBuilder.Services.BuildServiceProvider();
-            var items = provider.GetService<ISeedClients>()?.GetClients();
+            var items = provider.GetService<ISeeder<Client>>()?.GetSeeds();
 
             if (items == null) return identityServerBuilder;
 

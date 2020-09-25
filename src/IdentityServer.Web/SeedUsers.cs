@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Web
 {
-    public class SeedUsers :ISeedUsers<ApplicationUser>
+    public class SeedUsers : ISeeder<ApplicationUser>
     {
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
@@ -15,7 +15,7 @@ namespace IdentityServer.Web
             _passwordHasher = passwordHasher;
         }
         
-        public IEnumerable<ApplicationUser> GetUsers() => new List<ApplicationUser>
+        public IEnumerable<ApplicationUser> GetSeeds() => new List<ApplicationUser>
         {
             new ApplicationUser
             {

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Web
 {
-    public class SeedClients : ISeedClients
+    public class SeedClients : ISeeder<Client>
     {
-        public IEnumerable<Client> GetClients() => new List<Client>
+        public IEnumerable<Client> GetSeeds() => new List<Client>
         {
             new Client
             {

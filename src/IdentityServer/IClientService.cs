@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 
@@ -5,9 +6,9 @@ namespace IdentityServer
 {
     public interface IClientService
     {
-        Task Create(Client client);
-        Task Update(Client client);
-        Task Delete(Client client);
-        Task<Client> Get(string clientId);
+        Task Create(Client client, CancellationToken cancellationToken = default);
+        Task Update(Client client, CancellationToken cancellationToken = default);
+        Task Delete(Client client, CancellationToken cancellationToken = default);
+        Task<Client> Get(string clientId, CancellationToken cancellationToken = default);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -14,8 +15,8 @@ namespace IdentityServer.Web
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            await host.Services.SeedUsers<ApplicationUser>();
-            await host.Services.SeedClients();
+            await host.Services.Seed<ApplicationUser>();
+            await host.Services.Seed<Client>();
             await host.RunAsync();
         }
 

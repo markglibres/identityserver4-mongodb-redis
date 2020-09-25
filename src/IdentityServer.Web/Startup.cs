@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,8 +20,8 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISeedUsers<ApplicationUser>, SeedUsers>();
-            services.AddSingleton<ISeedClients, SeedClients>();
+            services.AddSingleton<ISeeder<ApplicationUser>, SeedUsers>();
+            services.AddSingleton<ISeeder<Client>, SeedClients>();
 
             services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(options =>
             {
@@ -34,8 +35,8 @@ namespace IdentityServer.Web
                     .AddInMemoryIdentityResources(Config.GetIdentityResources())
                     .AddInMemoryApiResources(Config.GetApiResources())
                     .AddInMemoryApiScopes(Config.GetApiScopes())
-                    //.AddMongoDbClientStore()
-                    .AddInMemoryClients();
+                    .AddMongoDbClientStore();
+                //.AddInMemoryClients();
             });
 
         }

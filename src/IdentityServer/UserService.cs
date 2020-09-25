@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer
 {
-    public class UserService<T> : IUserService<T>
+    public class UserService<T> : IUserService<T>, ISeedService<T>
         where T: IdentityUser
     {
         private readonly IUserStore<T> _userStore;
