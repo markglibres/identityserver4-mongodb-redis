@@ -10,9 +10,9 @@ services:
         - Environment=Development
         - "Identity__Mongo__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver"
         - Identity__Mongo__Database=Identity
-        - Redis__ConnectionString=redis
-        - Redis__Db=-1
-        - Redis__Prefix=identity
+        - Identity__Redis__ConnectionString=redis
+        - Identity__Redis__Db=-1
+        - Identity__Redis__Prefix=identity
     container_name: identity
     depends_on: 
         - redis
