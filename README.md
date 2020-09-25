@@ -1,4 +1,4 @@
-![Build Master](https://github.com/markglibres/identityserver4-mongodb-redis/workflows/Build%20Master/badge.svg?branch=master&event=push)
+![Build Master](https://github.com/markglibres/identityserver4-mongodb-redis/workflows/Build%20Master/badge.svg?branch=master)
 
 # IdentityServer4 using MongoDb with Redis cache
 
