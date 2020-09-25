@@ -1,0 +1,352 @@
+{
+	"info": {
+		"_postman_id": "c2ad2db3-a7b4-409b-8478-c95f1e67d8a6",
+		"name": "Functional - IdentityServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "29f12dff-1667-4687-bd9e-3135226489d8",
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", jsonResponse.access_token);",
+							"pm.environment.set(\"refreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"requestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"    const scopes = request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    const responseScopes = responseJson.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    ",
+							"    pm.expect(responseJson.token_type).to.be.eq(\"Bearer\");",
+							"    pm.expect(responseScopes).to.include.members(scopes);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "dev",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "hardtoguess",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "myapi.access openid offline_access ",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "spaWeb",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6fa267e9-a87e-47cf-9dea-39eda98fccdf",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "hardtoguess",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "spaWeb",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						},
+						{
+							"key": "token_type_hint",
+							"value": "access_token",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/revocation",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"revocation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a0e790e0-f854-481e-811d-a8da93ca4b3d",
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", responseJson.access_token);",
+							"pm.environment.set(\"refreshtoken\", responseJson.refresh_token);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"",
+							"    const requestedScopes = pm.environment.get(\"requestedScopes\");",
+							"    const responseScopes = responseJson.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    ",
+							"    pm.expect(responseScopes).to.have.members(requestedScopes);",
+							"",
+							"    const expectedResponse = {",
+							"        \"token_type\": \"Bearer\"",
+							"    }",
+							"    pm.expect(responseJson).to.include(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "spaWeb",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{refreshtoken}}",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get UserInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0628f643-4524-4acf-a20f-9bf31d187e11",
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('User schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"sub\": { \"type\": \"string\" },",
+							"        \"tenantId\": { \"type\": \"string\" },",
+							"        \"userId\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{auth_host}}/connect/userinfo",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4835956b-a203-4f36-afcf-2401aca58213",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "92fa8429-f987-40e5-b3a1-ee3d7f10b306",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

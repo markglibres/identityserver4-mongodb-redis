@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  identity:
+    build:
+        context: .
+        dockerfile: IdentityServer.Web/Dockerfile
+    image: identity
+    environment:
+        - Environment=Development
+        - "Identity__Mongo__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver"
+        - Identity__Mongo__Database=Identity
+        - Redis__ConnectionString=redis
+        - Redis__Db=-1
+        - Redis__Prefix=identity
+    container_name: identity
+    depends_on: 
+        - redis
+        - mongodb
+    ports:
+        - "5000:80"
+    networks:
+        - identity
+    restart: always
+
+  redis:
+    image: bitnami/redis
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - identity
+    restart: always
+
+  mongodb:
+    image: mongo:4.2.8
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=foobar
+    ports:
+      - 27017:27017
+    networks:
+      - identity
+    restart: always
+
+networks:
+    identity:
+        driver: bridge

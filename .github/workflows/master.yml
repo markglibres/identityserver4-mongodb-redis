@@ -24,8 +24,7 @@ jobs:
       run: dotnet restore ./src/IdentityServer/IdentityServer.csproj
     - name: Build
       run: dotnet build ./src/IdentityServer/IdentityServer.csproj --configuration Release --no-restore
-    #- name: Test
-    #  run: dotnet test --no-restore --verbosity normal
+
   build-identity-web:
     name: Build Identity Web
     runs-on: ubuntu-latest
@@ -40,3 +39,22 @@ jobs:
       run: dotnet restore ./src/IdentityServer.Web/IdentityServer.Web.csproj
     - name: Build
       run: dotnet build ./src/IdentityServer.Web/IdentityServer.Web.csproj --configuration Release --no-restore
+
+  functional:
+    name: Api functional tests
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@main
+
+      - name: Run service dependencies
+        run: ./.github/scripts/functional.sh --up
+
+      - name: Check running containers
+        run: docker ps -a
+      
+      - name: Run functional tests
+        run: ./.github/scripts/functional.sh --collection "*collection.json"     
+
+      - name: Stop service dependencies
+        run: ./.github/scripts/functional.sh --down
