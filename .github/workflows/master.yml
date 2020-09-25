@@ -7,7 +7,7 @@ on:
     paths: 
       - 'src/IdentityServer/**'
       - 'src/IdentityServer.Web/**'
-      - '.github/workflows/master.yml''
+      - '.github/workflows/master.yml'
 
 jobs:
   build-identity:
