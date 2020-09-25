@@ -43,6 +43,7 @@ jobs:
   functional:
     name: Api functional tests
     runs-on: [ubuntu-latest]
+    needs: [ build-identity, build-identity-web ]
     steps:
       - name: Checkout branch
         uses: actions/checkout@main
