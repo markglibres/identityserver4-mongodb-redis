@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Humanizer;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace IdentityServer.Repositories
@@ -21,7 +22,16 @@ namespace IdentityServer.Repositories
 
         public async Task<IList<T>> Find(Expression<Func<T, bool>> expression)
         {
-            return await Collection().Find(expression).ToListAsync();
+            var result = await Collection().FindAsync(expression);
+            return result.ToList();
+        }
+
+        public async Task<IList<T>> FindAnyIn(string propertyName, IEnumerable<string> items)
+        {
+            var filter = Builders<T>.Filter.AnyIn(propertyName, items);
+            var result = await Collection().FindAsync(filter);
+
+            return result.ToList();
         }
 
         public async Task Delete(Expression<Func<T, bool>> predicate)

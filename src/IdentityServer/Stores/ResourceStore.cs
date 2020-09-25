@@ -52,7 +52,7 @@ namespace IdentityServer.Stores
             if (!scopesToSearch.Any()) return default;
 
             var result = await _apiResourceRepository
-                .Find(r => scopesToSearch.Intersect(r.Scopes).Any());
+                .FindAnyIn(nameof(ApiResource.Scopes), scopesToSearch);
 
             return result;
         }

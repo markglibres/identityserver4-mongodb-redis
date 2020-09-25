@@ -11,8 +11,7 @@ namespace IdentityServer.Web
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            await host.Services.Seed<ApplicationUser>();
-            await host.Services.Seed<Client>();
+            await host.Services.Initialize<ApplicationUser>();
             await host.RunAsync();
         }
 

@@ -19,6 +19,9 @@ namespace IdentityServer.Web
         {
             services.AddSingleton<ISeeder<ApplicationUser>, SeedUsers>();
             services.AddSingleton<ISeeder<Client>, SeedClients>();
+            services.AddSingleton<ISeeder<ApiResource>, SeedApiResources>();
+            services.AddSingleton<ISeeder<ApiScope>, SeedApiScopes>();
+            services.AddSingleton<ISeeder<IdentityResource>, SeedIdentityResources>();
 
             services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(
                 options => { options.IssuerUri = "http://localhost:5000"; }, provider =>
@@ -28,11 +31,10 @@ namespace IdentityServer.Web
                     }, builder =>
                 {
                     builder.AddDeveloperSigningCredential() // use a valid signing cert in production
-                        .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                        .AddInMemoryApiResources(Config.GetApiResources())
-                        .AddInMemoryApiScopes(Config.GetApiScopes())
+                        //.AddInMemoryResources()
+                        //.AddInMemoryClients();
+                        .AddMongoDbResources()
                         .AddMongoDbClientStore();
-                    //.AddInMemoryClients();
                 });
         }
 

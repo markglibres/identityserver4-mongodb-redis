@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using IdentityServer.Repositories;
 using IdentityServer.Services;
 using IdentityServer.Stores;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace IdentityServer
 {
@@ -30,6 +33,9 @@ namespace IdentityServer
 
             services.AddTransient<ISeedService<TUser>, UserService<TUser>>();
             services.AddTransient<ISeedService<Client>, ClientService>();
+            services.AddTransient<ISeedService<ApiResource>, ResourceService<ApiResource>>();
+            services.AddTransient<ISeedService<ApiScope>, ResourceService<ApiScope>>();
+            services.AddTransient<ISeedService<IdentityResource>, ResourceService<IdentityResource>>();
 
             services.AddIdentity<TUser, TRole>().AddDefaultTokenProviders();
             services.AddTransient<IUserStore<TUser>, UserStore<TUser>>();
@@ -61,15 +67,55 @@ namespace IdentityServer
             identityServerBuilder.AddClientStore<ClientStore>();
             return identityServerBuilder;
         }
+        
+        public static IIdentityServerBuilder AddMongoDbResources(this IIdentityServerBuilder identityServerBuilder)
+        {
+            SetupDocument<IdentityResource>();
+            SetupDocument<ApiResource>();
+            SetupDocument<ApiScope>();
+            SetupDocument<IdentityResources.OpenId>();
+            SetupDocument<IdentityResources.Email>();
+            SetupDocument<IdentityResources.Profile>();
+            SetupDocument<IdentityResources.Address>();
+            SetupDocument<IdentityResources.Phone>();
+            
+            identityServerBuilder.AddResourceStore<ResourceStore>();
+            return identityServerBuilder;
+        }
+
+        private static void SetupDocument<T>()
+        {
+            BsonClassMap.RegisterClassMap<T>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
+        }
 
         public static IIdentityServerBuilder AddInMemoryClients(this IIdentityServerBuilder identityServerBuilder)
         {
+            identityServerBuilder.Services.AddTransient<IInMemorySettings<Client>, InMemorySettings<Client>>();
             var provider = identityServerBuilder.Services.BuildServiceProvider();
             var items = provider.GetService<ISeeder<Client>>()?.GetSeeds();
 
             if (items == null) return identityServerBuilder;
 
             identityServerBuilder.AddInMemoryClients(items);
+            return identityServerBuilder;
+        }
+        
+        public static IIdentityServerBuilder AddInMemoryResources(this IIdentityServerBuilder identityServerBuilder)
+        {
+            identityServerBuilder.Services.AddTransient<IInMemorySettings<Resource>, InMemorySettings<Resource>>();
+            var provider = identityServerBuilder.Services.BuildServiceProvider();
+            var apiResources = provider.GetService<ISeeder<ApiResource>>()?.GetSeeds().ToList();
+            var apiScopes = provider.GetService<ISeeder<ApiScope>>()?.GetSeeds().ToList();
+            var identityResources = provider.GetService<ISeeder<IdentityResource>>()?.GetSeeds().ToList();
+
+            if (apiResources?.Any() ?? false) identityServerBuilder.AddInMemoryApiResources(apiResources);
+            if (apiScopes?.Any() ?? false) identityServerBuilder.AddInMemoryApiScopes(apiScopes);
+            if (identityResources?.Any() ?? false) identityServerBuilder.AddInMemoryIdentityResources(identityResources);
+            
             return identityServerBuilder;
         }
     }
