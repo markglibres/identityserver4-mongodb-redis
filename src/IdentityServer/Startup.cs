@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 
@@ -111,15 +112,58 @@ namespace IdentityServer
             return identityServerBuilder;
         }
 
-        // public static IIdentityServerBuilder AddRedisCaching(this IIdentityServerBuilder identityServerBuilder)
-        // {
-        //     identityServerBuilder
-        //         .AddOperationalStore(options =>
-        //         {
-        //             options.RedisConnectionString = "---redis store connection string---";
-        //             options.Db = 1;
-        //         })
-        // }
+        public static IIdentityServerBuilder AddRedisCaching(
+            this IIdentityServerBuilder identityServerBuilder,
+            Action<RedisOptions> redisOptions)
+        {
+            var config = new RedisOptions();
+            redisOptions?.Invoke(config);
+            
+            identityServerBuilder
+                .AddOperationalStore(options =>
+                {
+                    options.RedisConnectionString = config.ConnectionString;
+                    options.Db = config.Db;
+                }).AddRedisCaching(options =>
+                {
+                    options.RedisConnectionString = config.ConnectionString;
+                    options.KeyPrefix = config.Prefix;
+                });
+
+            return identityServerBuilder;
+        }
+        
+        public static IIdentityServerBuilder AddRedisCaching(this IIdentityServerBuilder identityServerBuilder)
+        {
+            var config = new RedisOptions();
+            
+            var provider = identityServerBuilder.Services.BuildServiceProvider();
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            var configSection = configuration.GetSection("Identity:Redis").Get<RedisOptions>();
+
+            if (configSection != null)
+            {
+                if (!string.IsNullOrWhiteSpace(configSection.ConnectionString))
+                    config.ConnectionString = configSection.ConnectionString;
+
+                if (configSection.Db != 0) config.Db = configSection.Db;
+
+                if (!string.IsNullOrWhiteSpace(configSection.Prefix)) config.Prefix = configSection.Prefix;
+            }
+            
+            identityServerBuilder
+                .AddOperationalStore(options =>
+                {
+                    options.RedisConnectionString = config.ConnectionString;
+                    options.Db = config.Db;
+                }).AddRedisCaching(options =>
+                {
+                    options.RedisConnectionString = config.ConnectionString;
+                    options.KeyPrefix = config.Prefix;
+                });
+
+            return identityServerBuilder;
+        }
 
         private static void SetupDocument<T>()
         {
