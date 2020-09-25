@@ -10,6 +10,7 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 
@@ -19,18 +20,23 @@ namespace IdentityServer
     {
         public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole, TProfile>(
             this IServiceCollection services,
-            Action<IdentityServerOptions> options,
+            Action<MongoOptions> mongoOptions,
+            Action<IdentityServerOptions> identityOptions,
             Func<IServiceProvider, ICorsPolicyService> policy,
             Action<IIdentityServerBuilder> identityBuilder)
             where TUser : IdentityUser
             where TRole : IdentityRole
             where TProfile : ProfileService<TUser>
         {
-            var provider = services.BuildServiceProvider();
-            var configuration = provider.GetRequiredService<IConfiguration>();
-
-            services.Configure<MongoOptions>(configuration.GetSection("Identity:Mongo"));
-
+            var mongoConfig = new MongoOptions();
+            mongoOptions(mongoConfig);
+            
+            services.Configure<MongoOptions>(m =>
+            {
+                m.Database = mongoConfig.Database;
+                m.ConnectionString = mongoConfig.ConnectionString;
+            });
+            
             services.AddTransient<ISeedService<TUser>, UserService<TUser>>();
             services.AddTransient<ISeedService<Client>, ClientService>();
             services.AddTransient<ISeedService<ApiResource>, ResourceService<ApiResource>>();
@@ -46,13 +52,35 @@ namespace IdentityServer
             services.AddTransient<IUserService<TUser>, UserService<TUser>>();
             services.AddTransient<IClientService, ClientService>();
 
-            var builder = services.AddIdentityServer(options);
+            var builder = services.AddIdentityServer(identityOptions);
 
             identityBuilder(builder);
             builder
                 .AddAspNetIdentity<TUser>()
                 .AddProfileService<TProfile>();
             services.AddSingleton(policy);
+
+            return builder;
+        }
+        
+        public static IIdentityServerBuilder AddMongoDbIdentityServer<TUser, TRole, TProfile>(
+            this IServiceCollection services,
+            Action<IdentityServerOptions> options,
+            Func<IServiceProvider, ICorsPolicyService> policy,
+            Action<IIdentityServerBuilder> identityBuilder)
+            where TUser : IdentityUser
+            where TRole : IdentityRole
+            where TProfile : ProfileService<TUser>
+        {
+            var provider = services.BuildServiceProvider();
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            var configSection = configuration.GetSection("Identity:Mongo").Get<MongoOptions>();
+
+            var builder = services.AddMongoDbIdentityServer<TUser, TRole, TProfile>(mongoOptions =>
+            {
+                mongoOptions.Database = configSection.Database;
+                mongoOptions.ConnectionString = configSection.ConnectionString;
+            }, options, policy, identityBuilder);
 
             return builder;
         }
@@ -82,6 +110,16 @@ namespace IdentityServer
             identityServerBuilder.AddResourceStore<ResourceStore>();
             return identityServerBuilder;
         }
+
+        // public static IIdentityServerBuilder AddRedisCaching(this IIdentityServerBuilder identityServerBuilder)
+        // {
+        //     identityServerBuilder
+        //         .AddOperationalStore(options =>
+        //         {
+        //             options.RedisConnectionString = "---redis store connection string---";
+        //             options.Db = 1;
+        //         })
+        // }
 
         private static void SetupDocument<T>()
         {
