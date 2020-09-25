@@ -20,6 +20,7 @@ namespace IdentityServer.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ISeedUsers<ApplicationUser>, SeedUsers>();
+            services.AddSingleton<ISeedClients, SeedClients>();
 
             services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(options =>
             {
@@ -33,7 +34,8 @@ namespace IdentityServer.Web
                     .AddInMemoryIdentityResources(Config.GetIdentityResources())
                     .AddInMemoryApiResources(Config.GetApiResources())
                     .AddInMemoryApiScopes(Config.GetApiScopes())
-                    .AddInMemoryClients(Config.GetClients());
+                    //.AddMongoDbClientStore()
+                    .AddInMemoryClients();
             });
 
         }

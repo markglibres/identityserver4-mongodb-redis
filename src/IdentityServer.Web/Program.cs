@@ -15,6 +15,7 @@ namespace IdentityServer.Web
         {
             var host = CreateHostBuilder(args).Build();
             await host.Services.SeedUsers<ApplicationUser>();
+            await host.Services.SeedClients();
             await host.RunAsync();
         }
 

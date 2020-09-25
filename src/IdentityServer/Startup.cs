@@ -2,11 +2,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Configuration;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson.Serialization;
 
 namespace IdentityServer
 {
@@ -20,6 +22,7 @@ namespace IdentityServer
             where TRole: IdentityRole
             where TProfile: ProfileService<TUser>
         {
+            
             var provider = services.BuildServiceProvider();
             var configuration = provider.GetRequiredService<IConfiguration>();
             
@@ -32,8 +35,10 @@ namespace IdentityServer
             services.AddTransient<IRoleStore<TRole>, RoleStore<TRole>>();
             services.AddTransient(typeof(IRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IUserService<TUser>, UserService<TUser>>();
+            services.AddTransient<IClientService, ClientService>();
 
             var builder = services.AddIdentityServer(options);
+            
             identityBuilder(builder);
             builder
                 .AddAspNetIdentity<TUser>()
@@ -42,28 +47,27 @@ namespace IdentityServer
 
             return builder;
         }
-        
-        public static async Task SeedUsers<TUser>(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
-            where TUser: IdentityUser
+
+        public static IIdentityServerBuilder AddMongoDbClientStore(this IIdentityServerBuilder identityServerBuilder)
         {
-            using var scope = serviceProvider.CreateScope();
-
-            var users = scope
-                .ServiceProvider
-                .GetService<ISeedUsers<TUser>>()
-                ?.GetUsers();
-            
-            if(users == null) return;
-            
-            var userService = scope
-                .ServiceProvider
-                .GetService<IUserService<TUser>>();
-
-            foreach (var user in users)
+            BsonClassMap.RegisterClassMap<Client>(map =>
             {
-                await userService.Create(user, cancellationToken);
-            }
-        } 
-        
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
+            identityServerBuilder.AddClientStore<ClientStore>();
+            return identityServerBuilder;
+        }
+
+        public static IIdentityServerBuilder AddInMemoryClients(this IIdentityServerBuilder identityServerBuilder)
+        {
+            var provider = identityServerBuilder.Services.BuildServiceProvider();
+            var items = provider.GetService<ISeedClients>()?.GetClients();
+
+            if (items == null) return identityServerBuilder;
+
+            identityServerBuilder.AddInMemoryClients(items);
+            return identityServerBuilder;
+        }
     }
 }
