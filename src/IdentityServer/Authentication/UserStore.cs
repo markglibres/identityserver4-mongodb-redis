@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Identity;
 namespace IdentityServer.Stores
 {
     public class UserStore<T> : IUserStore<T>, IUserPasswordStore<T>
-        where T : IdentityUser
+        where T: IdentityUser
     {
-        private readonly IRepository<T> _repository;
+        private readonly IIdentityRepository<T> _identityRepository;
 
-        public UserStore(IRepository<T> repository)
+        public UserStore(IIdentityRepository<T> identityRepository)
         {
-            _repository = repository;
+            _identityRepository = identityRepository;
         }
 
         public Task<string> GetPasswordHashAsync(T user, CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ namespace IdentityServer.Stores
             if (string.IsNullOrWhiteSpace(user.UserName)) return IdentityResult.Failed();
             var result = await FindByNameAsync(user.UserName, CancellationToken.None);
             if (result != null) return IdentityResult.Failed();
-            await _repository.Insert(user);
+            await _identityRepository.Insert(user);
             return IdentityResult.Success;
         }
 
@@ -50,7 +50,7 @@ namespace IdentityServer.Stores
             cancellationToken.ThrowIfCancellationRequested();
             var result = await FindByIdAsync(user.Id, CancellationToken.None);
             if (result == null) return IdentityResult.Failed();
-            await _repository.Delete(u => u.Id == user.Id);
+            await _identityRepository.Delete(u => u.Id == user.Id);
             return IdentityResult.Success;
         }
 
@@ -58,7 +58,7 @@ namespace IdentityServer.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(userId)) throw new RequiredArgumentException(nameof(userId));
-            var result = await _repository.SingleOrDefault(u => u.Id == userId);
+            var result = await _identityRepository.SingleOrDefault(u => u.Id == userId);
             return result;
         }
 
@@ -67,7 +67,7 @@ namespace IdentityServer.Stores
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(normalizedUserName))
                 throw new RequiredArgumentException(nameof(normalizedUserName));
-            var result = await _repository.SingleOrDefault(u =>
+            var result = await _identityRepository.SingleOrDefault(u =>
                 u.UserName.ToLowerInvariant() == normalizedUserName.ToLowerInvariant());
             return result;
         }
@@ -118,7 +118,7 @@ namespace IdentityServer.Stores
             if (user == null) return IdentityResult.Failed();
             var result = await FindByIdAsync(user.Id, CancellationToken.None);
             if (result == null) IdentityResult.Failed();
-            await _repository.Update(user, u => u.Id == user.Id);
+            await _identityRepository.Update(user, u => u.Id == user.Id);
             return IdentityResult.Success;
         }
     }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Repositories
 {
-    public interface IRepository<T> where T : class
+    public interface IIdentityRepository<T> where T : class
     {
         Task<IList<T>> Find(Expression<Func<T, bool>> expression);
         Task<IList<T>> FindAnyIn(string propertyName, IEnumerable<string> items);

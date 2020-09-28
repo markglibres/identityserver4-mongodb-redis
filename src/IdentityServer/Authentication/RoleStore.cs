@@ -8,11 +8,11 @@ namespace IdentityServer.Stores
     public class RoleStore<T> : IRoleStore<T>
         where T : IdentityRole
     {
-        private readonly IRepository<T> _repository;
+        private readonly IIdentityRepository<T> _identityRepository;
 
-        public RoleStore(IRepository<T> repository)
+        public RoleStore(IIdentityRepository<T> identityRepository)
         {
-            _repository = repository;
+            _identityRepository = identityRepository;
         }
 
         public void Dispose()
@@ -24,7 +24,7 @@ namespace IdentityServer.Stores
             cancellationToken.ThrowIfCancellationRequested();
             var result = await FindByNameAsync(role.Name, CancellationToken.None);
             if (result != null) return IdentityResult.Failed();
-            await _repository.Insert(role);
+            await _identityRepository.Insert(role);
             return IdentityResult.Success;
         }
 
@@ -33,7 +33,7 @@ namespace IdentityServer.Stores
             cancellationToken.ThrowIfCancellationRequested();
             var result = await FindByIdAsync(role.Id, CancellationToken.None);
             if (result == null) return IdentityResult.Failed();
-            await _repository.Delete(r => r.Id == role.Id);
+            await _identityRepository.Delete(r => r.Id == role.Id);
             return IdentityResult.Success;
         }
 
@@ -41,7 +41,7 @@ namespace IdentityServer.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(roleId)) throw new RequiredArgumentException(nameof(roleId));
-            var result = await _repository.SingleOrDefault(r => r.Id == roleId);
+            var result = await _identityRepository.SingleOrDefault(r => r.Id == roleId);
             return result;
         }
 
@@ -50,7 +50,7 @@ namespace IdentityServer.Stores
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(normalizedRoleName))
                 throw new RequiredArgumentException(nameof(normalizedRoleName));
-            var result = await _repository.SingleOrDefault(r => r.NormalizedName == normalizedRoleName);
+            var result = await _identityRepository.SingleOrDefault(r => r.NormalizedName == normalizedRoleName);
             return result;
         }
 
@@ -99,7 +99,7 @@ namespace IdentityServer.Stores
             if (role == null) return IdentityResult.Failed();
             var result = await FindByIdAsync(role.Id, CancellationToken.None);
             if (result == null) IdentityResult.Failed();
-            await _repository.Update(role, r => r.Id == role.Id);
+            await _identityRepository.Update(role, r => r.Id == role.Id);
             return IdentityResult.Success;
         }
     }

@@ -7,9 +7,9 @@ namespace IdentityServer.Services
 {
     public class ClientService : IClientService, ISeedService<Client>
     {
-        private readonly IRepository<Client> _repository;
+        private readonly IIdentityRepository<Client> _repository;
 
-        public ClientService(IRepository<Client> repository)
+        public ClientService(IIdentityRepository<Client> repository)
         {
             _repository = repository;
         }

@@ -7,9 +7,9 @@ namespace IdentityServer.Stores
 {
     public class ClientStore : IClientStore
     {
-        private readonly IRepository<Client> _repository;
+        private readonly IIdentityRepository<Client> _repository;
 
-        public ClientStore(IRepository<Client> repository)
+        public ClientStore(IIdentityRepository<Client> repository)
         {
             _repository = repository;
         }

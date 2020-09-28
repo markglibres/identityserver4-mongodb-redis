@@ -1,6 +1,6 @@
 namespace IdentityServer
 {
-    public class IdentityOptions
+    public class AuthorizationOptions
     {
         public string Uri { get; set; }
     }

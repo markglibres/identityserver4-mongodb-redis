@@ -9,9 +9,9 @@ namespace IdentityServer.Services
     public class ResourceService<T> : IResourceService<T>, ISeedService<T>
         where T: Resource
     {
-        private readonly IRepository<T> _repository;
+        private readonly IIdentityRepository<T> _repository;
 
-        public ResourceService(IRepository<T> repository)
+        public ResourceService(IIdentityRepository<T> repository)
         {
             _repository = repository;
         }

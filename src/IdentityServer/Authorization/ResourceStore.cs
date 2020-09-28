@@ -9,14 +9,14 @@ namespace IdentityServer.Stores
 {
     public class ResourceStore : IResourceStore
     {
-        private readonly IRepository<ApiResource> _apiResourceRepository;
-        private readonly IRepository<ApiScope> _apiScopeRepository;
-        private readonly IRepository<IdentityResource> _identityResourceRepository;
+        private readonly IIdentityRepository<ApiResource> _apiResourceRepository;
+        private readonly IIdentityRepository<ApiScope> _apiScopeRepository;
+        private readonly IIdentityRepository<IdentityResource> _identityResourceRepository;
 
         public ResourceStore(
-            IRepository<IdentityResource> identityResourceRepository,
-            IRepository<ApiScope> apiScopeRepository,
-            IRepository<ApiResource> apiResourceRepository)
+            IIdentityRepository<IdentityResource> identityResourceRepository,
+            IIdentityRepository<ApiScope> apiScopeRepository,
+            IIdentityRepository<ApiResource> apiResourceRepository)
         {
             _identityResourceRepository = identityResourceRepository;
             _apiScopeRepository = apiScopeRepository;

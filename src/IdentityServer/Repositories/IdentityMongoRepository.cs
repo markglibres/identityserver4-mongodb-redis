@@ -9,12 +9,12 @@ using MongoDB.Driver;
 
 namespace IdentityServer.Repositories
 {
-    public class MongoRepository<T> : IRepository<T>
+    public class IdentityMongoRepository<T> : IIdentityRepository<T>
         where T : class, new()
     {
         private readonly IMongoDatabase _database;
 
-        public MongoRepository(IOptions<MongoOptions> options)
+        public IdentityMongoRepository(IOptions<IdentityMongoOptions> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _database = client.GetDatabase(options.Value.Database);

@@ -1,9 +1,15 @@
+using IdentityServer.Authentication;
+using IdentityServer.Authorization;
+using IdentityServer.Repositories;
 using IdentityServer.Services;
+using IdentityServer.Stores;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,26 +19,31 @@ namespace IdentityServer.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISeeder<ApplicationUser>, SeedUsers>();
-            services.AddSingleton<ISeeder<Client>, SeedClients>();
-            services.AddSingleton<ISeeder<ApiResource>, SeedApiResources>();
-            services.AddSingleton<ISeeder<ApiScope>, SeedApiScopes>();
-            services.AddSingleton<ISeeder<IdentityResource>, SeedIdentityResources>();
-
-            services.AddMongoDbIdentityServer<ApplicationUser, ApplicationRole, ApplicationProfile>(
-                builder =>
+            services.AddIdentityServerMongoDb<ApplicationUser, ApplicationRole>(options =>
                 {
-                    builder.AddDeveloperSigningCredential() // use a valid signing cert in production
-                        //.AddInMemoryResources()
-                        //.AddInMemoryClients()
-                        .AddMongoDbResources()
-                        .AddMongoDbClientStore()
-                        .AddRedisCaching();
-                });
+                    options.IssuerUri = "http://localhost:5000";
+                }, provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
+                {
+                    AllowAll = true
+                })
+                .AddRedisCaching()
+                .AddSeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
+                .AddSeedClients<SeedClients>()
+                .AddSeedApiResources<SeedApiResources>()
+                .AddSeedApiScope<SeedApiScopes>()
+                .AddSeedIdentityResource<SeedIdentityResources>()
+                .AddDeveloperSigningCredential();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,8 +1,8 @@
 namespace IdentityServer.Repositories
 {
-    public class RedisOptions
+    public class IdentityRedisOptions
     {
-        public RedisOptions()
+        public IdentityRedisOptions()
         {
             ConnectionString = "localhost";
             Db = -1;
