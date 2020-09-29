@@ -1,14 +1,8 @@
-using IdentityServer.Authentication;
-using IdentityServer.Authorization;
-using IdentityServer.Repositories;
-using IdentityServer.Services;
-using IdentityServer.Stores;
-using IdentityServer4.Models;
+using IdentityServer.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,29 +13,30 @@ namespace IdentityServer.Web
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServerMongoDb(provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
-                {
-                    AllowAll = true
-                })
+            services.AddIdentityServerMongoDb(provider =>
+                    new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
+                    {
+                        AllowAll = true
+                    })
                 .AddRedisCaching()
-                .AddClients<SeedClients>()
-                .AddApiResources<SeedApiResources>()
-                .AddApiScope<SeedApiScopes>()
-                .AddIdentityResource<SeedIdentityResources>()
                 .AddDeveloperSigningCredential()
                 .AddResourceOwnerPassword<ApplicationUser, ApplicationRole>()
-                .AddResourceOwnerPasswordUsers<ApplicationUser, SeedUsers<ApplicationUser>>();
-
+                .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
+                .SeedClients<SeedClients>()
+                .SeedApiResources<SeedApiResources>()
+                .SeedApiScope<SeedApiScopes>()
+                .SeedIdentityResource<SeedIdentityResources>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
