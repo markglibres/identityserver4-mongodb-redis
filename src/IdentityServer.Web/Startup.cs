@@ -29,7 +29,7 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServerMongoDb<ApplicationUser, ApplicationRole>(options =>
+            services.AddIdentityServerMongoDb(options =>
                 {
                     options.IssuerUri = "http://localhost:5000";
                 }, provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
@@ -37,12 +37,13 @@ namespace IdentityServer.Web
                     AllowAll = true
                 })
                 .AddRedisCaching()
-                .AddSeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
-                .AddSeedClients<SeedClients>()
-                .AddSeedApiResources<SeedApiResources>()
-                .AddSeedApiScope<SeedApiScopes>()
-                .AddSeedIdentityResource<SeedIdentityResources>()
-                .AddDeveloperSigningCredential();
+                .AddClients<SeedClients>()
+                .AddApiResources<SeedApiResources>()
+                .AddApiScope<SeedApiScopes>()
+                .AddIdentityResource<SeedIdentityResources>()
+                .AddDeveloperSigningCredential()
+                .AddResourceOwnerPassword<ApplicationUser, ApplicationRole>()
+                .AddResourceOwnerPasswordUsers<ApplicationUser, SeedUsers<ApplicationUser>>();
 
         }
 

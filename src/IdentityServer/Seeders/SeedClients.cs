@@ -25,7 +25,8 @@ namespace IdentityServer.Web
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
                         "myapi.access"
-                    }
+                    },
+                    AllowOfflineAccess = true
                 },
                 new Client
                 {

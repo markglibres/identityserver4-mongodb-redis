@@ -24,6 +24,7 @@ namespace IdentityServer.Authorization
             Action<IdentityServerOptions> setupIdentityOption,
             Func<IServiceProvider, ICorsPolicyService> setupPolicy)
         {
+            services.AddIdentityMongoDb();
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton(setupPolicy);
             
@@ -35,22 +36,16 @@ namespace IdentityServer.Authorization
             return builder;
         }
         
-        public static IIdentityServerBuilder AddIdentityServerMongoDb<TUser, TRole>(
-            this IServiceCollection services,
-            Action<IdentityServerOptions> setupIdentityOption,
-            Func<IServiceProvider, ICorsPolicyService> setupPolicy)
+        public static IIdentityServerBuilder AddResourceOwnerPassword<TUser, TRole>(
+            this IIdentityServerBuilder builder)
             where TUser: IdentityUser
             where TRole: IdentityRole
         {
+            var services = builder.Services;
             services.AddTransient<IClientService, ClientService>();
-            services.AddSingleton(setupPolicy);
-            services.AddIdentityUserMongoDb<TUser, TRole>();
+            services.AddIdentityUser<TUser, TRole>();
             
-            var builder = services
-                .AddIdentityServer(setupIdentityOption)
-                .AddMongoDbResources()
-                .AddMongoDbClientStore()
-                .AddIdentityUser<TUser>();
+            builder.AddIdentityUser<TUser>();
             
             return builder;
         }
@@ -95,7 +90,7 @@ namespace IdentityServer.Authorization
             return builder.AddAspNetIdentity<TUser>();
         }
         
-        public static IIdentityServerBuilder AddSeedUsers<TUser, TSeeder>(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddResourceOwnerPasswordUsers<TUser, TSeeder>(this IIdentityServerBuilder builder)
             where TUser: IdentityUser
             where TSeeder: class, ISeeder<TUser>
         {
@@ -105,7 +100,7 @@ namespace IdentityServer.Authorization
             return builder;
         }
 
-        public static IIdentityServerBuilder AddSeedClients<TSeeder>(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddClients<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<Client>
         {
             var services = builder.Services;
@@ -115,7 +110,7 @@ namespace IdentityServer.Authorization
             return builder;
         }
         
-        public static IIdentityServerBuilder AddSeedApiResources<TSeeder>(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddApiResources<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<ApiResource>
         {
             var services = builder.Services;
@@ -125,7 +120,7 @@ namespace IdentityServer.Authorization
             return builder;
         }
         
-        public static IIdentityServerBuilder AddSeedApiScope<TSeeder>(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddApiScope<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<ApiScope>
         {
             var services = builder.Services;
@@ -135,7 +130,7 @@ namespace IdentityServer.Authorization
             return builder;
         }
         
-        public static IIdentityServerBuilder AddSeedIdentityResource<TSeeder>(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddIdentityResource<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<IdentityResource>
         {
             var services = builder.Services;

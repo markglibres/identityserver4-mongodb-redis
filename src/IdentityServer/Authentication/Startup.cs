@@ -10,7 +10,7 @@ namespace IdentityServer.Authentication
 {
     public static class Startup
     {
-        public static IServiceCollection AddIdentityUserMongoDb<TUser, TRole>(this IServiceCollection services)
+        public static IServiceCollection AddIdentityUser<TUser, TRole>(this IServiceCollection services)
             where TUser : IdentityUser
             where TRole : IdentityRole
         {
