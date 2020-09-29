@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using System.Linq;
 using IdentityServer.Authentication;
 using IdentityServer.Repositories;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 
 namespace IdentityServer.Authorization
@@ -24,6 +26,7 @@ namespace IdentityServer.Authorization
             Action<IdentityServerOptions> setupIdentityOption,
             Func<IServiceProvider, ICorsPolicyService> setupPolicy)
         {
+            services.AddIdentityConfig();
             services.AddIdentityMongoDb();
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton(setupPolicy);
@@ -34,6 +37,35 @@ namespace IdentityServer.Authorization
                 .AddMongoDbClientStore();
             
             return builder;
+        }
+        
+        public static IIdentityServerBuilder AddIdentityServerMongoDb(
+            this IServiceCollection services,
+            Func<IServiceProvider, ICorsPolicyService> setupPolicy)
+        {
+            var config = services.AddIdentityConfig();
+
+            var builder = services.AddIdentityServerMongoDb(options =>
+            {
+                options.IssuerUri = config.Authority;
+            }, setupPolicy);
+            
+            return builder;
+        }
+
+        public static IdentityConfig AddIdentityConfig(this IServiceCollection services)
+        {
+            var provider = services.BuildServiceProvider();
+            var configuration = provider.GetService<IConfiguration>();
+
+            var config = provider.GetService<IOptions<IdentityConfig>>();
+            
+            if (config != null) return config.Value;
+            
+            var configSection = configuration.GetSection("Identity");
+            services.Configure<IdentityConfig>(configSection);
+
+            return configSection.Get<IdentityConfig>();
         }
         
         public static IIdentityServerBuilder AddResourceOwnerPassword<TUser, TRole>(

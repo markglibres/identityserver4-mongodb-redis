@@ -29,10 +29,7 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServerMongoDb(options =>
-                {
-                    options.IssuerUri = "http://localhost:5000";
-                }, provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
+            services.AddIdentityServerMongoDb(provider => new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
                 {
                     AllowAll = true
                 })
