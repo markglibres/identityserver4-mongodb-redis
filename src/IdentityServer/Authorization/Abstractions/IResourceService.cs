@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Services
+namespace IdentityServer.Authorization.Abstractions
 {
     public interface IResourceService<T> where T : Resource
     

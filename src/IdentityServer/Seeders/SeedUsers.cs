@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Web
+namespace IdentityServer.Seeders
 {
     public class SeedUsers<T> : ISeeder<T>
         where T: IdentityUser

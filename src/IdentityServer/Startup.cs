@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using IdentityServer.Repositories;
-using IdentityServer.Services;
-using IdentityServer.Stores;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;

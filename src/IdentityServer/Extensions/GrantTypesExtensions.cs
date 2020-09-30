@@ -1,4 +1,7 @@
-using IdentityServer.Services;
+using IdentityServer.Authentication;
+using IdentityServer.Authorization;
+using IdentityServer.Authorization.Abstractions;
+using IdentityServer.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

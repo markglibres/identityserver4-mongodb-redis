@@ -1,10 +1,11 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Repositories;
+using IdentityServer.Authorization.Abstractions;
+using IdentityServer.Repositories.Abstractions;
+using IdentityServer.Seeders;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Services
+namespace IdentityServer.Authorization
 {
     public class ResourceService<T> : IResourceService<T>, ISeedService<T>
         where T: Resource

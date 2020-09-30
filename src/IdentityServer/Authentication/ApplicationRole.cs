@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Web
+namespace IdentityServer.Authentication
 {
-    public class ApplicationRole : IdentityRole
+    public partial class ApplicationRole : IdentityRole
     {
     }
 }

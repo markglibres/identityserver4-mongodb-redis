@@ -1,8 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Services
+namespace IdentityServer.Authentication.Abstractions
 {
     public interface IUserService<in T>
     {

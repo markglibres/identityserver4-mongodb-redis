@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using IdentityServer.Authentication;
 using IdentityServer.Extensions;
+using IdentityServer.Seeders;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using IdentityServer_ApplicationUser = IdentityServer.Web.ApplicationUser;
+using IdentityServer_ApplicationUser = IdentityServer.Authentication.ApplicationUser;
 
 namespace IdentityServer.Web
 {
@@ -33,7 +35,7 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddResourceOwnerPassword<ApplicationUser, ApplicationRole>()
+                .AddResourceOwnerPassword<IdentityServer_ApplicationUser, ApplicationRole>()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<SeedClients>()
                 .SeedApiResources<SeedApiResources>()

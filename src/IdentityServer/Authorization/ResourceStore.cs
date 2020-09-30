@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer.Repositories;
+using IdentityServer.Repositories.Abstractions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 
-namespace IdentityServer.Stores
+namespace IdentityServer.Authorization
 {
     public class ResourceStore : IResourceStore
     {

@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Repositories;
+using IdentityServer.Repositories.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Stores
+namespace IdentityServer.Authentication
 {
     public class RoleStore<T> : IRoleStore<T>
         where T : IdentityRole

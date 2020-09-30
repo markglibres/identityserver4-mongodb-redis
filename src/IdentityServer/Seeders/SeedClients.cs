@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using IdentityServer.Services;
 using IdentityServer4;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Web
+namespace IdentityServer.Seeders
 {
     public class SeedClients : ISeeder<Client>
     {

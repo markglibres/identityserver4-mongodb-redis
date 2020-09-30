@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Stores
+namespace IdentityServer.Authentication
 {
     public class UserPasswordHasher<T> : PasswordHasher<T>
         where T: IdentityUser
