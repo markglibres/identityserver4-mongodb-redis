@@ -30,8 +30,7 @@ namespace IdentityServer.Web
             services.AddIdentityServerMongoDb(provider =>
                     new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
                     {
-                        AllowAll = true,
-                        AllowedOrigins = new List<string> { }
+                        AllowAll = true
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
