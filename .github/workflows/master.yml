@@ -66,8 +66,25 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@main
-        
+
       - name: Create package and publish
         run: ./.github/scripts/nuget.sh
         env:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
+
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Add project version change
+        run: |
+          git add src/IdentityServer/IdentityServer.csproj
+      - name: Commit files
+        run: |
+          git config --local user.email "markglibres@gmail.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "bump version" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

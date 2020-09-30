@@ -9,7 +9,3 @@ cd ../../src/IdentityServer
 
 dotnet pack IdentityServer.csproj -c Release --output nupkgs
 dotnet nuget push nupkgs/*.nupkg --api-key ${NUGET_APIKEY} --source https://api.nuget.org/v3/index.json
-
-git add IdentityServer.csproj
-git commit -m "bump version"
-git push
