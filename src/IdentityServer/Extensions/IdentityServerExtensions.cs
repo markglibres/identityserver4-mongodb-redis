@@ -41,7 +41,7 @@ namespace IdentityServer.Extensions
             return builder;
         }
 
-        public static IIdentityServerBuilder AddRedisCaching(this IIdentityServerBuilder identityServerBuilder)
+        public static IIdentityServerBuilder AddRedisCache(this IIdentityServerBuilder identityServerBuilder)
         {
             var config = new IdentityRedisOptions();
 
@@ -73,7 +73,7 @@ namespace IdentityServer.Extensions
             return identityServerBuilder;
         }
 
-        public static IIdentityServerBuilder AddRedisCaching(
+        public static IIdentityServerBuilder AddRedisCache(
             this IIdentityServerBuilder identityServerBuilder,
             Action<IdentityRedisOptions> redisOptions)
         {

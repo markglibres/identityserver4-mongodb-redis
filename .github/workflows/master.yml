@@ -58,3 +58,14 @@ jobs:
 
       - name: Stop service dependencies
         run: ./.github/scripts/functional.sh --down
+
+  nuget:
+    name: Publish package to nuget
+    runs-on: [ubuntu-latest]
+    needs: [ functional ]
+    steps:
+      - name: Create NuGet package
+        run: dotnet pack -c Release src/IdentityServer
+
+      - name: Push package to NuGet
+        run: dotnet nuget push src/IdentityServer/bin/Release/*.nupkg --api-key ${{ NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json

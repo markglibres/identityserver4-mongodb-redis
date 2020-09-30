@@ -29,7 +29,7 @@ namespace IdentityServer.Web
                     {
                         AllowAll = true
                     })
-                .AddRedisCaching()
+                .AddRedisCache()
                 .AddDeveloperSigningCredential()
                 .AddResourceOwnerPassword<ApplicationUser, ApplicationRole>()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
