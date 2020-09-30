@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using IdentityServer.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
@@ -27,7 +28,8 @@ namespace IdentityServer.Web
             services.AddIdentityServerMongoDb(provider =>
                     new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
                     {
-                        AllowAll = true
+                        AllowAll = true,
+                        AllowedOrigins = new List<string> { }
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()

@@ -31,13 +31,10 @@ namespace IdentityServer.Services
             foreach (var item in items) await service.Create(item, cancellationToken);
         }
         
-        public static async Task Initialize<TUser>(this IServiceProvider serviceProvider,
+        public static async Task Initialize(this IServiceProvider serviceProvider,
             CancellationToken cancellationToken = default)
-            where TUser: IdentityUser
         {
             using var scope = serviceProvider.CreateScope();
-
-            await serviceProvider.Seed<TUser>(cancellationToken);
             
             if (scope.ServiceProvider.GetService<IInMemorySettings<Client>>() == null)
             {
@@ -50,6 +47,15 @@ namespace IdentityServer.Services
                 await serviceProvider.Seed<ApiScope>(cancellationToken);
                 await serviceProvider.Seed<IdentityResource>(cancellationToken);    
             }
+        }
+        
+        public static async Task Initialize<TUser>(this IServiceProvider serviceProvider,
+            CancellationToken cancellationToken = default)
+            where TUser: IdentityUser
+        {
+            using var scope = serviceProvider.CreateScope();
+            await serviceProvider.Seed<TUser>(cancellationToken);
+            
         }
     }
 }
