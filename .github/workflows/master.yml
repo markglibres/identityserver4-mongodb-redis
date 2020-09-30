@@ -64,6 +64,9 @@ jobs:
     runs-on: [ubuntu-latest]
     needs: [ functional ]
     steps:
+      - name: Checkout branch
+        uses: actions/checkout@main
+        
       - name: Create package and publish
         run: ./.github/scripts/nuget.sh
         env:
