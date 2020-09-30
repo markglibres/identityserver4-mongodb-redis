@@ -65,7 +65,7 @@ jobs:
     needs: [ functional ]
     steps:
       - name: Create NuGet package
-        run: dotnet pack -c Release src/IdentityServer
+        run: dotnet pack -c Release src/IdentityServer/IdentityServer.csproj
 
       - name: Push package to NuGet
         run: dotnet nuget push src/IdentityServer/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
