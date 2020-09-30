@@ -63,9 +63,13 @@ jobs:
     name: Publish package to nuget
     runs-on: [ubuntu-latest]
     needs: [ functional ]
+    defaults:
+      run:
+        working-directory: src/IdentityServer    
+
     steps:
       - name: Create NuGet package
-        run: dotnet pack -c Release src/IdentityServer/IdentityServer.csproj
+        run: dotnet pack -c Release
 
       - name: Push package to NuGet
-        run: dotnet nuget push src/IdentityServer/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push bin/Release/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
