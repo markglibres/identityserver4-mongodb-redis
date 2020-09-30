@@ -69,7 +69,7 @@ jobs:
 
     steps:
       - name: Create NuGet package
-        run: dotnet pack -c Release --output nupkgs
+        run: dotnet pack IdentityServer.csproj -c Release --output nupkgs
 
       - name: Push package to NuGet
         run: dotnet nuget push nupkgs/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
