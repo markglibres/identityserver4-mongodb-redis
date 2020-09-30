@@ -42,7 +42,7 @@ services:
       - 27017:27017
     networks:
       - identity
-    restart: always
+    restart: always 
 
 networks:
     identity:
