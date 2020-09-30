@@ -65,11 +65,11 @@ jobs:
     needs: [ functional ]
     defaults:
       run:
-        working-directory: src/IdentityServer    
+        working-directory: ./src/IdentityServer    
 
     steps:
       - name: Create NuGet package
-        run: dotnet pack -c Release
+        run: dotnet pack -c Release --output nupkgs
 
       - name: Push package to NuGet
-        run: dotnet nuget push bin/Release/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push nupkgs/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
