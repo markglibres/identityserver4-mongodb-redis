@@ -68,4 +68,4 @@ jobs:
         run: dotnet pack -c Release src/IdentityServer
 
       - name: Push package to NuGet
-        run: dotnet nuget push src/IdentityServer/bin/Release/*.nupkg --api-key ${{ NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push src/IdentityServer/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
