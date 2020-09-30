@@ -218,7 +218,7 @@ Logout is not supported with ROPG, but token revocation is supported but not for
 	</details>    
 5.  Create classes that implements the following:
 	```csharp
-	1. IUserStore<ApplicationUser>
+	1. IUserStore<ApplicationUser> 
 	2. IUserPasswordStore<ApplicationUser>
 	3. IPasswordHasher<ApplicationUser>
 	4. IRoleStore<ApplicationRole>
