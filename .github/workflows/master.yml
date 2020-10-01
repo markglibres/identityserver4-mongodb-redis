@@ -108,6 +108,12 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@main
 
+      - name: Display files
+        run: |
+          ls -al
+          ls -al src
+          ls -al src/IdentityServer.Web
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
