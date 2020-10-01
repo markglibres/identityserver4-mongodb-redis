@@ -1,3 +1,4 @@
+
 ![Build Master](https://github.com/markglibres/identityserver4-mongodb-redis/workflows/Build%20Master/badge.svg?branch=master) [![NuGet Badge](https://buildstats.info/nuget/BizzPo.IdentityServer)](https://www.nuget.org/packages/BizzPo.IdentityServer/)
 
 # IdentityServer4 with MongoDb & Redis cache
@@ -11,9 +12,26 @@ This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis 
 * Comes with an optional seed data that you can use to start testing IdentityServer4
 * Easy way to seed data
 
-## Installation
-1. Install NuGet package [BizzPo.IdentityServer](https://www.nuget.org/packages/BizzPo.IdentityServer/)
-2. In `appsettings.json`, add configuration for mongodb and redis
+## Run sample IdentityServer with Docker
+1. Clone this repository
+	```bash
+	git clone git@github.com:markglibres/identityserver4-mongodb-redis.git
+	```
+2. Build docker images
+	```bash
+	docker-compose -f src/docker-compose.yaml build
+	```
+3. Run docker containers
+	```bash
+	docker-compose -f src/docker-compose.yaml up
+	```
+4. Install Postman UI and import the postman folder `/postman`
+5. On Postman UI, uun sample Login, Logout, Refresh Token and Get User endpoints with `identity_docker` environment
+
+## Installation via NuGet
+1. Create empty dotnetcore API project
+2. Install NuGet package [BizzPo.IdentityServer](https://www.nuget.org/packages/BizzPo.IdentityServer/)
+3. In `appsettings.json`, add configuration for mongodb and redis
 	```json
 	"Identity": {
 		"Authority": "http://localhost:5000", /* url of your identity server */
