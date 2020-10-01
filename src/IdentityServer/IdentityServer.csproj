@@ -4,7 +4,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <PackageId>BizzPo.IdentityServer</PackageId>
-        <Version>1.0.0.15</Version>
+        <Version>1.0.0.16</Version>
         <Authors>Mark Gil Libres</Authors>
         <Company>BizzPo</Company>
     </PropertyGroup>
