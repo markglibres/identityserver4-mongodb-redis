@@ -93,6 +93,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ functional ]
     steps:
+      - name: Checkout branch
+        uses: actions/checkout@main
+        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -109,8 +112,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: /src/IdentityServer.Web/Dockerfile
+          context: ./src
+          file: IdentityServer.Web/Dockerfile
           push: true
           tags: bizzpo/identityserver4:latest
       -
