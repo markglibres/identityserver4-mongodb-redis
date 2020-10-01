@@ -26,7 +26,7 @@ This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis 
 	docker-compose -f src/docker-compose.yaml up
 	```
 4. Install Postman UI and import the postman folder `/postman`
-5. On Postman UI, uun sample Login, Logout, Refresh Token and Get User endpoints with `identity_docker` environment
+5. On Postman UI, run sample Login, Logout, Refresh Token and Get User endpoints with `identity_docker` environment
 
 ## Installation via NuGet
 1. Create empty dotnetcore API project
