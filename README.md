@@ -6,7 +6,8 @@
 # IdentityServer4 with MongoDb & Redis cache
 "[IdentityServer](https://github.com/IdentityServer/IdentityServer4) is a free, open source [OpenID Connect](http://openid.net/connect/) and [OAuth 2.0](https://tools.ietf.org/html/rfc6749) framework for [ASP.NET](http://asp.net/) Core and is officially [certified](https://openid.net/certification/) by the [OpenID Foundation](https://openid.net/) and thus spec-compliant and interoperable."
 
-This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis cache. 
+This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis cache. Developers can quickly spin up a docker image and start developing their apps without paying for $$$ on authorization service.
+
 ## Features
 * MongoDb store 
 * Redis cache as provided by [IdentityServer4.Contrib.RedisStore](https://github.com/AliBazzi/IdentityServer4.Contrib.RedisStore)
