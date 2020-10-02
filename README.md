@@ -1,4 +1,5 @@
 
+
 ![Build Master](https://github.com/markglibres/identityserver4-mongodb-redis/workflows/Build%20Master/badge.svg?branch=master) [![NuGet Badge](https://buildstats.info/nuget/BizzPo.IdentityServer)](https://www.nuget.org/packages/BizzPo.IdentityServer/) [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/bizzpo/identityserver4/)
 
 # IdentityServer4 with MongoDb & Redis cache
@@ -12,7 +13,79 @@ This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis 
 * Comes with an optional seed data that you can use to start testing IdentityServer4
 * Easy way to seed data
 
-## Run sample IdentityServer with Docker
+## Contents
+[Run sample IdentityServer with docker hub image](#Run-sample-IdentityServer-with-docker-hub-image)
+[Run sample IdentityServer with local docker](#Run-sample-IdentityServer-with-local-docker)
+[Installation via NuGet](#Installation-via-NuGet)
+[Configure seed data](#Configure-seed-data)
+[Configure for Resource Owner Password grant](#Configure-for-Resource-Owner-Password-grant)
+[Configure seed users](#Configure-seed-users)
+[How to seed data](#Built-in-seed-data)
+
+## Run sample IdentityServer with docker hub image
+1. Create docker-compose file i.e. `docker-compose-identity.yaml` and pull image from `bizzpo/identityserver4`. For example:
+	```yaml
+	version: '3.4'
+	services:
+		identity:
+			image: bizzpo/identityserver4
+			environment:
+				- Environment=Development
+				- "Identity__Mongo__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver"
+				- Identity__Mongo__Database=Identity
+				- Identity__Redis__ConnectionString=redis
+				- Identity__Redis__Db=-1
+				- Identity__Redis__Prefix=identity
+			container_name: identity
+			depends_on:
+				- redis
+				- mongodb
+			ports:
+				- 5000:80
+			networks:
+				- identity
+			restart: always
+		redis:
+			image: bitnami/redis
+			ports:
+				- 6379:6379
+			environment:
+				- ALLOW_EMPTY_PASSWORD=yes
+			networks:
+				- identity
+			restart: always
+		mongodb:
+			image: mongo:4.2.8
+			environment:
+				- MONGO_INITDB_ROOT_USERNAME=root
+				- MONGO_INITDB_ROOT_PASSWORD=foobar
+			ports:
+				- 27017:27017
+			networks:
+				- identity
+			restart: always
+	networks:
+		identity:
+			driver: bridge
+	```
+2. Run docker-compose file
+	```bash
+	docker-compose -f docker-compose-identity.yaml up
+	```
+3. Execute get token with the following details:
+	```bash
+	*	method = POST
+	*	url = http://localhost:5000/connect/token
+	*	grant_type = password
+	*	username = dev
+	*	password = hardtoguess
+	*	scope = myapi.access openid offline_access
+	*	client_id = spaWeb
+	*	client_secret = hardtoguess
+	```
+Click [here](https://github.com/markglibres/identityserver4-mongodb-redis/tree/master/src/IdentityServer/Seeders) to see more seeded sample clients and grant types
+
+## Run sample IdentityServer with local docker
 1. Clone this repository
 	```bash
 	git clone git@github.com:markglibres/identityserver4-mongodb-redis.git
