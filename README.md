@@ -1,5 +1,6 @@
 
 
+
 ![Build Master](https://github.com/markglibres/identityserver4-mongodb-redis/workflows/Build%20Master/badge.svg?branch=master) [![NuGet Badge](https://buildstats.info/nuget/BizzPo.IdentityServer)](https://www.nuget.org/packages/BizzPo.IdentityServer/) [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/bizzpo/identityserver4/)
 
 # IdentityServer4 with MongoDb & Redis cache
@@ -14,13 +15,19 @@ This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis 
 * Easy way to seed data
 
 ## Contents
-[Run sample IdentityServer with docker hub image](#Run-sample-IdentityServer-with-docker-hub-image)
-[Run sample IdentityServer with local docker](#Run-sample-IdentityServer-with-local-docker)
-[Installation via NuGet](#Installation-via-NuGet)
-[Configure seed data](#Configure-seed-data)
-[Configure for Resource Owner Password grant](#Configure-for-Resource-Owner-Password-grant)
-[Configure seed users](#Configure-seed-users)
-[How to seed data](#Built-in-seed-data)
+[Run sample IdentityServer with docker hub image](#run-sample-identityserver-with-docker-hub-image)
+
+[Run sample IdentityServer with local docker](#run-sample-identityserver-with-local-docker)
+
+[Installation via NuGet](#installation-via-nuget)
+
+[Configure seed data](#configure-seed-data)
+
+[Configure for Resource Owner Password grant](#configure-for-resource-owner-password-grant)
+
+[Configure seed users](#configure-seed-users)
+
+[How to seed data](#built-in-seed-data)
 
 ## Run sample IdentityServer with docker hub image
 1. Create docker-compose file i.e. `docker-compose-identity.yaml` and pull image from `bizzpo/identityserver4`. For example:
