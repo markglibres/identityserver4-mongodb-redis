@@ -30,6 +30,8 @@ This library does the heavy plumbing for IdentityServer4 with MongoDb and Redis 
 
 [How to seed data](#built-in-seed-data)
 
+[Sample on how to configure API client](#sample-on-how-to-configure-api-client)
+
 ## Run sample IdentityServer with docker hub image
 1. Create docker-compose file i.e. `docker-compose-identity.yaml` and pull image from `bizzpo/identityserver4`. For example:
     ```yaml
@@ -247,3 +249,56 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 Seeded values can be found [here](https://github.com/markglibres/identityserver4-mongodb-redis/tree/master/src/IdentityServer/Seeders)
+
+## Sample on how to configure API client
+Steps below is for a sample C# API project
+1. Create an empty API project
+2. Install the following NuGet packages:
+	```csharp
+	* Microsoft.AspNetCore.Authentication.JwtBearer
+	* IdentityModel.AspNetCore.OAuth2Introspection
+	```
+3. Configure authorization with JWT bearer token:
+	```csharp
+	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) 
+		.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => { 
+			options.Authority = "http://localhost:5000"; 
+			options.Audience = "myapi"; 
+			options.RequireHttpsMetadata = false; 
+			//if token does not contain a dot, it is a reference token 
+			//if it's a reference token, will forward it to introspection
+			options.ForwardDefaultSelector = Selector.ForwardReferenceToken("introspection"); 
+		});
+	```
+4. Configuration authorization with introspection (using reference token instead of access token)
+	```csharp
+	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => { 
+			// codes removed for brevity
+		})
+		.AddOAuth2Introspection("introspection", options =>
+	    {
+	        options.Authority = "http://localhost:8989";
+	        options.ClientId = "myapi";
+	        // the API secret value configured in previous step
+	        options.ClientSecret = "hardtoguess"; 
+	        // optional: use non-ssl for discovery endpoint, by default uses SSL
+	        options.DiscoveryPolicy = new DiscoveryPolicy
+	        {
+	            RequireHttps = false
+	        };
+    });
+	```
+5.  Configure pipeline to use authorization.
+	```csharp
+	app.UseIdentityServer(); 
+	app.UseAuthentication();  
+	app.UseAuthorization();
+	```
+6. Authorize controllers and set the default authorization scheme
+	```csharp
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public class MyApiController : ControllerBase
+	{
+	}
+	```
