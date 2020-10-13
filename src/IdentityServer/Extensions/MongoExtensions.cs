@@ -1,7 +1,7 @@
 using System;
-using IdentityServer.Authorization;
 using IdentityServer.Repositories;
 using IdentityServer.Repositories.Abstractions;
+using IdentityServer.Services;
 using IdentityServer4.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using IdentityServer.Repositories.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Authentication
+namespace IdentityServer.Users
 {
     public class RoleStore<T> : IRoleStore<T>
         where T : IdentityRole

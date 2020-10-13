@@ -1,9 +1,9 @@
 using System;
-using IdentityServer.Authentication;
-using IdentityServer.Authentication.Abstractions;
-using IdentityServer.Authorization;
-using IdentityServer.Authorization.Abstractions;
 using IdentityServer.Repositories;
+using IdentityServer.Services;
+using IdentityServer.Services.Abstractions;
+using IdentityServer.Users;
+using IdentityServer.Users.Abstractions;
 using IdentityServer4.Configuration;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;

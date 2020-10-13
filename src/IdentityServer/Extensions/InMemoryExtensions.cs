@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using IdentityServer.Authorization;
-using IdentityServer.Authorization.Abstractions;
 using IdentityServer.Seeders;
+using IdentityServer.Services;
+using IdentityServer.Services.Abstractions;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;

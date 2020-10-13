@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using IdentityServer.Authentication;
 using IdentityServer.Extensions;
 using IdentityServer.Seeders;
+using IdentityServer.Users;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using IdentityServer_ApplicationUser = IdentityServer.Authentication.ApplicationUser;
+using IdentityServer_ApplicationUser = IdentityServer.Users.ApplicationUser;
 
 namespace IdentityServer.Web
 {

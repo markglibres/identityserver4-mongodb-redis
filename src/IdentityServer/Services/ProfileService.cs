@@ -8,7 +8,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Authorization
+namespace IdentityServer.Services
 {
     public abstract class ProfileService<T> : IProfileService
         where T : IdentityUser

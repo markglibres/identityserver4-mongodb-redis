@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Authentication.Abstractions
+namespace IdentityServer.Users.Abstractions
 {
     public interface IUserService<in T>
     {

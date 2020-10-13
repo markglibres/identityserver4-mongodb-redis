@@ -1,4 +1,4 @@
-namespace IdentityServer.Authorization.Abstractions
+namespace IdentityServer.Services.Abstractions
 {
     public interface IInMemorySettings<T> where T: class
     {

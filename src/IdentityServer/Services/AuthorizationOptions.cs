@@ -1,4 +1,4 @@
-namespace IdentityServer.Authorization
+namespace IdentityServer.Services
 {
     public class AuthorizationOptions
     {

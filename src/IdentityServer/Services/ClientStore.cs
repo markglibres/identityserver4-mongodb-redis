@@ -3,7 +3,7 @@ using IdentityServer.Repositories.Abstractions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 
-namespace IdentityServer.Authorization
+namespace IdentityServer.Services
 {
     public class ClientStore : IClientStore
     {

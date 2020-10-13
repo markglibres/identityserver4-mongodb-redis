@@ -1,5 +1,5 @@
-using IdentityServer.Authorization;
 using IdentityServer.Seeders;
+using IdentityServer.Services;
 using IdentityServer4.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

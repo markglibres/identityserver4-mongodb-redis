@@ -1,6 +1,6 @@
-using IdentityServer.Authorization.Abstractions;
+using IdentityServer.Services.Abstractions;
 
-namespace IdentityServer.Authorization
+namespace IdentityServer.Services
 {
     public class InMemorySettings<T> : IInMemorySettings<T> 
         where T: class
