@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Identity;
 using IdentityServer.Extensions;
 using IdentityServer.Seeders;
 using IdentityServer.Users;
@@ -27,6 +28,9 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                .AddIdentity();
+            
             services.AddIdentityServerMongoDb(provider =>
                     new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
                     {
@@ -40,6 +44,7 @@ namespace IdentityServer.Web
                 .SeedApiResources<SeedApiResources>()
                 .SeedApiScope<SeedApiScopes>()
                 .SeedIdentityResource<SeedIdentityResources>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +58,7 @@ namespace IdentityServer.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
+                endpoints.MapControllers();
             });
         }
     }
