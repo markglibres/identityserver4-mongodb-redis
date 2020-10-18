@@ -1,0 +1,48 @@
+using AutoFixture;
+using FluentAssertions;
+using Identity.Domain;
+using Xunit;
+
+namespace Identity.Unit.Tests
+{
+    public class UserTests : DomainSpecification<UserAggregate>
+    {
+        public UserTests()
+        {
+            Register(() => new TenantId("dev"));
+            Register(() => new UserAggregate(Fixture.Create<TenantId>()));
+        }
+        [Fact]
+        public void Test()
+        {
+            Given(aggregate => { });
+
+            var fullname = new Fullname("Mark Gil", "Libres");
+            var email = new Email("me@example.com");
+            var password = new Password("etc");
+            
+            When(aggregate =>
+            {
+                aggregate.Create(
+                    fullname,
+                    email,
+                    password);
+            });
+
+            Then(aggregate =>
+            {
+                aggregate.Fullname.Should().Be(fullname);
+                aggregate.Email.Should().Be(email);
+                aggregate.Password.Should().Be(password);
+            });
+
+            Then<UserCreatedEvent>((aggregate, @event) =>
+            {
+                @event.Firstname.Should().Be("Mark Gil");
+                @event.Lastname.Should().Be("Libres");
+                @event.Email.Should().Be("me@example.com");
+                @event.Password.Should().Be("etc".ToSha256());
+            });
+        }
+    }
+}
