@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Identity.Domain.Abstractions;
+using Identity.Domain.Extensions;
 
-namespace Identity.Domain
+namespace Identity.Domain.ValueObjects
 {
     public class Password : ValueObject<string>
     {

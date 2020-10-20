@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Identity.Domain
+namespace Identity.Domain.Abstractions
 {
     public abstract class ValueObject<T>
     {

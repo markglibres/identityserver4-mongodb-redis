@@ -1,5 +1,9 @@
-namespace Identity.Domain
+using Identity.Domain.Abstractions;
+using Identity.Domain.Attributes;
+
+namespace Identity.Domain.User.Events
 {
+    [EventName("Identity.Domain.User.Events.UserCreatedEvent")]
     public class UserCreatedEvent : DomainEvent
     {
         public string Firstname { get; private set; }

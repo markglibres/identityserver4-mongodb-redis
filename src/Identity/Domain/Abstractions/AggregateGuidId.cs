@@ -1,14 +1,15 @@
 using System;
+using Identity.Domain.ValueObjects;
 
-namespace Identity.Domain
+namespace Identity.Domain.Abstractions
 {
-    public abstract class AggregateGuid : IAggregateId<Guid>
+    public abstract class AggregateGuidId : IAggregateId<Guid>, IAggregateId, IStreamable
     {
         private const string _delimiter = "|";
         public TenantId TenantId { get; private set; }
         public Guid Id { get; private set; }
         
-        public AggregateGuid()
+        public AggregateGuidId()
         {
             
         }
@@ -33,5 +34,6 @@ namespace Identity.Domain
         }
       
         public override string ToString() => $"{TenantId}{_delimiter}{Id}";
+        public string StreamName => $"Tenant:{TenantId}-{GetType().Namespace}:{Id}";
     }
 }

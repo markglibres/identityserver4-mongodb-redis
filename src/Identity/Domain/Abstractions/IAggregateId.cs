@@ -1,4 +1,6 @@
-namespace Identity.Domain
+using Identity.Domain.ValueObjects;
+
+namespace Identity.Domain.Abstractions
 {
     public interface IAggregateId<T> : IEntityId<T>
     {
@@ -9,4 +11,8 @@ namespace Identity.Domain
         void From(TenantId tenantId, T id);
     }
 
+    public interface IAggregateId : IStreamable
+    {
+        
+    }
 }

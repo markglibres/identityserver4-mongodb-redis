@@ -4,6 +4,7 @@ using System.Linq;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Identity.Domain;
+using Identity.Domain.Abstractions;
 using Moq;
 using Xunit;
 

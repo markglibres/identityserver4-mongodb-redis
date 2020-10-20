@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Identity.Domain.ValueObjects;
 
-namespace Identity.Domain
+namespace Identity.Domain.Abstractions
 {
-    public abstract class Aggregate<TId>: IAggregate, IAggregate<TId, Guid>
+    public abstract class Aggregate<TId>: IAggregate, IAggregate<TId>
         where TId: IAggregateId<Guid>, new()
     {
         public TId Id { get; }
@@ -48,16 +47,11 @@ namespace Identity.Domain
             Id.From(id);
         }
 
-        protected Aggregate(IReadOnlyCollection<IDomainEvent> events)
+        protected Aggregate(TId id, IReadOnlyCollection<IDomainEvent> events)
         {
+            Id = id;
+            
             if(!events.Any()) return;
-                
-            if(events.GroupBy(c => c.EntityId).Count() > 1) 
-                throw new DomainException($"Cannot apply events on {GetType().Name} with multiple aggregate ids");
-            
-            Id = new TId();
-            Id.From(events.First().EntityId);
-            
             events.ToList().ForEach(Apply);
         }
 
@@ -83,5 +77,6 @@ namespace Identity.Domain
             
             method?.Invoke(this, new object[] {@event});
         }
+
     }
 }

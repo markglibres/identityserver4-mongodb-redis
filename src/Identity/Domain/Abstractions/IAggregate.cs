@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Identity.Domain
+namespace Identity.Domain.Abstractions
 {
-    public interface IAggregate<out TId, T> where TId: IEntityId<T>
+    public interface IAggregate<out TId> : IEntityId
     {
         TId Id { get; }
     }

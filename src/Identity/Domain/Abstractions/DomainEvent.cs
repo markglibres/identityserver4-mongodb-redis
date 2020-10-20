@@ -1,6 +1,6 @@
 using System;
 
-namespace Identity.Domain
+namespace Identity.Domain.Abstractions
 {
     public abstract class DomainEvent : IDomainEvent
     {
@@ -12,5 +12,7 @@ namespace Identity.Domain
             EntityId = entityId.ToString();
             Id = Guid.NewGuid().ToString();
         }
+
+        public string StreamName => EntityId;
     }
 }

@@ -1,6 +1,10 @@
 using AutoFixture;
 using FluentAssertions;
 using Identity.Domain;
+using Identity.Domain.Extensions;
+using Identity.Domain.User;
+using Identity.Domain.User.Events;
+using Identity.Domain.ValueObjects;
 using Xunit;
 
 namespace Identity.Unit.Tests

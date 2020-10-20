@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Identity.Domain.Abstractions;
+using Identity.Domain.User.Events;
+using Identity.Domain.ValueObjects;
 
-namespace Identity.Domain
+namespace Identity.Domain.User
 {
-    public class UserAggregate : Aggregate<UserGuid>
+    public partial class UserAggregate : Aggregate<UserId>
     {
         public Fullname Fullname { get; private set; }
         public Email Email { get; private set; }
@@ -45,7 +48,7 @@ namespace Identity.Domain
         {
         }
 
-        public UserAggregate(IReadOnlyCollection<IDomainEvent> events) : base(events)
+        public UserAggregate(UserId id, IReadOnlyCollection<IDomainEvent> events) : base(id, events)
         {
         }
         #endregion

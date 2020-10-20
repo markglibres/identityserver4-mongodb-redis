@@ -1,4 +1,4 @@
-namespace Identity.Domain
+namespace Identity.Domain.Abstractions
 {
     public interface IEntityId<out T> : IEntityId
     {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using Identity.Domain.Abstractions;
 
-namespace Identity.Domain
+namespace Identity.Domain.ValueObjects
 {
     public class TenantId : ValueObject<string>
     {
