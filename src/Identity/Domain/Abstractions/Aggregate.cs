@@ -11,10 +11,10 @@ namespace Identity.Domain.Abstractions
     {
         public TId Id { get; }
         
-        private readonly IList<IDomainEvent> _unCommittedEvents = new List<IDomainEvent>();
+        private readonly List<IDomainEvent> _unCommittedEvents = new List<IDomainEvent>();
         public IReadOnlyCollection<IDomainEvent> UncommittedEvents => _unCommittedEvents.ToList().AsReadOnly();
         
-        private readonly IList<IDomainEvent> _committedEvents = new List<IDomainEvent>();
+        private readonly List<IDomainEvent> _committedEvents = new List<IDomainEvent>();
         public IReadOnlyCollection<IDomainEvent> CommittedEvents => _committedEvents.ToList().AsReadOnly();
 
         protected Aggregate(TId id)
@@ -26,17 +26,18 @@ namespace Identity.Domain.Abstractions
         {
             if(!events.Any()) return;
             events.ToList().ForEach(Apply);
+            _committedEvents.AddRange(events);
         }
 
         protected void Emit(IDomainEvent @event)
         {
             if (_unCommittedEvents.Any(e => e.Id == @event.Id)) return;
-            _unCommittedEvents.Add(@event);
             
             Apply(@event);
+            _unCommittedEvents.Add(@event);
         }
 
-        protected void Apply(IDomainEvent @event)
+        private void Apply(IDomainEvent @event)
         {
             var method = GetType()
                 .GetMethod(

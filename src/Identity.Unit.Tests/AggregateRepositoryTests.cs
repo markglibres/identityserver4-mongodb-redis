@@ -67,6 +67,12 @@ namespace Identity.Unit.Tests
                     .And
                     .HaveCount(1);
                 streamNameReceived.Should().Be(aggregate.Id.StreamName);
+                aggregate.UncommittedEvents.Should()
+                    .NotBeNullOrEmpty()
+                    .And
+                    .HaveCount(1);
+                aggregate.CommittedEvents.Should()
+                    .BeNullOrEmpty();
             });
         }
 
@@ -78,6 +84,8 @@ namespace Identity.Unit.Tests
             var email = new Email("me@example.com");
             var passwordString = "secret";
             var password = new Password(passwordString, false);
+            var userCreatedEvent = new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.Value,
+                passwordString);
             
             Given(repository =>
             {
@@ -86,10 +94,7 @@ namespace Identity.Unit.Tests
                         It.IsAny<CancellationToken>()))
                     .ReturnsAsync((string streamName, CancellationToken cancellationToken) =>
                     {
-                        var result = new List<IDomainEvent>
-                        {
-                            new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.Value, passwordString)
-                        }.AsReadOnly();
+                        var result = new List<IDomainEvent> { userCreatedEvent }.AsReadOnly();
                         return result;
                     });
             });
@@ -102,6 +107,14 @@ namespace Identity.Unit.Tests
                 aggregate.Fullname.Should().Be(fullname);
                 aggregate.Email.Should().Be(email);
                 aggregate.Password.Should().Be(password);
+                aggregate.CommittedEvents.Should()
+                    .NotBeNullOrEmpty()
+                    .And
+                    .HaveCount(1)
+                    .And
+                    .ContainEquivalentOf(userCreatedEvent);
+                aggregate.UncommittedEvents.Should()
+                    .BeNullOrEmpty();
             });
 
         }
