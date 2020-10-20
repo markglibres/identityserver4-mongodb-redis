@@ -10,10 +10,10 @@ namespace Identity.Integration.Tests
     {
         private T _service;
 
-        protected virtual T Given(Func<T, T> func)
+        protected virtual void Given(Action<T> func)
         {
             _service = Services.GetService<T>();
-            return func(_service);
+            func(_service);
         }
 
         protected virtual Task<TResult> When<TResult>(Func<T, Task<TResult>> func)

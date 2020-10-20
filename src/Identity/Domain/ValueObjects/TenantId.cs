@@ -7,10 +7,12 @@ namespace Identity.Domain.ValueObjects
     {
         private readonly string _tenantId;
 
-        public TenantId(string tenantId)
+        private TenantId(string tenantId)
         {
             _tenantId = tenantId;
         }
+
+        public static TenantId From(string tenantId) => new TenantId(tenantId);
         
         protected override IEnumerable<object> GetEqualityComponents()
         {

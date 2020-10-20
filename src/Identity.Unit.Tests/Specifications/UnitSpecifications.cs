@@ -1,36 +1,35 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Identity.Domain;
-using Identity.Domain.Abstractions;
 using Moq;
 using Xunit;
 
 namespace Identity.Unit.Tests
 {
-    public abstract class DomainSpecification<T> where T: class, IAggregate
+    public abstract class UnitSpecifications<T> where T : class
     {
-        private Dictionary<string, object> _services;
+        private readonly Dictionary<string, object> _services;
         private T _sut;
-        protected IFixture Fixture { get; }
-        
-        public DomainSpecification()
+        protected T SystemUnderTest => _sut;
+
+        public UnitSpecifications()
         {
             Fixture = new Fixture().Customize(new AutoMoqCustomization());
             _services = new Dictionary<string, object>();
         }
-        
+
+        protected IFixture Fixture { get; }
+
         protected Mock<TMock> Register<TMock>(Action<Mock<TMock>> action) where TMock : class
         {
             var mock = Fixture.FreezeMoq<TMock>();
             AddOrUpdateService(mock);
-            
+
             action(mock);
             return mock;
         }
-        
+
         protected TService Register<TService>(Func<TService> func)
         {
             var service = Fixture.Freeze<TService>(composer => composer.FromFactory(func));
@@ -46,21 +45,22 @@ namespace Identity.Unit.Tests
             if (_services.ContainsKey(key)) _services[key] = service;
             else _services.Add(key, service);
         }
-        
+
         protected T Given(Action<T> action)
         {
             _sut = Fixture.Create<T>();
             action(_sut);
             return _sut;
         }
-        
+
         protected T When(Action<T> action)
         {
             action(_sut);
             return _sut;
-        }        
+        }
+
         protected T ExceptionWhen<TException>(Action<T> action)
-        where TException: DomainException
+            where TException : Exception
         {
             Assert.Throws<TException>(() => action(_sut));
             return _sut;
@@ -70,13 +70,6 @@ namespace Identity.Unit.Tests
         {
             action(_sut);
             return _sut;
-        }
-   
-        protected IDomainEvent Then<TDomainEvent>(Action<T, TDomainEvent> action) where TDomainEvent: DomainEvent
-        {
-            var @event = _sut.UncommittedEvents?.FirstOrDefault(e => e.GetType().Name == typeof(TDomainEvent).Name);
-            action(_sut, @event as TDomainEvent);
-            return @event;
         }
     }
 }

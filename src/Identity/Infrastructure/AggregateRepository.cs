@@ -10,7 +10,7 @@ using BindingFlags = System.Reflection.BindingFlags;
 namespace Identity.Infrastructure
 {
     public class AggregateRepository<T, TId> : IAggregateRepository<T, TId> 
-        where T: IAggregate<TId>, IAggregate, new()
+        where T: IAggregate<TId>, IAggregate
         where TId: IAggregateId
     {
         private readonly IEventsRepository<IDomainEvent> _eventsRepository;

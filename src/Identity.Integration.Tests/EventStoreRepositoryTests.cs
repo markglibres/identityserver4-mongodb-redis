@@ -19,14 +19,14 @@ namespace Identity.Integration.Tests
 
         public EventStoreRepositoryTests()
         {
-            _tenantId = new TenantId("dev");
+            _tenantId =TenantId.From("dev");
             _streamName = DateTime.Now.Ticks.ToString();
         }
         
         [Fact]
-        public async Task Test()
+        public async Task Should_WriteAdnRead_Event_ToAndFrom_Store()
         {
-            Given(repository => repository);
+            Given(repository => { });
 
             var user = UserId.From(_tenantId);
             var @event = new UserCreatedEvent(user, "Mark", "Libres", "me@example.com", "secret");

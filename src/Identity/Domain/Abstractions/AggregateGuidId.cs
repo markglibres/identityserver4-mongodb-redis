@@ -30,7 +30,7 @@ namespace Identity.Domain.Abstractions
         protected AggregateGuidId(string id)
         {
             var tokens = id.Split(_delimiter);
-            TenantId = new TenantId(tokens[0]);
+            TenantId = TenantId.From(tokens[0]);
             Id = Guid.Parse(tokens[1]);
         }
 

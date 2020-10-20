@@ -9,14 +9,15 @@ using Xunit;
 
 namespace Identity.Unit.Tests
 {
-    public class UserTests : DomainSpecification<UserAggregate>
+    public class UserTests : AggregateSpecification<UserAggregate>
     {
         public UserTests()
         {
-            Register(() => new TenantId("dev"));
+            Register(() => TenantId.From("dev"));
             Register(() => UserId.From(Fixture.Create<TenantId>()));
             Register(() => new UserAggregate(Fixture.Create<UserId>()));
         }
+        
         [Fact]
         public void Test()
         {
