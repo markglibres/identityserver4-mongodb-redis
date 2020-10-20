@@ -19,7 +19,7 @@ namespace Identity.Unit.Tests
         }
         
         [Fact]
-        public void Test()
+        public void Should_CreateEvent_And_Apply_To_Aggregate()
         {
             Given(aggregate => { });
 

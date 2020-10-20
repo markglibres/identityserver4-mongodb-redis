@@ -11,14 +11,10 @@ namespace Identity.Domain.Abstractions
     {
         public TId Id { get; }
         
-        private static readonly Lazy<IList<IDomainEvent>> _lazyUncommitedEvents  = new Lazy<IList<IDomainEvent>>(() => new List<IDomainEvent>());
-        private IList<IDomainEvent> _unCommittedEvents = _lazyUncommitedEvents.Value;
-        
+        private readonly IList<IDomainEvent> _unCommittedEvents = new List<IDomainEvent>();
         public IReadOnlyCollection<IDomainEvent> UncommittedEvents => _unCommittedEvents.ToList().AsReadOnly();
         
-        private static readonly Lazy<IList<IDomainEvent>> _lazyCommitedEvents  = new Lazy<IList<IDomainEvent>>(() => new List<IDomainEvent>());
-        private IList<IDomainEvent> _committedEvents = _lazyCommitedEvents.Value;
-        
+        private readonly IList<IDomainEvent> _committedEvents = new List<IDomainEvent>();
         public IReadOnlyCollection<IDomainEvent> CommittedEvents => _committedEvents.ToList().AsReadOnly();
 
         protected Aggregate(TId id)

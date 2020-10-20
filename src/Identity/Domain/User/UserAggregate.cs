@@ -24,7 +24,7 @@ namespace Identity.Domain.User
             Emit(@event);
         }
 
-        public void Handle(UserCreatedEvent @event)
+        protected void Handle(UserCreatedEvent @event)
         {
             Fullname = new Fullname(@event.Firstname, @event.Lastname);
             Email = new Email(@event.Email);
@@ -35,7 +35,7 @@ namespace Identity.Domain.User
         public UserAggregate(UserId id) : base(id)
         {
         }
-        public UserAggregate(UserId id, IReadOnlyCollection<IDomainEvent> events) : base(id, events)
+        protected UserAggregate(UserId id, IReadOnlyCollection<IDomainEvent> events) : base(id, events)
         {
         }
         #endregion

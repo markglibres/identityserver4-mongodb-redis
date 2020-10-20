@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Moq;
@@ -12,14 +13,13 @@ namespace Identity.Unit.Tests
         private readonly Dictionary<string, object> _services;
         private T _sut;
         protected T SystemUnderTest => _sut;
-
-        public UnitSpecifications()
+        protected IFixture Fixture { get; }
+        
+        protected UnitSpecifications()
         {
             Fixture = new Fixture().Customize(new AutoMoqCustomization());
             _services = new Dictionary<string, object>();
         }
-
-        protected IFixture Fixture { get; }
 
         protected Mock<TMock> Register<TMock>(Action<Mock<TMock>> action) where TMock : class
         {
@@ -57,6 +57,11 @@ namespace Identity.Unit.Tests
         {
             action(_sut);
             return _sut;
+        }
+        
+        protected Task<TResult> WhenAsync<TResult>(Func<T, Task<TResult>> action)
+        {
+            return action(_sut);
         }
 
         protected T ExceptionWhen<TException>(Action<T> action)

@@ -1,9 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Identity.Application.Abstractions;
 using Identity.Domain.Abstractions;
+using Identity.Domain.Extensions;
 using Identity.Domain.User;
+using Identity.Domain.User.Events;
 using Identity.Domain.ValueObjects;
 using Identity.Infrastructure;
 using Moq;
@@ -22,7 +27,7 @@ namespace Identity.Unit.Tests
         }
 
         [Fact]
-        public void Should_PassCorrectDetails_When_Calling_Save()
+        public async Task Should_PassCorrectDetails_When_Calling_Save()
         {
             IReadOnlyCollection<IDomainEvent> eventsReceived = null;
             var streamNameReceived = string.Empty;
@@ -47,10 +52,12 @@ namespace Identity.Unit.Tests
             var email = new Email("me@example.com");
             var password = new Password("secret");
             
-            When(repository =>
+            
+            await WhenAsync(async repository =>
             {
                 aggregate.Create(fullname, email, password);
-                repository.Save(aggregate, CancellationToken.None);
+                await repository.Save(aggregate, CancellationToken.None);
+                return Task.CompletedTask;
             });
 
             Then(repository =>
@@ -62,5 +69,42 @@ namespace Identity.Unit.Tests
                 streamNameReceived.Should().Be(aggregate.Id.StreamName);
             });
         }
+
+        [Fact]
+        public async Task Should_ReplayEvents_When_Loading_From_EventStore()
+        {
+            var userId = UserId.From(TenantId.From("dev"));
+            var fullname = new Fullname("Mark", "Libres");
+            var email = new Email("me@example.com");
+            var passwordString = "secret";
+            var password = new Password(passwordString, false);
+            
+            Given(repository =>
+            {
+                _eventsRepoMock.Setup(r => r.Get(
+                        It.IsAny<string>(),
+                        It.IsAny<CancellationToken>()))
+                    .ReturnsAsync((string streamName, CancellationToken cancellationToken) =>
+                    {
+                        var result = new List<IDomainEvent>
+                        {
+                            new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.Value, passwordString)
+                        }.AsReadOnly();
+                        return result;
+                    });
+            });
+            
+            var aggregate = await WhenAsync(async repository => await repository.Get(userId, CancellationToken.None));
+
+            Then(repository =>
+            {
+                aggregate.Should().NotBeNull();
+                aggregate.Fullname.Should().Be(fullname);
+                aggregate.Email.Should().Be(email);
+                aggregate.Password.Should().Be(password);
+            });
+
+        }
+
     }
 }
