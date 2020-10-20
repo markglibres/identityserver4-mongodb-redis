@@ -1,4 +1,4 @@
-name: 'Branch Testing'
+name: 'Branch Testing Backend'
 
 on:
   push:
@@ -11,8 +11,8 @@ on:
       - '.github/actions/build-run-unit-tests/**'
 
 jobs:
-  identityUnitTests:
-    name: Unit tests for Identity
+  unitTests:
+    name: Run unit tests
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout branch
@@ -22,4 +22,4 @@ jobs:
         uses: ./.github/actions/build-run-unit-tests
         with:
           workdir: ./src
-          project: 'Identity.Unit.Tests.csproj'
+          project: '*.Unit.Tests/*.csproj'
