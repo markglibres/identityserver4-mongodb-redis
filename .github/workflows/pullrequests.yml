@@ -1,13 +1,9 @@
 name: 'Pull Request Testing'
 
 on:
-  # pull_request:
-  #   branches:
-  #     - 'master'
-  push:
+  pull_request:
     branches:
-      - '*'
-      - '!master'
+      - 'master'
     paths:
       - 'src/**'
       - '.github/workflows/pullrequests.yml'

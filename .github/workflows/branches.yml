@@ -1,0 +1,25 @@
+name: 'Branch Testing'
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+    paths:
+      - 'src/**'
+      - '.github/workflows/branches.yml'
+      - '.github/actions/build-run-unit-tests/**'
+
+jobs:
+  identityUnitTests:
+    name: Unit tests for Identity
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@main
+
+      - name: Build and run unit tests
+        uses: ./.github/actions/build-run-unit-tests
+        with:
+          workdir: ./src
+          project: 'Identity.Unit.Tests.csproj'

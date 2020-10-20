@@ -1,0 +1,21 @@
+name: 'Build and run dotnetcore tests'
+author: 'hipages'
+description: 'This action will setup dotnet, build dotnetcore projects and execute tests'
+inputs:
+  project:
+    description: 'Path to .csproj files. Wildcards are accepted. Defaults to current directory'
+    required: false
+    default: '**/*.Unit.Test/*.csproj'
+  configuration:
+    description: 'Configuration profile to use. Defaults to Release'
+    required: false
+    default: 'Release'
+  workdir:
+    description: 'The default working directory.'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+
+
