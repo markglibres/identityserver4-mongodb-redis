@@ -1,0 +1,32 @@
+name: 'Pull Request Testing'
+
+on:
+  pull_request:
+    branches:
+      # - 'master'
+      - '*'
+      - '!master'
+    paths:
+      - 'src/**'
+      - '.github/workflows/pullrequests.yml'
+      - '.github/scripts/integration.sh'
+
+jobs:
+  integrationtests:
+    name: Run Integration tests
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@main
+
+      - name: Run service dependencies
+        run: ./.github/scripts/integration.sh --up
+
+      - name: Check running containers
+        run: docker ps -a
+      
+      - name: Run integration tests
+        run: ./.github/scripts/integration.sh --run
+
+      - name: Stop service dependencies
+        run: ./.github/scripts/integration.sh --down

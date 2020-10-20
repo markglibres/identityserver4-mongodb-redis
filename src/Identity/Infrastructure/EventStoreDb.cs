@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using EventStore.Client;
 using Identity.Infrastructure.Abstractions;
 using Identity.Infrastructure.Configs;
@@ -19,7 +20,12 @@ namespace Identity.Infrastructure
                 {
                     Address = new Uri(config.ConnectionString)
                 },
-                ConnectionName = config.Name
+                ConnectionName = config.Name,
+                CreateHttpMessageHandler = () =>
+                    new HttpClientHandler {
+                        ServerCertificateCustomValidationCallback =
+                            (message, certificate2, x509Chain, sslPolicyErrors) => true
+                    }
             };
 
             _eventStoreClient = new EventStoreClient(settings);

@@ -32,22 +32,9 @@ namespace Identity.Domain.User
         }
 
         #region Constructors
-        public UserAggregate(TenantId tenantId) : base(tenantId)
+        public UserAggregate(UserId id) : base(id)
         {
         }
-
-        public UserAggregate(TenantId tenantId, Guid id) : base(tenantId, id)
-        {
-        }
-
-        public UserAggregate(IAggregateId<Guid> id) : base(id)
-        {
-        }
-
-        public UserAggregate(string id) : base(id)
-        {
-        }
-
         public UserAggregate(UserId id, IReadOnlyCollection<IDomainEvent> events) : base(id, events)
         {
         }

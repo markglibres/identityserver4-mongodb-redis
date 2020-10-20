@@ -7,7 +7,7 @@ using Identity.Domain.ValueObjects;
 namespace Identity.Domain.Abstractions
 {
     public abstract class Aggregate<TId>: IAggregate, IAggregate<TId>
-        where TId: IAggregateId<Guid>, new()
+        where TId: IAggregateId<Guid>
     {
         public TId Id { get; }
         
@@ -21,36 +21,13 @@ namespace Identity.Domain.Abstractions
         
         public IReadOnlyCollection<IDomainEvent> CommittedEvents => _committedEvents.ToList().AsReadOnly();
 
-        protected Aggregate()
-        {
-        }
-        
-        protected Aggregate(TenantId tenantId) : this(tenantId, Guid.NewGuid())
-        {
-            
-        }
-
-        protected Aggregate(TenantId tenantId, Guid id)
-        {
-            Id = new TId();
-            Id.From(tenantId, id);
-        }
-
-        protected Aggregate(IAggregateId<Guid> id)
-        {
-            Id = (TId) id;
-        }
-
-        protected Aggregate(string id)
-        {
-            Id = new TId();
-            Id.From(id);
-        }
-
-        protected Aggregate(TId id, IReadOnlyCollection<IDomainEvent> events)
+        protected Aggregate(TId id)
         {
             Id = id;
-            
+        }
+        
+        protected Aggregate(TId id, IReadOnlyCollection<IDomainEvent> events) : this(id)
+        {
             if(!events.Any()) return;
             events.ToList().ForEach(Apply);
         }

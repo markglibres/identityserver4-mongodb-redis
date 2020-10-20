@@ -20,7 +20,7 @@ services:
     ports:
         - "5000:80"
     networks:
-        - identity
+        - bizzpo
     restart: always
 
   redis:
@@ -30,7 +30,7 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
-      - identity
+      - bizzpo
     restart: always
 
   mongodb:
@@ -41,9 +41,9 @@ services:
     ports:
       - 27017:27017
     networks:
-      - identity
+      - bizzpo
     restart: always 
 
 networks:
-    identity:
-        driver: bridge
+  bizzpo:
+    driver: bridge

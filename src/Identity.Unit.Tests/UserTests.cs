@@ -14,7 +14,8 @@ namespace Identity.Unit.Tests
         public UserTests()
         {
             Register(() => new TenantId("dev"));
-            Register(() => new UserAggregate(Fixture.Create<TenantId>()));
+            Register(() => UserId.From(Fixture.Create<TenantId>()));
+            Register(() => new UserAggregate(Fixture.Create<UserId>()));
         }
         [Fact]
         public void Test()
