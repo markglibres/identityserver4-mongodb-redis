@@ -1,6 +1,7 @@
 using AutoFixture;
 using FluentAssertions;
 using Identity.Domain;
+using Identity.Domain.Abstractions;
 using Identity.Domain.Extensions;
 using Identity.Domain.User;
 using Identity.Domain.User.Events;
@@ -14,7 +15,7 @@ namespace Identity.Unit.Tests
         public UserTests()
         {
             Register(() => TenantId.From("dev"));
-            Register(() => UserId.From(Fixture.Create<TenantId>()));
+            Register(() => AggregateGuid.For<UserId>("dev"));
             Register(() => new UserAggregate(Fixture.Create<UserId>()));
         }
         

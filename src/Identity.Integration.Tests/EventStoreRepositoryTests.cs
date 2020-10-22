@@ -14,12 +14,12 @@ namespace Identity.Integration.Tests
 {
     public class EventStoreRepositoryTests : ServiceSpecifications<IEventsRepository<IDomainEvent>>
     {
-        private TenantId _tenantId;
+        private string _tenantId;
         private string _streamName;
 
         public EventStoreRepositoryTests()
         {
-            _tenantId =TenantId.From("dev");
+            _tenantId = "dev";
             _streamName = DateTime.Now.Ticks.ToString();
         }
         
@@ -28,7 +28,7 @@ namespace Identity.Integration.Tests
         {
             Given(repository => { });
 
-            var user = UserId.From(_tenantId);
+            var user = AggregateGuid.For<UserId>(_tenantId);
             var @event = new UserCreatedEvent(user, "Mark", "Libres", "me@example.com", "secret");
 
             await When(async repository =>

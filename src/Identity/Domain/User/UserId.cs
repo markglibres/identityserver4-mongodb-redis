@@ -5,7 +5,7 @@ using Identity.Domain.ValueObjects;
 
 namespace Identity.Domain.User
 {
-    public class UserId : AggregateGuidId
+    public class UserId : AggregateGuid
     {
         private UserId(TenantId tenantId) : base(tenantId)
         {
@@ -20,10 +20,6 @@ namespace Identity.Domain.User
         {
             
         }
-
-        public static UserId From(TenantId tenantId) => new UserId(tenantId);
-        public static UserId From(TenantId tenantId, Guid guid) => new UserId(tenantId, guid);
-        public static UserId From(string id) => new UserId(id);
         
     }
 }
