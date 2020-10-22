@@ -3,7 +3,7 @@ using Identity.Domain.Abstractions;
 
 namespace Identity.Domain.ValueObjects
 {
-    public class TenantId : ValueObject<string>
+    public class TenantId : ValueObject
     {
         private readonly string _tenantId;
 
@@ -18,7 +18,5 @@ namespace Identity.Domain.ValueObjects
         {
             yield return _tenantId;
         }
-
-        public override string Value => _tenantId;
     }
 }

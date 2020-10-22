@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,23 +16,32 @@ namespace Identity.Integration.Tests
             _service = Services.GetService<T>();
             func(_service);
         }
-
-        protected virtual Task<TResult> When<TResult>(Func<T, Task<TResult>> func)
+        
+        protected virtual async Task GivenAsync(Func<T, Task> func)
         {
-            return func(_service);
+            _service = Services.GetService<T>();
+            await func(_service);
         }
 
-        protected virtual Task Then(Action<T> assertions)
+        protected virtual async Task<TResult> When<TResult>(Func<T, Task<TResult>> func)
         {
-            assertions(_service);
-            return Task.CompletedTask;
+            return await func(_service);
+        }
+
+        protected virtual async Task Then(Func<T, Task> assertions)
+        {
+            await assertions(_service);
         }
         
-        protected virtual Task Then<TService>(Action<T, TService> assertions)
+        protected virtual void Then(Action<T> assertions)
+        {
+            assertions(_service);
+        }
+        
+        protected virtual async Task Then<TService>(Func<T, TService, Task>  assertions)
         {
             var service = Services.GetService<TService>();
-            assertions(_service, service);
-            return Task.CompletedTask;
+            await assertions(_service, service);
         }
     }
 }

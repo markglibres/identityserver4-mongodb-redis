@@ -3,7 +3,7 @@ using Identity.Domain.Abstractions;
 
 namespace Identity.Domain.ValueObjects
 {
-    public class Fullname : ValueObject<string>
+    public class Fullname : ValueObject
     {
         public string Firstname { get; private set; }
         public string Lastname { get; private set; }
@@ -20,6 +20,6 @@ namespace Identity.Domain.ValueObjects
             yield return Lastname;
         }
 
-        public override string Value => $"{Firstname} {Lastname}";
+        public override string ToString() => $"{Firstname} {Lastname}";
     }
 }

@@ -31,7 +31,7 @@ namespace Identity.Domain.Abstractions
             Id = Guid.Parse(tokens[1]);
         }
 
-        public string StreamName => $"Tenant:{TenantId}-{GetType().Namespace}:{Id}";
+        public string StreamName => $"Tenant:{TenantId}-{GetType().Name}:{Id}";
         public TenantId TenantId { get; }
         public Guid Id { get; }
 

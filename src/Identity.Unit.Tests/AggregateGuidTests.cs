@@ -17,7 +17,7 @@ namespace Identity.Unit.Tests
             var id = AggregateGuid.For<UserId>("dev", guid);
 
             id.Should().NotBeNull();
-            id.TenantId.Value.Should().Be(tenant);
+            id.TenantId.ToString().Should().Be(tenant);
             id.Id.Should().Be(guid);
         }
         

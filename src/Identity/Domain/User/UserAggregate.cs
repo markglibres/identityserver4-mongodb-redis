@@ -18,8 +18,8 @@ namespace Identity.Domain.User
                 Id,
                 fullname.Firstname,
                 fullname.Lastname,
-                email.Value,
-                password.Value);
+                email.ToString(),
+                password.ToString());
             
             Emit(@event);
         }

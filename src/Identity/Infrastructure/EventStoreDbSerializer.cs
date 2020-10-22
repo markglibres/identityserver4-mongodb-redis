@@ -4,14 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EventStore.Client;
 using Identity.Domain.Abstractions;
 using Identity.Domain.Attributes;
 using Identity.Domain.Extensions;
 using Identity.Domain.User.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using JsonConverter = Newtonsoft.Json.JsonConverter;
+using JsonProperty = Newtonsoft.Json.Serialization.JsonProperty;
 
 namespace Identity.Infrastructure
 {
@@ -25,11 +31,18 @@ namespace Identity.Infrastructure
             _domainEventTypes = GetEventTypes();
             _serializerSettings = new JsonSerializerSettings
             {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                 TypeNameHandling = TypeNameHandling.None,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                ContractResolver = new PrivateResolver()
+                ContractResolver = new PrivateResolver(),
+                Converters = new List<JsonConverter>
+                {
+                    new StringEnumConverter()
+                },
+                NullValueHandling = NullValueHandling.Ignore
             };
             
+
         }
         public EventData Serialize(IDomainEvent @event)
         {
@@ -51,10 +64,12 @@ namespace Identity.Infrastructure
             
             if(eventType == null) return null;
             
-            using var reader = new StreamReader(new MemoryStream(@event.Data.ToArray()));
-            var data = await reader.ReadToEndAsync();
-
-            return (IDomainEvent) JsonConvert.DeserializeObject(data, eventType, _serializerSettings);
+            using (var reader = new StreamReader(new MemoryStream(@event.Data.ToArray())))
+            {
+                var data = await reader.ReadToEndAsync();
+                var deserializeObject = JsonConvert.DeserializeObject(data, eventType, _serializerSettings);
+                return (IDomainEvent)deserializeObject;
+            }
         }
 
         private static List<Type> GetEventTypes()
@@ -62,7 +77,8 @@ namespace Identity.Infrastructure
             var domainEvents = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => type.IsSubclassOf(typeof(IDomainEvent)))
+                .Where(type => type.GetCustomAttribute(typeof(EventNameAttribute)) != null 
+                               && (type.IsSubclassOf(typeof(DomainEvent)) || type.IsSubclassOf(typeof(IDomainEvent))))
                 .ToList();
 
             return domainEvents;
@@ -100,6 +116,7 @@ namespace Identity.Infrastructure
             prop.Writable = hasPrivateSetter;
             return prop;
         }
+
     }
 
     class EventMetadata

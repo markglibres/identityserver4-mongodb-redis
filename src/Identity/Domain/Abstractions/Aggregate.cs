@@ -43,8 +43,7 @@ namespace Identity.Domain.Abstractions
                 .GetMethod(
                     "Handle", 
                     BindingFlags.NonPublic
-                    | BindingFlags.Instance
-                    | BindingFlags.Public, 
+                    | BindingFlags.Instance, 
                     null,  
                     new[] {@event.GetType()}, 
                     null); 

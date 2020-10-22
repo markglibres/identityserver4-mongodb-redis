@@ -4,7 +4,7 @@ using Identity.Domain.Extensions;
 
 namespace Identity.Domain.ValueObjects
 {
-    public class Password : ValueObject<string>
+    public class Password : ValueObject
     {
         private readonly string _password;
 
@@ -17,7 +17,5 @@ namespace Identity.Domain.ValueObjects
         {
             yield return _password;
         }
-
-        public override string Value => _password;
     }
 }

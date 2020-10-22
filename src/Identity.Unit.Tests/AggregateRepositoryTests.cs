@@ -84,7 +84,7 @@ namespace Identity.Unit.Tests
             var email = new Email("me@example.com");
             var passwordString = "secret";
             var password = new Password(passwordString, false);
-            var userCreatedEvent = new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.Value,
+            var userCreatedEvent = new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.ToString(),
                 passwordString);
             
             Given(repository =>

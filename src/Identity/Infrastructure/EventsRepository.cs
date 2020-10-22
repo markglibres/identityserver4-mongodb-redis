@@ -48,7 +48,6 @@ namespace Identity.Infrastructure
             if (await stream.ReadState == ReadState.StreamNotFound) return null;
 
             var resolvedEvents = await stream
-                .Where(e => !e.Event.Data.IsEmpty)
                 .ToListAsync(cancellationToken);
 
             var events = resolvedEvents

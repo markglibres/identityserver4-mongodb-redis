@@ -3,7 +3,7 @@ using Identity.Domain.Abstractions;
 
 namespace Identity.Domain.ValueObjects
 {
-    public class Email : ValueObject<string>
+    public class Email : ValueObject
     {
         private string _email;
 
@@ -17,6 +17,5 @@ namespace Identity.Domain.ValueObjects
             yield return _email;
         }
 
-        public override string Value => _email;
     }
 }

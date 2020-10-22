@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Identity.Domain.Abstractions
 {
-    public abstract class DomainEvent : IDomainEvent
+    public abstract class DomainEvent : ValueObject, IDomainEvent
     {
         public string Id { get; private set; }
         public string EntityId { get; private set; }
@@ -12,7 +14,13 @@ namespace Identity.Domain.Abstractions
             EntityId = entityId.ToString();
             Id = Guid.NewGuid().ToString();
         }
+        protected DomainEvent()
+        {
+        }
 
-        public string StreamName => EntityId;
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Id;
+        }
     }
 }
