@@ -26,5 +26,12 @@ namespace Identity.Integration.Tests
             assertions(_service);
             return Task.CompletedTask;
         }
+        
+        protected virtual Task Then<TService>(Action<T, TService> assertions)
+        {
+            var service = Services.GetService<TService>();
+            assertions(_service, service);
+            return Task.CompletedTask;
+        }
     }
 }

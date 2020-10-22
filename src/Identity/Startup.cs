@@ -3,6 +3,7 @@ using Identity.Domain.Abstractions;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Abstractions;
 using Identity.Infrastructure.Configs;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -24,8 +25,10 @@ namespace Identity
             services.AddSingleton<IEventStoreDb, EventStoreDb>();
             services.AddTransient<IEventStoreDbSerializer, EventStoreDbSerializer>();
             services.AddTransient<IEventsRepository<IDomainEvent>, EventsRepository<IDomainEvent>>();
+            services.AddTransient(typeof(IAggregateRepository<,>), typeof(AggregateRepository<,>));
             
-            
+            services.AddMediatR(typeof(Startup));
+                
             return services;
         }
         
