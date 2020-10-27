@@ -10,7 +10,7 @@ namespace Identity.Domain.ValueObjects
 
         private DateTimeUtc(DateTimeOffset dateTimeOffset)
         {
-            _dateTimeOffset = dateTimeOffset.UtcDateTime;
+            _dateTimeOffset = dateTimeOffset;
         }
         
         protected override IEnumerable<object> GetEqualityComponents()
@@ -18,8 +18,9 @@ namespace Identity.Domain.ValueObjects
             yield return _dateTimeOffset.UtcDateTime;
         }
         
-        public static DateTimeUtc Now() => new DateTimeUtc(DateTime.UtcNow);
-        public static DateTimeUtc From(DateTimeOffset dateTimeOffset) => new DateTimeUtc(dateTimeOffset.UtcDateTime);
+        public static DateTimeUtc Now() => new DateTimeUtc(DateTimeOffset.Now);
+        public static DateTimeUtc From(DateTimeOffset dateTimeOffset) => new DateTimeUtc(dateTimeOffset);
+        public static DateTimeUtc From(DateTime dateTime) => new DateTimeUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
         public DateTimeOffset Value => _dateTimeOffset;
     }
 }

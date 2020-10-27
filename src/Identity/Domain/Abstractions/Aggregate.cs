@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Identity.Domain.Extensions;
 using Identity.Domain.ValueObjects;
 
 namespace Identity.Domain.Abstractions
@@ -32,6 +33,8 @@ namespace Identity.Domain.Abstractions
         protected void Emit(IDomainEvent @event)
         {
             if (_unCommittedEvents.Any(e => e.Id == @event.Id)) return;
+            
+            @event.SetProperty(nameof(@event.CreatedOn), DateTimeUtc.Now().Value);
             
             Apply(@event);
             _unCommittedEvents.Add(@event);

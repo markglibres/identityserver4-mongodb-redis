@@ -8,6 +8,7 @@ namespace Identity.Domain.Abstractions
     {
         public string Id { get; private set; }
         public string EntityId { get; private set; }
+        public DateTimeOffset CreatedOn { get; private set; }
 
         protected DomainEvent(IEntityId entityId)
         {

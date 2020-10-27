@@ -1,3 +1,4 @@
+using System;
 using AutoFixture;
 using FluentAssertions;
 using Identity.Domain;
@@ -10,9 +11,9 @@ using Xunit;
 
 namespace Identity.Unit.Tests
 {
-    public class UserTests : AggregateSpecification<UserAggregate>
+    public class AggregateTests : AggregateSpecification<UserAggregate>
     {
-        public UserTests()
+        public AggregateTests()
         {
             Register(() => TenantId.Create("dev"));
             Register(() => AggregateGuid.Create<UserId>("dev"));
@@ -27,7 +28,8 @@ namespace Identity.Unit.Tests
             var fullname = Fullname.Create("Mark Gil", "Libres");
             var email = Email.Create("me@example.com");
             var password = Password.Create("etc");
-            
+
+            var startDateTime = DateTimeOffset.Now;
             When(aggregate =>
             {
                 aggregate.Create(
@@ -35,6 +37,7 @@ namespace Identity.Unit.Tests
                     email,
                     password);
             });
+            var endDateTime = DateTimeOffset.Now;
 
             Then(aggregate =>
             {
@@ -49,6 +52,12 @@ namespace Identity.Unit.Tests
                 @event.Lastname.Should().Be("Libres");
                 @event.Email.Should().Be("me@example.com");
                 @event.Password.Should().Be("etc".ToSha256());
+                @event.CreatedOn.Should()
+                    .NotBe(default)
+                    .And
+                    .BeCloseTo(startDateTime)
+                    .And
+                    .BeCloseTo(endDateTime);
             });
         }
     }
