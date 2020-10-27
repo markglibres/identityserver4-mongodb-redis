@@ -63,13 +63,11 @@ namespace Identity.Infrastructure
                     type.GetEventName() == metaData.EventName && type.GetEventVersion() == metaData.EventVersion);
             
             if(eventType == null) return null;
-            
-            using (var reader = new StreamReader(new MemoryStream(@event.Data.ToArray())))
-            {
-                var data = await reader.ReadToEndAsync();
-                var deserializeObject = JsonConvert.DeserializeObject(data, eventType, _serializerSettings);
-                return (IDomainEvent)deserializeObject;
-            }
+
+            using var reader = new StreamReader(new MemoryStream(@event.Data.ToArray()));
+            var data = await reader.ReadToEndAsync();
+            var deserializeObject = JsonConvert.DeserializeObject(data, eventType, _serializerSettings);
+            return (IDomainEvent)deserializeObject;
         }
 
         private static List<Type> GetEventTypes()
