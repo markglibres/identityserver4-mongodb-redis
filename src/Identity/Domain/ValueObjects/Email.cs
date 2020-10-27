@@ -7,7 +7,7 @@ namespace Identity.Domain.ValueObjects
     {
         private string _email;
 
-        public Email(string email)
+        private Email(string email)
         {
             _email = email;
         }
@@ -15,6 +15,12 @@ namespace Identity.Domain.ValueObjects
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return _email;
+        }
+
+        public static Email Create(string email)
+        {
+            var value = new Email(email);
+            return value;
         }
 
     }

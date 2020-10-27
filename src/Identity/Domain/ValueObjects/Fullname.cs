@@ -8,7 +8,7 @@ namespace Identity.Domain.ValueObjects
         public string Firstname { get; private set; }
         public string Lastname { get; private set; }
 
-        public Fullname(string firstname, string lastname)
+        private Fullname(string firstname, string lastname)
         {
             Firstname = firstname;
             Lastname = lastname;
@@ -21,5 +21,11 @@ namespace Identity.Domain.ValueObjects
         }
 
         public override string ToString() => $"{Firstname} {Lastname}";
+
+        public static Fullname Create(string firstname, string lastname)
+        {
+            var value = new Fullname(firstname, lastname);
+            return value;
+        }
     }
 }

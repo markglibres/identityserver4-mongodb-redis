@@ -35,7 +35,7 @@ namespace Identity.Integration.Tests
 
             await Then<IEventsRepository<IDomainEvent>>(async (handler, repository) =>
             {
-                var userId = AggregateGuid.For<UserId>("dev", id);
+                var userId = AggregateGuid.Create<UserId>("dev", id);
                 var record = await repository.Get(userId.StreamName, CancellationToken.None);
                 
                 record.Should().NotBeNull();

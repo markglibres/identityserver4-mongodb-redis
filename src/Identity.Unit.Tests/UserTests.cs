@@ -14,8 +14,8 @@ namespace Identity.Unit.Tests
     {
         public UserTests()
         {
-            Register(() => TenantId.From("dev"));
-            Register(() => AggregateGuid.For<UserId>("dev"));
+            Register(() => TenantId.Create("dev"));
+            Register(() => AggregateGuid.Create<UserId>("dev"));
             Register(() => new UserAggregate(Fixture.Create<UserId>()));
         }
         
@@ -24,9 +24,9 @@ namespace Identity.Unit.Tests
         {
             Given(aggregate => { });
 
-            var fullname = new Fullname("Mark Gil", "Libres");
-            var email = new Email("me@example.com");
-            var password = new Password("etc");
+            var fullname = Fullname.Create("Mark Gil", "Libres");
+            var email = Email.Create("me@example.com");
+            var password = Password.Create("etc");
             
             When(aggregate =>
             {

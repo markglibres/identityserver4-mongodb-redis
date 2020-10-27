@@ -8,7 +8,7 @@ namespace Identity.Domain.ValueObjects
     {
         private readonly string _password;
 
-        public Password(string password, bool encrypt = true)
+        private Password(string password, bool encrypt = true)
         {
             _password = encrypt ? password.ToSha256() : password;
         }
@@ -16,6 +16,12 @@ namespace Identity.Domain.ValueObjects
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return _password;
+        }
+
+        public static Password Create(string password, bool encrypt = true)
+        {
+            var value = new Password(password, encrypt);
+            return value;
         }
     }
 }

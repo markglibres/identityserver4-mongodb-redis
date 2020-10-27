@@ -27,7 +27,7 @@ namespace Identity.Domain.Abstractions
         protected AggregateGuid(string id)
         {
             var tokens = id.Split(_delimiter);
-            TenantId = TenantId.From(tokens[0]);
+            TenantId = TenantId.Create(tokens[0]);
             Id = Guid.Parse(tokens[1]);
         }
 
@@ -40,9 +40,9 @@ namespace Identity.Domain.Abstractions
             return $"{TenantId}{_delimiter}{Id}";
         }
 
-        public static TId For<TId>(string tenantId, Guid id) where TId : class, IAggregateId<Guid>
+        public static TId Create<TId>(string tenantId, Guid id) where TId : class, IAggregateId<Guid>
         {
-            var tenant = TenantId.From(tenantId);
+            var tenant = TenantId.Create(tenantId);
             var constructor = typeof(TId).GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Instance,
                 null,
@@ -54,9 +54,9 @@ namespace Identity.Domain.Abstractions
             return aggregateId;
         }
         
-        public static TId For<TId>(string tenantId) where TId : class, IAggregateId<Guid>
+        public static TId Create<TId>(string tenantId) where TId : class, IAggregateId<Guid>
         {
-            var tenant = TenantId.From(tenantId);
+            var tenant = TenantId.Create(tenantId);
             var constructor = typeof(TId).GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Instance,
                 null,

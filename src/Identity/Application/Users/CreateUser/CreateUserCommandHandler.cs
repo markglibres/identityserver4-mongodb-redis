@@ -20,11 +20,11 @@ namespace Identity.Application.Users.CreateUser
         
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new UserAggregate(AggregateGuid.For<UserId>(request.TenantId));
+            var user = new UserAggregate(AggregateGuid.Create<UserId>(request.TenantId));
             user.Create(
-                new Fullname(request.Firstname, request.Lastname),
-                new Email(request.Email),
-                new Password(request.PlainPassword));
+                Fullname.Create(request.Firstname, request.Lastname),
+                Email.Create(request.Email),
+                Password.Create(request.PlainPassword));
 
             await _userRepository.Save(user, cancellationToken);
             

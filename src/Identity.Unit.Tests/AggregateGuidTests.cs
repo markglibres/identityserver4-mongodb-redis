@@ -14,7 +14,7 @@ namespace Identity.Unit.Tests
             var guid = Guid.NewGuid();
             var tenant = "dev";
             
-            var id = AggregateGuid.For<UserId>("dev", guid);
+            var id = AggregateGuid.Create<UserId>("dev", guid);
 
             id.Should().NotBeNull();
             id.TenantId.ToString().Should().Be(tenant);

@@ -14,10 +14,10 @@ namespace Identity.Integration.Tests
         [Fact]
         public async Task Should_Be_Able_To_Serialize_And_Deserialize_Data()
         {
-            var userId = AggregateGuid.For<UserId>("dev");
-            var fullname = new Fullname("Mark","Libres");
-            var email = new Email("me@example.com");
-            var password = new Password("secret");
+            var userId = AggregateGuid.Create<UserId>("dev");
+            var fullname = Fullname.Create("Mark","Libres");
+            var email = Email.Create("me@example.com");
+            var password = Password.Create("secret");
             
             await GivenAsync(async repository =>
             {

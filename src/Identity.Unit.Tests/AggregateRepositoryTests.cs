@@ -47,10 +47,10 @@ namespace Identity.Unit.Tests
                     });
             });
 
-            var aggregate = new UserAggregate(AggregateGuid.For<UserId>("dev"));
-            var fullname = new Fullname("Mark", "Libres");
-            var email = new Email("me@example.com");
-            var password = new Password("secret");
+            var aggregate = new UserAggregate(AggregateGuid.Create<UserId>("dev"));
+            var fullname = Fullname.Create("Mark", "Libres");
+            var email = Email.Create("me@example.com");
+            var password = Password.Create("secret");
             
             
             await WhenAsync(async repository =>
@@ -79,11 +79,11 @@ namespace Identity.Unit.Tests
         [Fact]
         public async Task Should_ReplayEvents_When_Loading_From_EventStore()
         {
-            var userId = AggregateGuid.For<UserId>("dev");
-            var fullname = new Fullname("Mark", "Libres");
-            var email = new Email("me@example.com");
+            var userId = AggregateGuid.Create<UserId>("dev");
+            var fullname = Fullname.Create("Mark", "Libres");
+            var email = Email.Create("me@example.com");
             var passwordString = "secret";
-            var password = new Password(passwordString, false);
+            var password = Password.Create(passwordString, false);
             var userCreatedEvent = new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.ToString(),
                 passwordString);
             

@@ -9,6 +9,6 @@ namespace Identity.Application.Abstractions
         public string TenantId { get; set; }
         public Guid Id { get; set; }
 
-        public TId AggregateId => AggregateGuid.For<TId>(TenantId, Id);
+        public TId AggregateId => AggregateGuid.Create<TId>(TenantId, Id);
     }
 }

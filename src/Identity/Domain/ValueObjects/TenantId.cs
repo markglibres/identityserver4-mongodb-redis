@@ -12,7 +12,7 @@ namespace Identity.Domain.ValueObjects
             _tenantId = tenantId;
         }
 
-        public static TenantId From(string tenantId) => new TenantId(tenantId);
+        public static TenantId Create(string tenantId) => new TenantId(tenantId);
         
         protected override IEnumerable<object> GetEqualityComponents()
         {

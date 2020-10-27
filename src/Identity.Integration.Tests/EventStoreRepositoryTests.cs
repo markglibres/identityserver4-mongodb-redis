@@ -28,7 +28,7 @@ namespace Identity.Integration.Tests
         {
             Given(repository => { });
 
-            var user = AggregateGuid.For<UserId>(_tenantId);
+            var user = AggregateGuid.Create<UserId>(_tenantId);
             var @event = new UserCreatedEvent(user, "Mark", "Libres", "me@example.com", "secret");
 
             await When(async repository =>

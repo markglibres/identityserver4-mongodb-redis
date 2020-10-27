@@ -26,9 +26,9 @@ namespace Identity.Domain.User
 
         protected void Handle(UserCreatedEvent @event)
         {
-            Fullname = new Fullname(@event.Firstname, @event.Lastname);
-            Email = new Email(@event.Email);
-            Password = new Password(@event.Password, false);
+            Fullname = Fullname.Create(@event.Firstname, @event.Lastname);
+            Email = Email.Create(@event.Email);
+            Password = Password.Create(@event.Password, false);
         }
 
         #region Constructors
