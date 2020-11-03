@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Identity.Domain.User.Events
 {
-    [EventName("Identity.Domain.User.Events.UserCreatedEvent")]
+    [EventName("Identity.Domain.User.Events","UserCreatedEvent")]
     public class UserCreatedEvent : DomainEvent
     {
         public string Firstname { get; private set;  }

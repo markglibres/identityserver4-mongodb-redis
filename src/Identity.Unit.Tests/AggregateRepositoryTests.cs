@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Identity.Unit.Tests
 {
-    public class AggregateRepositoryTests : UnitSpecifications<AggregateRepository<UserAggregate, UserId>>
+    public class AggregateRepositoryTests : UnitSpecifications<AggregateRepository<User, UserId>>
     {
         private Mock<IEventsRepository<IDomainEvent>> _eventsRepoMock;
 
@@ -47,7 +47,7 @@ namespace Identity.Unit.Tests
                     });
             });
 
-            var aggregate = new UserAggregate(AggregateGuid.Create<UserId>("dev"));
+            var aggregate = new User(AggregateGuid.Create<UserId>("dev"));
             var fullname = Fullname.Create("Mark", "Libres");
             var email = Email.Create("me@example.com");
             var password = Password.Create("secret");

@@ -6,7 +6,7 @@ using Identity.Domain.ValueObjects;
 
 namespace Identity.Domain.User
 {
-    public partial class UserAggregate : Aggregate<UserId>
+    public partial class User : Aggregate<UserId>
     {
         public Fullname Fullname { get; private set; }
         public Email Email { get; private set; }
@@ -32,10 +32,10 @@ namespace Identity.Domain.User
         }
 
         #region Constructors
-        public UserAggregate(UserId id) : base(id)
+        public User(UserId id) : base(id)
         {
         }
-        protected UserAggregate(UserId id, IReadOnlyCollection<IDomainEvent> events) : base(id, events)
+        protected User(UserId id, IReadOnlyCollection<IDomainEvent> events) : base(id, events)
         {
         }
         #endregion

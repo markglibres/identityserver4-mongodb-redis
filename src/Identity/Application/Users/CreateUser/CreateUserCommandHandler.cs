@@ -11,16 +11,16 @@ namespace Identity.Application.Users.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
     {
-        private readonly IAggregateRepository<UserAggregate, UserId> _userRepository;
+        private readonly IAggregateRepository<User, UserId> _userRepository;
 
-        public CreateUserCommandHandler(IAggregateRepository<UserAggregate, UserId> userRepository)
+        public CreateUserCommandHandler(IAggregateRepository<User, UserId> userRepository)
         {
             _userRepository = userRepository;
         }
         
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new UserAggregate(AggregateGuid.Create<UserId>(request.TenantId));
+            var user = new User(AggregateGuid.Create<UserId>(request.TenantId));
             user.Create(
                 Fullname.Create(request.Firstname, request.Lastname),
                 Email.Create(request.Email),

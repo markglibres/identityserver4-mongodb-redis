@@ -11,13 +11,13 @@ using Xunit;
 
 namespace Identity.Unit.Tests
 {
-    public class AggregateTests : AggregateSpecification<UserAggregate>
+    public class AggregateTests : AggregateSpecification<User>
     {
         public AggregateTests()
         {
             Register(() => TenantId.Create("dev"));
             Register(() => AggregateGuid.Create<UserId>("dev"));
-            Register(() => new UserAggregate(Fixture.Create<UserId>()));
+            Register(() => new User(Fixture.Create<UserId>()));
         }
         
         [Fact]

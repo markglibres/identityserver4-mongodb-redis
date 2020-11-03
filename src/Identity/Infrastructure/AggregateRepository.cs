@@ -23,14 +23,14 @@ namespace Identity.Infrastructure
         public async Task Save(T aggregate, CancellationToken cancellationToken)
         {
             var events = aggregate.UncommittedEvents;
-            await _eventsRepository.Save(events, aggregate.Id.StreamName, cancellationToken);
+            await _eventsRepository.Save(events, GetStreamName(aggregate.Id), cancellationToken);
         }
 
         public async Task<T> Get(TId id, CancellationToken cancellationToken)
         {
             try
             {
-                var events = await _eventsRepository.Get(id.StreamName, cancellationToken);
+                var events = await _eventsRepository.Get(GetStreamName(id), cancellationToken);
 
                 var constructor = typeof(T).GetConstructor(
                     BindingFlags.NonPublic | BindingFlags.Instance,
@@ -47,5 +47,7 @@ namespace Identity.Infrastructure
                 throw new DomainException($"There was an error loading the aggregate: {e.Message}");
             }
         }
+
+        private string GetStreamName(TId id) => $"{typeof(T).Name}-{id.StreamName}";
     }
 }

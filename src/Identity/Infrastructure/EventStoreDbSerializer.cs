@@ -47,7 +47,7 @@ namespace Identity.Infrastructure
         public EventData Serialize(IDomainEvent @event)
         {
             var eventId = @event.Id;
-            var type = @event.GetType().GetEventType();
+            var type = @event.GetType().GetEventName();
             var data = ToBytes(@event);
             var metadata = ToBytes(GetHeaders(@event));
             
@@ -60,7 +60,9 @@ namespace Identity.Infrastructure
             var metaData = JsonConvert.DeserializeObject<EventMetadata>(FromBytes(@event.Metadata));
             var eventType = _domainEventTypes
                 .FirstOrDefault(type =>
-                    type.GetEventName() == metaData.EventName && type.GetEventVersion() == metaData.EventVersion);
+                    type.GetEventName() == metaData.EventName 
+                    && type.GetEventVersion() == metaData.EventVersion
+                    && type.GetEventNamespace() == metaData.EventNamespace);
             
             if(eventType == null) return null;
 
@@ -94,9 +96,10 @@ namespace Identity.Infrastructure
         {
             var headers = new EventMetadata
             {
-                Id = @event.Id,
+                EventId = @event.Id,
                 EventName = @event.GetType().GetEventName(),
-                EventVersion = @event.GetType().GetEventVersion()
+                EventVersion = @event.GetType().GetEventVersion(),
+                EventNamespace = @event.GetType().GetEventNamespace()
             };
 
             return headers;
@@ -119,9 +122,10 @@ namespace Identity.Infrastructure
 
     class EventMetadata
     {
-        public string Id { get; set; }
+        public string EventId { get; set; }
         public string EventName { get; set; }
         public string EventVersion { get; set; }
+        public string EventNamespace { get; set; }
     }
     
 }

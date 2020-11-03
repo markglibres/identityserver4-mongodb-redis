@@ -22,6 +22,18 @@ services:
       - bizzpo
     restart: always
 
+  eventstore:
+    image: eventstore/eventstore:20.6.0-buster-slim
+    environment:
+      - EVENTSTORE_DEV=true
+      - EVENTSTORE_MEM_DB=true
+    ports:
+      - 1113:1113
+      - 2113:2113
+    networks:
+      - bizzpo
+    restart: always
+
 networks:
   bizzpo:
       driver: bridge

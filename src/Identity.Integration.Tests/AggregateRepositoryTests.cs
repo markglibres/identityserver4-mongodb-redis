@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Identity.Integration.Tests
 {
-    public class AggregateRepositoryTests : ServiceSpecifications<IAggregateRepository<UserAggregate, UserId>>
+    public class AggregateRepositoryTests : ServiceSpecifications<IAggregateRepository<User, UserId>>
     {
         [Fact]
         public async Task Should_Be_Able_To_Serialize_And_Deserialize_Data()
@@ -21,7 +21,7 @@ namespace Identity.Integration.Tests
             
             await GivenAsync(async repository =>
             {
-                var aggregate = new UserAggregate(userId);
+                var aggregate = new User(userId);
                 aggregate.Create(fullname, email, password);
 
                 await repository.Save(aggregate, CancellationToken.None);
