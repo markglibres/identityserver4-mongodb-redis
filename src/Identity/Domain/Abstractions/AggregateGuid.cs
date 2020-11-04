@@ -4,7 +4,7 @@ using Identity.Domain.ValueObjects;
 
 namespace Identity.Domain.Abstractions
 {
-    public abstract class AggregateGuid : IAggregateId<Guid>, IAggregateId, IStreamable, IEntityId
+    public abstract class AggregateGuid : IAggregateId<Guid>, IAggregateId
     {
         private const string _delimiter = "|";
 
@@ -31,7 +31,7 @@ namespace Identity.Domain.Abstractions
             Id = Guid.Parse(tokens[1]);
         }
 
-        public string StreamName => $"{TenantId}-{Id}";
+        public string StreamName => $"{TenantId}-{GetType().Name}:{Id}";
         public TenantId TenantId { get; }
         public Guid Id { get; }
 

@@ -23,14 +23,14 @@ namespace Identity.Infrastructure
         public async Task Save(T aggregate, CancellationToken cancellationToken)
         {
             var events = aggregate.UncommittedEvents;
-            await _eventsRepository.Save(events, GetStreamName(aggregate.Id), cancellationToken);
+            await _eventsRepository.Save(events, aggregate.Id.StreamName, cancellationToken);
         }
 
         public async Task<T> Get(TId id, CancellationToken cancellationToken)
         {
             try
             {
-                var events = await _eventsRepository.Get(GetStreamName(id), cancellationToken);
+                var events = await _eventsRepository.Get(id.StreamName, cancellationToken);
 
                 var constructor = typeof(T).GetConstructor(
                     BindingFlags.NonPublic | BindingFlags.Instance,
@@ -48,6 +48,5 @@ namespace Identity.Infrastructure
             }
         }
 
-        private string GetStreamName(TId id) => $"{typeof(T).Name}-{id.StreamName}";
     }
 }

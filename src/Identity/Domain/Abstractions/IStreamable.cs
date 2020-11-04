@@ -1,3 +1,5 @@
+using System;
+
 namespace Identity.Domain.Abstractions
 {
     public interface IStreamable
