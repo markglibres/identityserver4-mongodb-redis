@@ -14,21 +14,24 @@ namespace Identity.Infrastructure
         where T : class, new()
     {
         private readonly MongoClient _client;
+        private MongoDbConfig _options;
 
         public MongoDbRepository(IOptions<MongoDbConfig> options)
         {
-            _client = new MongoClient(options.Value.ConnectionString);
+            _options = options.Value;
+            _client = new MongoClient(_options.ConnectionString);
         }
 
-        private IMongoDatabase GetDatabase(string databaseName) => _client.GetDatabase(databaseName);
+        private IMongoDatabase GetDatabase(string database = "") => _client
+            .GetDatabase(string.IsNullOrWhiteSpace(database) ? _options.DefaultDatabase : database);
 
-        public async Task<IList<T>> Find(string database, Expression<Func<T, bool>> expression)
+        public async Task<IList<T>> Find(Expression<Func<T, bool>> expression, string database = "")
         {
             var result = await Collection(database).FindAsync(expression);
             return result.ToList();
         }
 
-        public async Task<IList<T>> FindAnyIn(string database, string propertyName, IEnumerable<string> items)
+        public async Task<IList<T>> FindAnyIn(string propertyName, IEnumerable<string> items, string database = "")
         {
             var filter = Builders<T>.Filter.AnyIn(propertyName, items);
             var result = await Collection(database).FindAsync(filter);
@@ -36,29 +39,29 @@ namespace Identity.Infrastructure
             return result.ToList();
         }
 
-        public async Task Delete(string database, Expression<Func<T, bool>> predicate)
+        public async Task Delete(Expression<Func<T, bool>> predicate, string database = "")
         {
             await Collection(database).DeleteManyAsync(predicate);
         }
 
-        public async Task<T> SingleOrDefault(string database, Expression<Func<T, bool>> expression)
+        public async Task<T> SingleOrDefault(Expression<Func<T, bool>> expression, string database = "")
         {
             var result = await Collection(database).FindAsync(expression);
 
             return result?.SingleOrDefault();
         }
 
-        public async Task Update(string database, T item, Expression<Func<T, bool>> expression)
+        public async Task Update(T item, Expression<Func<T, bool>> expression, string database = "")
         {
             await Collection(database).FindOneAndReplaceAsync(expression, item, new FindOneAndReplaceOptions<T>(){ IsUpsert = true });
         }
 
-        public async Task Insert(string database, T item)
+        public async Task Insert(T item, string database = "")
         {
             await Collection(database).InsertOneAsync(item);
         }
 
-        public async Task Insert(string database, IEnumerable<T> items)
+        public async Task Insert(IEnumerable<T> items, string database = "")
         {
             await Collection(database).InsertManyAsync(items);
         }

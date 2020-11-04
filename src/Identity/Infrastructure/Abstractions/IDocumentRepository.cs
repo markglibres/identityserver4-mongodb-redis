@@ -7,12 +7,12 @@ namespace Identity.Infrastructure.Abstractions
 {
     public interface IDocumentRepository<T> where T : class
     {
-        Task<IList<T>> Find(string database, Expression<Func<T, bool>> expression);
-        Task<IList<T>> FindAnyIn(string database, string propertyName, IEnumerable<string> items);
-        Task Delete(string database, Expression<Func<T, bool>> predicate);
-        Task<T> SingleOrDefault(string database, Expression<Func<T, bool>> expression);
-        Task Update(string database, T item, Expression<Func<T, bool>> expression);
-        Task Insert(string database, T item);
-        Task Insert(string database, IEnumerable<T> items);
+        Task<IList<T>> Find(Expression<Func<T, bool>> expression, string database = "");
+        Task<IList<T>> FindAnyIn(string propertyName, IEnumerable<string> items, string database = "");
+        Task Delete(Expression<Func<T, bool>> predicate, string database = "");
+        Task<T> SingleOrDefault(Expression<Func<T, bool>> expression, string database = "");
+        Task Update(T item, Expression<Func<T, bool>> expression, string database = "");
+        Task Insert(T item, string database = "");
+        Task Insert(IEnumerable<T> items, string database = "");
     }
 }
