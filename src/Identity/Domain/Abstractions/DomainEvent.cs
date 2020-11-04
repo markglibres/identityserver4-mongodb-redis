@@ -1,19 +1,22 @@
 using System;
 using System.Collections.Generic;
+using MediatR;
 using Newtonsoft.Json;
 
 namespace Identity.Domain.Abstractions
 {
-    public abstract class DomainEvent : ValueObject, IDomainEvent
+    public abstract class DomainEvent : ValueObject, IDomainEvent, INotification
     {
-        public string Id { get; private set; }
+        public string EventId { get; private set; }
         public string EntityId { get; private set; }
+        public string TenantId { get; private set; }
         public DateTimeOffset CreatedOn { get; private set; }
 
-        protected DomainEvent(IEntityId entityId)
+        protected DomainEvent(string tenantId, string entityId)
         {
-            EntityId = entityId.ToString();
-            Id = Guid.NewGuid().ToString();
+            EntityId = entityId;
+            TenantId = tenantId;
+            EventId = Guid.NewGuid().ToString();
         }
         protected DomainEvent()
         {
@@ -21,7 +24,7 @@ namespace Identity.Domain.Abstractions
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Id;
+            yield return EventId;
         }
     }
 }

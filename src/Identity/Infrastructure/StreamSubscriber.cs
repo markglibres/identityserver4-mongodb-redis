@@ -35,6 +35,9 @@ namespace Identity.Infrastructure
                     await _streamHandler.Handle(@event.Event);
                     await _streamManager.SetPosition(@event.Event.Position);
                 },
+                filterOptions: new SubscriptionFilterOptions(
+                    EventTypeFilter.ExcludeSystemEvents()
+                    ),
                 cancellationToken: stoppingToken
             );
         }

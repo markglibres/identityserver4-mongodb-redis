@@ -8,5 +8,6 @@ namespace Identity.Domain.Abstractions
     public interface IEntityId
     {
         string ToString();
+        
     }
 }

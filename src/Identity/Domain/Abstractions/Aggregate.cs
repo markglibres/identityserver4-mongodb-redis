@@ -32,7 +32,7 @@ namespace Identity.Domain.Abstractions
 
         protected void Emit(IDomainEvent @event)
         {
-            if (_unCommittedEvents.Any(e => e.Id == @event.Id)) return;
+            if (_unCommittedEvents.Any(e => e.EventId == @event.EventId)) return;
             
             @event.SetProperty(nameof(@event.CreatedOn), DateTimeUtc.Now().Value);
             

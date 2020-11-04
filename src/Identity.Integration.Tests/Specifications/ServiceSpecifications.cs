@@ -27,6 +27,11 @@ namespace Identity.Integration.Tests
         {
             return await func(_service);
         }
+        
+        protected virtual async Task When(Func<T, Task> func)
+        {
+            await func(_service);
+        }
 
         protected virtual async Task Then(Func<T, Task> assertions)
         {

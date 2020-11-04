@@ -46,7 +46,7 @@ namespace Identity.Infrastructure
         }
         public EventData Serialize(IDomainEvent @event)
         {
-            var eventId = @event.Id;
+            var eventId = @event.EventId;
             var type = @event.GetType().GetEventName();
             var data = ToBytes(@event);
             var metadata = ToBytes(GetHeaders(@event));
@@ -57,7 +57,8 @@ namespace Identity.Infrastructure
 
         public async Task<IDomainEvent> Deserialize(EventRecord @event)
         {
-            var metaData = JsonConvert.DeserializeObject<EventMetadata>(FromBytes(@event.Metadata));
+            var metaDataString = FromBytes(@event.Metadata);
+            var metaData = JsonConvert.DeserializeObject<EventMetadata>(metaDataString);
             var eventType = _domainEventTypes
                 .FirstOrDefault(type =>
                     type.GetEventName() == metaData.EventName 
@@ -96,7 +97,7 @@ namespace Identity.Infrastructure
         {
             var headers = new EventMetadata
             {
-                EventId = @event.Id,
+                EventId = @event.EventId,
                 EventName = @event.GetType().GetEventName(),
                 EventVersion = @event.GetType().GetEventVersion(),
                 EventNamespace = @event.GetType().GetEventNamespace()
