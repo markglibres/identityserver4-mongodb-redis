@@ -16,6 +16,7 @@ namespace Identity.Infrastructure
             var config = options.Value;
             var settings = new EventStoreClientSettings
             {
+                DefaultCredentials = new UserCredentials("admin", "changeit"),
                 ConnectivitySettings =
                 {
                     Address = new Uri(config.ConnectionString)
