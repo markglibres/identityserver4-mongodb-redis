@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EventStore.Client;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Abstractions;
+using Identity.Worker.Models;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,13 +36,24 @@ namespace Identity.Worker.HostedServices
             using var scope = _serviceScopeFactory.CreateScope();
 
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            
+            var subscriptionRepo =
+                scope.ServiceProvider.GetRequiredService<IDocumentRepository<SubscriptionSettings>>();
+                
+            var settings = await subscriptionRepo.SingleOrDefault("global",
+                 s => s.Tenant == "dev" );
+
+            if (settings == null)
+            {
+                settings = SubscriptionSettings.For("dev");
+                await subscriptionRepo.Insert("global", settings);
+            }
+
             //while (!stoppingToken.IsCancellationRequested)
             //{
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 await _eventStoreClient.SubscribeToAllAsync(
-                    Position.Start,
+                    settings.Position,
                     EventAppeared,
                     filterOptions: new SubscriptionFilterOptions(
                         EventTypeFilter.RegularExpression("^User"),
@@ -65,6 +77,17 @@ namespace Identity.Worker.HostedServices
             _logger.LogInformation("EventAppeared at position: {arg2}", arg2.OriginalPosition?.CommitPosition);
             
             _logger.LogInformation("Message Id: {id}, Created on: {date}, Entity id: {entityId}", message.Id, message.CreatedOn, message.EntityId);
+            
+            using var scope = _serviceScopeFactory.CreateScope();
+
+            var subscriptionRepo =
+                scope.ServiceProvider.GetRequiredService<IDocumentRepository<SubscriptionSettings>>();
+                
+            var settings = await subscriptionRepo.SingleOrDefault("global",
+                               s => s.Tenant == "dev");
+            
+            settings.SetLastPosition((long)arg2.Event.Position.CommitPosition);
+            await subscriptionRepo.Update("global", settings, s => s.Id.Equals(settings.Id));
         }
     }
 }

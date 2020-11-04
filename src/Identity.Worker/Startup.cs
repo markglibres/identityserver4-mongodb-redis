@@ -1,5 +1,7 @@
+using Identity.Worker.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization;
 
 namespace Identity.Worker
 {
@@ -16,6 +18,12 @@ namespace Identity.Worker
         {
             services.AddIdentity(_configuration);
             services.AddHostedService<HostedServices.Worker>();
+            
+            BsonClassMap.RegisterClassMap<SubscriptionSettings>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
         }
     }
 }

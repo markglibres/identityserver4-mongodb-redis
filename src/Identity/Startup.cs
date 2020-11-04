@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 
 namespace Identity
 {
@@ -19,16 +20,20 @@ namespace Identity
 
         public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
         {
-            var configSection = configuration.GetSection("EventStoreDb");
-            services.Configure<EventStoreDbConfig>(configSection);
+            var eventStoreConfig = configuration.GetSection("EventStoreDb");
+            services.Configure<EventStoreDbConfig>(eventStoreConfig);
+            
+            var mongoDbConfig = configuration.GetSection("MongoDb");
+            services.Configure<MongoDbConfig>(mongoDbConfig);
             
             services.AddSingleton<IEventStoreDb, EventStoreDb>();
             services.AddTransient<IEventStoreDbSerializer, EventStoreDbSerializer>();
             services.AddTransient<IEventsRepository<IDomainEvent>, EventsRepository<IDomainEvent>>();
             services.AddTransient(typeof(IAggregateRepository<,>), typeof(AggregateRepository<,>));
+            services.AddTransient(typeof(IDocumentRepository<>), typeof(MongoDbRepository<>));
             
             services.AddMediatR(typeof(Startup));
-                
+            
             return services;
         }
         
