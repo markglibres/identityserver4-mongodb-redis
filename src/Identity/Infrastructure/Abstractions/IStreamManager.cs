@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using EventStore.Client;
 
-namespace Identity.Worker.Services.Abstractions
+namespace Identity.Infrastructure.Abstractions
 {
-    public interface IStreamSubscriber
+    public interface IStreamManager
     {
         Task<Position> GetPosition();
         Task SetPosition(Position position);

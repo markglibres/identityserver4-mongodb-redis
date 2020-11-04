@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using EventStore.Client;
 
-namespace Identity.Worker.Services.Abstractions
+namespace Identity.Infrastructure.Abstractions
 {
-    internal interface IStreamHandler
+    public interface IStreamHandler
     {
         Task Handle(EventRecord arg2Event);
     }

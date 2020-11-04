@@ -1,18 +1,17 @@
 using System.Threading.Tasks;
 using EventStore.Client;
 using Identity.Infrastructure.Abstractions;
-using Identity.Worker.Models;
-using Identity.Worker.Services.Abstractions;
+using Identity.Infrastructure.Models;
 
-namespace Identity.Worker.Services
+namespace Identity.Infrastructure
 {
-    public class StreamSubscriber : IStreamSubscriber
+    public class StreamManager : IStreamManager
     {
         private readonly IDocumentRepository<SubscriptionSettings> _documentRepository;
         private const string _database = "global";
         private const string _tenant = "all";
 
-        public StreamSubscriber(IDocumentRepository<SubscriptionSettings> documentRepository)
+        public StreamManager(IDocumentRepository<SubscriptionSettings> documentRepository)
         {
             _documentRepository = documentRepository;
             

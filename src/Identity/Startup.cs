@@ -3,6 +3,7 @@ using Identity.Domain.Abstractions;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Abstractions;
 using Identity.Infrastructure.Configs;
+using Identity.Infrastructure.Models;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,5 +38,19 @@ namespace Identity
             return services;
         }
         
+        public static IServiceCollection AddIdentitySubscriber(this IServiceCollection services)
+        {
+            services.AddTransient<IStreamManager, StreamManager>();
+            services.AddTransient<IStreamHandler, StreamHandler>();
+            services.AddTransient<IStreamSubscriber, StreamSubscriber>();
+            
+            BsonClassMap.RegisterClassMap<SubscriptionSettings>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
+            
+            return services;
+        }
     }
 }

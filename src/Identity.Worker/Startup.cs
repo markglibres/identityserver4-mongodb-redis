@@ -1,8 +1,8 @@
 using EventStore.Client;
+using Identity.Infrastructure;
+using Identity.Infrastructure.Abstractions;
+using Identity.Infrastructure.Models;
 using Identity.Worker.HostedServices;
-using Identity.Worker.Models;
-using Identity.Worker.Services;
-using Identity.Worker.Services.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
@@ -21,15 +21,9 @@ namespace Identity.Worker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity(_configuration);
+            services.AddIdentitySubscriber();
             services.AddHostedService<HostedServices.Worker>();
-            services.AddTransient<IStreamSubscriber, StreamSubscriber>();
-            services.AddTransient<IStreamHandler, StreamHandler>();
             
-            BsonClassMap.RegisterClassMap<SubscriptionSettings>(map =>
-            {
-                map.AutoMap();
-                map.SetIgnoreExtraElements(true);
-            });
         }
     }
 }

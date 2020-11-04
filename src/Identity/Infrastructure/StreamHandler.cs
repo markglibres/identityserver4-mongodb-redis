@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using EventStore.Client;
-using Identity.Worker.Services.Abstractions;
+using Identity.Infrastructure.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace Identity.Worker.Services
+namespace Identity.Infrastructure
 {
     public class StreamHandler : IStreamHandler
     {

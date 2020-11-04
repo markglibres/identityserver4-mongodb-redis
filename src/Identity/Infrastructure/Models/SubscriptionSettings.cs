@@ -1,7 +1,7 @@
 using System;
 using EventStore.Client;
 
-namespace Identity.Worker.Models
+namespace Identity.Infrastructure.Models
 {
     public class SubscriptionSettings
     {
