@@ -13,6 +13,35 @@ services:
       - bizzpo
     restart: always
 
+  mongodb:
+    image: mongo:4.2.8
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=foobar
+    ports:
+      - 27017:27017
+    networks:
+      - bizzpo
+    restart: always
+
+  identityworker:
+    build:
+      context: .
+      dockerfile: Identity.Worker/Dockerfile
+    image: identityworker
+    environment:
+      - Environment=dev
+      - 'MongoDb__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
+      - MongoDb__DefaultDatabase=Identity_Worker
+      - EventStoreDb__ConnectionString=https://eventstore:2113
+      - EventStoreDb__Name=Identity
+    container_name: identityworker
+    ports:
+      - 1100:80
+    networks:
+      - bizzpo
+    restart: always
+
 networks:
     bizzpo:
         driver: bridge
