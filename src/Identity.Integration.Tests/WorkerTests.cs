@@ -16,18 +16,20 @@ namespace Identity.Integration.Tests
     {
         public WorkerTests()
         {
-            _tenantId = "dev";
             _streamName = DateTime.Now.Ticks.ToString();
         }
 
-        private readonly string _tenantId;
         private readonly string _streamName;
 
         [Fact]
         public async Task OnSaveEvents_ToEventStore_Should_SubscribeToStream_And_Write_ReadOnly_Model()
         {
-            var userId = AggregateGuid.Create<UserId>(_tenantId);
-            var @event = new UserCreatedEvent(userId, "Mark", "Libres", "me@example.com", "secret");
+            var userId = AggregateGuid.Create<UserId>();
+            var @event = new UserCreatedEvent(userId, 
+                Faker.Name.FirstName(), 
+                Faker.Name.LastName(), 
+                $"{Faker.Random.Word()}@example.com", 
+                "secret");
 
             Given(repository => { });
 
@@ -44,7 +46,7 @@ namespace Identity.Integration.Tests
             await Then<IDocumentRepository<UserModel>>(async (mediator, repository) =>
             {
                 var user = await repository.SingleOrDefault(u => u.Id == userId.Id.ToString(),
-                    userId.TenantId.ToString());
+                    userId.TenantId);
                 user.Should().NotBeNull();
             });
         }

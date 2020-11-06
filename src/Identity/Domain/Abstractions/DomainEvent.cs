@@ -12,10 +12,10 @@ namespace Identity.Domain.Abstractions
         public string TenantId { get; private set; }
         public DateTimeOffset CreatedOn { get; private set; }
 
-        protected DomainEvent(string tenantId, string entityId)
+        protected DomainEvent(string entityId, string tenantId = null)
         {
             EntityId = entityId;
-            TenantId = tenantId;
+            TenantId = string.IsNullOrWhiteSpace(tenantId) ? ValueObjects.TenantId.Default.ToString() : tenantId ;
             EventId = Guid.NewGuid().ToString();
         }
         protected DomainEvent()

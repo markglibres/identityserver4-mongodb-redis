@@ -20,7 +20,7 @@ namespace Identity.Domain.User.Events
         public UserCreatedEvent(
             UserId id,
             string firstname, string lastname, 
-            string email, string password) : base(id.TenantId.ToString(), id.Id.ToString())
+            string email, string password) : base(id.Id.ToString(), id.TenantId.ToString())
         {
             Firstname = firstname;
             Lastname = lastname;

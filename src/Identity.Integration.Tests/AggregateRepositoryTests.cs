@@ -14,9 +14,9 @@ namespace Identity.Integration.Tests
         [Fact]
         public async Task Should_Be_Able_To_Serialize_And_Deserialize_Data()
         {
-            var userId = AggregateGuid.Create<UserId>("dev");
-            var fullname = Fullname.Create("Mark","Libres");
-            var email = Email.Create("me@example.com");
+            var userId = AggregateGuid.Create<UserId>();
+            var fullname = Fullname.Create(Faker.Name.FirstName(),Faker.Name.LastName());
+            var email = Email.Create($"{Faker.Random.Word()}@example.com");
             var password = Password.Create("secret");
             
             await GivenAsync(async repository =>

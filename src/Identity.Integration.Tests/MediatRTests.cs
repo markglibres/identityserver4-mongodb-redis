@@ -31,7 +31,6 @@ namespace Identity.Integration.Tests
                 Email = "me@example.com",
                 Firstname = "Mark",
                 Lastname = "Libres",
-                TenantId = "dev",
                 PlainPassword = "secret"
             };
 
@@ -39,46 +38,13 @@ namespace Identity.Integration.Tests
 
             await Then<IEventsRepository<IDomainEvent>>(async (handler, repository) =>
             {
-                var userId = AggregateGuid.Create<UserId>("dev", id);
+                var userId = AggregateGuid.Create<UserId>(id);
                 var streamName = $"{userId.StreamName}";
                 var record = await repository.Get(streamName, CancellationToken.None);
                 
                 record.Should().NotBeNull();
                 record.Should().HaveCount(1);
             });
-        }
-
-        [Fact]
-        public async Task OnSubscribeEvent_Should_Write_ReadModel()
-        {
-            var tenant = "dev";
-            var id = Guid.Empty;
-            var command = new CreateUserCommand
-            {
-                Id = Guid.NewGuid(),
-                Email = "me@example.com",
-                Firstname = "Mark",
-                Lastname = "Libres",
-                TenantId = tenant,
-                PlainPassword = "secret"
-            };
-            
-            await GivenAsync(async mediator =>
-            {
-                id = await mediator.Send(command, CancellationToken.None);
-            });
-
-            var userId = AggregateGuid.Create<UserId>("dev", id);
-            var @event = new UserCreatedEvent(userId, command.Firstname, command.Lastname, command.Email, command.PlainPassword.ToSha256() );
-            
-            await When(async mediator => await mediator.Publish(@event, CancellationToken.None));
-
-            await Then<IDocumentRepository<UserModel>>(async (mediator, repository) =>
-            {
-                var user = await repository.SingleOrDefault(u => u.Id == id.ToString(), userId.TenantId.ToString());
-                user.Should().NotBeNull();
-            });
-
         }
     }
 }

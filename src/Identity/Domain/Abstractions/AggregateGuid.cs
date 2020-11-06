@@ -12,16 +12,16 @@ namespace Identity.Domain.Abstractions
         {
         }
 
-        protected AggregateGuid(TenantId tenantId, Guid id)
+        protected AggregateGuid(Guid id, TenantId tenantId = null)
         {
-            TenantId = tenantId;
+            TenantId = tenantId ?? TenantId.Default;
             Id = id;
         }
 
-        protected AggregateGuid(TenantId tenantId)
+        protected AggregateGuid(TenantId tenantId = null)
         {
             Id = Guid.NewGuid();
-            TenantId = tenantId;
+            TenantId = tenantId ?? TenantId.Default;
         }
 
         protected AggregateGuid(string id)
@@ -40,23 +40,23 @@ namespace Identity.Domain.Abstractions
             return $"{TenantId}{_delimiter}{Id}";
         }
 
-        public static TId Create<TId>(string tenantId, Guid id) where TId : class, IAggregateId<Guid>
+        public static TId Create<TId>(Guid id, string tenantId = null) where TId : class, IAggregateId<Guid>
         {
-            var tenant = TenantId.Create(tenantId);
+            var tenant = string.IsNullOrWhiteSpace(tenantId) ? TenantId.Default : TenantId.Create(tenantId);
             var constructor = typeof(TId).GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Instance,
                 null,
-                new[] {typeof(TenantId), typeof(Guid)},
+                new[] {typeof(Guid), typeof(TenantId)},
                 null
             );
-            var aggregateId = (TId) constructor?.Invoke(new object[] {tenant, id});
+            var aggregateId = (TId) constructor?.Invoke(new object[] {id, tenant});
 
             return aggregateId;
         }
         
-        public static TId Create<TId>(string tenantId) where TId : class, IAggregateId<Guid>
+        public static TId Create<TId>(string tenantId = null) where TId : class, IAggregateId<Guid>
         {
-            var tenant = TenantId.Create(tenantId);
+            var tenant = string.IsNullOrWhiteSpace(tenantId) ? TenantId.Default : TenantId.Create(tenantId);
             var constructor = typeof(TId).GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Instance,
                 null,

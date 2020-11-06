@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Identity.Domain.Abstractions;
 
 namespace Identity.Domain.ValueObjects
@@ -18,5 +19,7 @@ namespace Identity.Domain.ValueObjects
         {
             yield return _tenantId;
         }
+
+        public static TenantId Default => new TenantId(Assembly.GetExecutingAssembly().GetName().Name);
     }
 }

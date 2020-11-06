@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Identity.Application.Abstractions;
 using Identity.Domain.User.Events;
+using Identity.Domain.ValueObjects;
 using Identity.Infrastructure.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +28,7 @@ namespace Identity.Application.Users.GetUser
                 Password = notification.Password
             };
 
-            await _documentRepository.Insert(model, notification.TenantId);
+            await _documentRepository.Insert(model, TenantId.Create(notification.TenantId));
         }
     }
 }
