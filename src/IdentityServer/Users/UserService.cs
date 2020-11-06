@@ -15,7 +15,7 @@ namespace IdentityServer.Users
         {
             _userStore = userStore;
         }
-
+        
         public async Task Create(T user, CancellationToken cancellationToken = default)
         {
             var foundUser = await _userStore.FindByNameAsync(user.UserName, cancellationToken);
@@ -29,6 +29,12 @@ namespace IdentityServer.Users
             if (foundUser == null) return;
 
             await _userStore.UpdateAsync(user, cancellationToken);
+        }
+
+        public async Task<T> GetByUsername(string username, CancellationToken cancellationToken = default)
+        {
+            var user = await _userStore.FindByNameAsync(username, cancellationToken);
+            return user;
         }
     }
 }

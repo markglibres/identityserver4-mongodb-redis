@@ -51,7 +51,7 @@ namespace Identity.Unit.Tests
                 @event.Firstname.Should().Be("Mark Gil");
                 @event.Lastname.Should().Be("Libres");
                 @event.Email.Should().Be("me@example.com");
-                @event.Password.Should().Be("etc".ToSha256());
+                @event.Password.Should().Be("etc");
                 @event.CreatedOn.Should()
                     .NotBe(default)
                     .And

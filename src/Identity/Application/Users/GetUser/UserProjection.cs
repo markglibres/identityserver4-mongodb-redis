@@ -10,10 +10,14 @@ namespace Identity.Application.Users.GetUser
 {
     public class UserProjection : IProjector<UserCreatedEvent>
     {
+        private readonly ILogger<UserProjection> _logger;
         private readonly IDocumentRepository<UserModel> _documentRepository;
 
-        public UserProjection(IDocumentRepository<UserModel> documentRepository)
+        public UserProjection(
+            ILogger<UserProjection> logger,
+            IDocumentRepository<UserModel> documentRepository)
         {
+            _logger = logger;
             _documentRepository = documentRepository;
         }
         
@@ -29,6 +33,7 @@ namespace Identity.Application.Users.GetUser
             };
 
             await _documentRepository.Insert(model, TenantId.Create(notification.TenantId));
+            _logger.LogInformation($"User {notification.Email} has been projected");
         }
     }
 }

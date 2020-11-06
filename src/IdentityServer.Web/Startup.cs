@@ -38,7 +38,7 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddResourceOwnerPassword<IdentityServer_ApplicationUser, ApplicationRole>()
+                .AddResourceOwnerPassword<ApplicationUser, ApplicationRole>()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<SeedClients>()
                 .SeedApiResources<SeedApiResources>()

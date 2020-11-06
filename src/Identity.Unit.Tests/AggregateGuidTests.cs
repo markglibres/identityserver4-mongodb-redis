@@ -11,7 +11,7 @@ namespace Identity.Unit.Tests
     {
         [Theory]
         [InlineData("dev", "dev")]
-        [InlineData(null, "global")]
+        [InlineData(null, "Identity")]
         public void OnCreate_AggregateGuid_Using_For_Should_Generate_Values(string tenant, string expectedTenant)
         {
             var guid = Guid.NewGuid();

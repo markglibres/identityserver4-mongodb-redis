@@ -83,7 +83,7 @@ namespace Identity.Unit.Tests
             var fullname = Fullname.Create("Mark", "Libres");
             var email = Email.Create("me@example.com");
             var passwordString = "secret";
-            var password = Password.Create(passwordString, false);
+            var password = Password.Create(passwordString);
             var userCreatedEvent = new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.ToString(),
                 passwordString);
             

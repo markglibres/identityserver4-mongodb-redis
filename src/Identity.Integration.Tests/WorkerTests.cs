@@ -7,12 +7,13 @@ using Identity.Application.Users.GetUser;
 using Identity.Domain.Abstractions;
 using Identity.Domain.User;
 using Identity.Domain.User.Events;
+using Identity.Domain.ValueObjects;
 using Identity.Infrastructure.Abstractions;
 using Xunit;
 
 namespace Identity.Integration.Tests
 {
-    public class WorkerTests : ServiceSpecifications<IEventsRepository<IDomainEvent>>
+    public class WorkerTests : ServiceSpecifications<IAggregateRepository<User, UserId>>
     {
         public WorkerTests()
         {
@@ -25,28 +26,21 @@ namespace Identity.Integration.Tests
         public async Task OnSaveEvents_ToEventStore_Should_SubscribeToStream_And_Write_ReadOnly_Model()
         {
             var userId = AggregateGuid.Create<UserId>();
-            var @event = new UserCreatedEvent(userId, 
-                Faker.Name.FirstName(), 
-                Faker.Name.LastName(), 
-                $"{Faker.Random.Word()}@example.com", 
-                "secret");
-
-            Given(repository => { });
-
-            await When(async repository =>
+            var fullname = Fullname.Create(Faker.Name.FirstName(),Faker.Name.LastName());
+            var email = Email.Create($"{Faker.Random.Word()}@example.com");
+            var password = Password.Create("secret");
+            
+            await GivenAsync(async repository =>
             {
-                await repository.Save(
-                    new[] {@event},
-                    _streamName,
-                    CancellationToken.None);
+                var aggregate = new User(userId);
+                aggregate.Create(fullname, email, password);
 
-                return Task.CompletedTask;
+                await repository.Save(aggregate, CancellationToken.None);
             });
 
             await Then<IDocumentRepository<UserModel>>(async (mediator, repository) =>
             {
-                var user = await repository.SingleOrDefault(u => u.Id == userId.Id.ToString(),
-                    userId.TenantId);
+                var user = await repository.SingleOrDefault(u => u.Id == userId.Id.ToString());
                 user.Should().NotBeNull();
             });
         }

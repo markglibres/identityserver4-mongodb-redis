@@ -36,7 +36,7 @@ namespace Identity.Infrastructure
                     await _streamManager.SetPosition(@event.Event.Position);
                 },
                 filterOptions: new SubscriptionFilterOptions(
-                    EventTypeFilter.ExcludeSystemEvents()
+                    StreamFilter.Prefix("Identity")
                     ),
                 cancellationToken: stoppingToken
             );
