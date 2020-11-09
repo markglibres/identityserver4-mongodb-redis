@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Bogus;
 using Moq;
 using Xunit;
 
@@ -14,11 +15,13 @@ namespace Identity.Unit.Tests
         private T _sut;
         protected T SystemUnderTest => _sut;
         protected IFixture Fixture { get; }
+        protected Faker Faker { get; }
         
         protected UnitSpecifications()
         {
             Fixture = new Fixture().Customize(new AutoMoqCustomization());
             _services = new Dictionary<string, object>();
+            Faker = new Faker("en");
         }
 
         protected Mock<TMock> Register<TMock>(Action<Mock<TMock>> action) where TMock : class

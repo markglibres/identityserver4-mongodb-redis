@@ -24,11 +24,22 @@ namespace Identity.Domain.User
             Emit(@event);
         }
 
+        public void UpdatePassword(Password password)
+        {
+            var @event = new UserPasswordUpdatedEvent(Id, password.ToString());
+            Emit(@event);
+        }
+
         protected void Handle(UserCreatedEvent @event)
         {
             Fullname = Fullname.Create(@event.Firstname, @event.Lastname);
             Email = Email.Create(@event.Email);
             Password = Password.Create(@event.Password, false);
+        }
+
+        protected void Handle(UserPasswordUpdatedEvent @event)
+        {
+            Password = Password.Create(@event.HashedPassword, false);
         }
 
         #region Constructors

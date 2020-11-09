@@ -8,7 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Identity.Application.Users.GetUser
 {
-    public class UserProjection : IProjector<UserCreatedEvent>
+    public class UserProjection : 
+        IProjector<UserCreatedEvent>,
+        IProjector<UserPasswordUpdatedEvent>
+
     {
         private readonly ILogger<UserProjection> _logger;
         private readonly IDocumentRepository<UserModel> _documentRepository;
@@ -35,6 +38,18 @@ namespace Identity.Application.Users.GetUser
 
             await _documentRepository.Insert(model, TenantId.Create(notification.TenantId));
             _logger.LogInformation($"User {notification.Email} has been projected");
+        }
+
+        public async Task Handle(UserPasswordUpdatedEvent notification, CancellationToken cancellationToken)
+        {
+            var model = await _documentRepository
+                .SingleOrDefault(m => m.Id == notification.EntityId);
+            if(model == null) return;
+
+            model.Password = notification.HashedPassword;
+            await _documentRepository.Update(model, m => m.Id == notification.EntityId,
+                TenantId.Create(notification.TenantId));
+            _logger.LogInformation($"User {model.Email} password has been projected");
         }
     }
 }
