@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Identity.Domain.ValueObjects;
 using MediatR;
 using Newtonsoft.Json;
 

@@ -29,7 +29,8 @@ namespace Identity.Application.Users.GetUser
                 Email = notification.Email,
                 Firstname = notification.Firstname,
                 Lastname = notification.Lastname,
-                Password = notification.Password
+                Password = notification.Password,
+                LastCommittedEvent = notification.EventId
             };
 
             await _documentRepository.Insert(model, TenantId.Create(notification.TenantId));

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Identity.Domain.Abstractions
@@ -11,6 +12,7 @@ namespace Identity.Domain.Abstractions
     {
         IReadOnlyCollection<IDomainEvent> UncommittedEvents { get; }
         IReadOnlyCollection<IDomainEvent> CommittedEvents { get; }
+        string LastCommittedEvent { get; }
     }
 
 }

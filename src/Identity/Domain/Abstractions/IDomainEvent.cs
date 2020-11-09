@@ -1,4 +1,5 @@
 using System;
+using Identity.Domain.ValueObjects;
 
 namespace Identity.Domain.Abstractions
 {

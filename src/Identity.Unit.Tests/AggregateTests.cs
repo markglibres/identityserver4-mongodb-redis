@@ -29,7 +29,7 @@ namespace Identity.Unit.Tests
             var email = Email.Create("me@example.com");
             var password = Password.Create("etc");
 
-            var startDateTime = DateTimeOffset.Now;
+            var start = DateTimeUtc.Now();
             When(aggregate =>
             {
                 aggregate.Create(
@@ -37,8 +37,8 @@ namespace Identity.Unit.Tests
                     email,
                     password);
             });
-            var endDateTime = DateTimeOffset.Now;
-
+            var end = DateTimeUtc.Now();
+            
             Then(aggregate =>
             {
                 aggregate.Fullname.Should().Be(fullname);
@@ -52,12 +52,14 @@ namespace Identity.Unit.Tests
                 @event.Lastname.Should().Be("Libres");
                 @event.Email.Should().Be("me@example.com");
                 @event.Password.Should().Be(password.ToString());
-                @event.CreatedOn.Should()
-                    .NotBe(default)
+                @event.CreatedOn.Should().NotBe(default);
+                @event.CreatedOn
+                    .Should()
+                    .BeCloseTo(start.Value)
                     .And
-                    .BeCloseTo(startDateTime)
-                    .And
-                    .BeCloseTo(endDateTime);
+                    .BeCloseTo(end.Value);
+
+
             });
         }
     }

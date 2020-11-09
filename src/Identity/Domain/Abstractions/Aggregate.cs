@@ -17,6 +17,8 @@ namespace Identity.Domain.Abstractions
         
         private readonly List<IDomainEvent> _committedEvents = new List<IDomainEvent>();
         public IReadOnlyCollection<IDomainEvent> CommittedEvents => _committedEvents.ToList().AsReadOnly();
+        
+        public string LastCommittedEvent { get; private set; }
 
         protected Aggregate(TId id)
         {
@@ -52,6 +54,12 @@ namespace Identity.Domain.Abstractions
                     null); 
             
             method?.Invoke(this, new object[] {@event});
+            SetLastCommittedEvent(@event);
+        }
+
+        private void SetLastCommittedEvent(IDomainEvent @event)
+        {
+            LastCommittedEvent = @event.EventId;
         }
 
     }
