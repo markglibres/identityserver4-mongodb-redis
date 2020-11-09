@@ -41,7 +41,7 @@ namespace Identity.Worker.Integration.IdentityServer
                 Email = notification.Email,
                 UserName = notification.Email,
                 EmailConfirmed = true,
-                PasswordHash = _passwordHasher.HashPassword(null, notification.Password)
+                PasswordHash =   notification.Password // _passwordHasher.HashPassword(null, notification.Password)
             };
 
             await _userService.Create(user, cancellationToken);

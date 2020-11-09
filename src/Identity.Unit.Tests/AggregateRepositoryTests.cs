@@ -85,7 +85,7 @@ namespace Identity.Unit.Tests
             var passwordString = "secret";
             var password = Password.Create(passwordString);
             var userCreatedEvent = new UserCreatedEvent(userId, fullname.Firstname, fullname.Lastname, email.ToString(),
-                passwordString);
+                password.ToString());
             
             Given(repository =>
             {

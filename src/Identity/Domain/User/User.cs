@@ -28,7 +28,7 @@ namespace Identity.Domain.User
         {
             Fullname = Fullname.Create(@event.Firstname, @event.Lastname);
             Email = Email.Create(@event.Email);
-            Password = Password.Create(@event.Password);
+            Password = Password.Create(@event.Password, false);
         }
 
         #region Constructors
