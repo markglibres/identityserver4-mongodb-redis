@@ -19,7 +19,7 @@ namespace Identity.Application.Users.UpdateUserPassword
         
         public async Task<Unit> Handle(UpdateUserPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = new User(AggregateGuid.Create<UserId>());
+            var user = new User(UserId.Create());
             user.UpdatePassword(Password.Create(request.PlainPassword, false));
 
             await _userRepository.Save(user, cancellationToken);

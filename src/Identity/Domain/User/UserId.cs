@@ -20,6 +20,9 @@ namespace Identity.Domain.User
         {
             
         }
-        
+
+        public static UserId Create(string tenantId = null) => Create<UserId>(tenantId);
+        public static UserId Create(Guid id, string tenantId = null) => Create<UserId>(id, tenantId);
+
     }
 }

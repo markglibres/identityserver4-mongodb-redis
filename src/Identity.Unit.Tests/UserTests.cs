@@ -16,7 +16,7 @@ namespace Identity.Unit.Tests
         public UserTests()
         {
             Register(() => TenantId.Create("dev"));
-            Register(() => AggregateGuid.Create<UserId>("dev"));
+            Register(() => UserId.Create("dev"));
             Register(() => new User(Fixture.Create<UserId>()));
         }
         

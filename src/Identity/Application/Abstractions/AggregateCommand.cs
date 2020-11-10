@@ -7,7 +7,5 @@ namespace Identity.Application.Abstractions
         where TId : class, IAggregateId<Guid>
     {
         public Guid Id { get; set; }
-
-        public TId AggregateId => AggregateGuid.Create<TId>(Id);
     }
 }

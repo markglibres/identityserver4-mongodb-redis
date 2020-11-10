@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Identity.Domain.ValueObjects;
+using Microsoft.Extensions.WebEncoders.Testing;
 
 namespace Identity.Domain.Abstractions
 {
@@ -40,7 +41,7 @@ namespace Identity.Domain.Abstractions
             return $"{TenantId}{_delimiter}{Id}";
         }
 
-        public static TId Create<TId>(Guid id, string tenantId = null) where TId : class, IAggregateId<Guid>
+        protected static TId Create<TId>(Guid id, string tenantId = null) where TId : class, IAggregateId<Guid>
         {
             var tenant = string.IsNullOrWhiteSpace(tenantId) ? TenantId.Default : TenantId.Create(tenantId);
             var constructor = typeof(TId).GetConstructor(
@@ -54,7 +55,7 @@ namespace Identity.Domain.Abstractions
             return aggregateId;
         }
         
-        public static TId Create<TId>(string tenantId = null) where TId : class, IAggregateId<Guid>
+        protected static TId Create<TId>(string tenantId = null) where TId : class, IAggregateId<Guid>
         {
             var tenant = string.IsNullOrWhiteSpace(tenantId) ? TenantId.Default : TenantId.Create(tenantId);
             var constructor = typeof(TId).GetConstructor(
@@ -67,8 +68,8 @@ namespace Identity.Domain.Abstractions
 
             return aggregateId;
         }
-        
-        public static TId From<TId>(string aggregateId) where TId : class, IAggregateId<Guid>
+
+        protected static TId From<TId>(string aggregateId) where TId : class, IAggregateId<Guid>
         {
             var constructor = typeof(TId).GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Instance,

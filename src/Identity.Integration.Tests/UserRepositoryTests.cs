@@ -16,7 +16,7 @@ namespace Identity.Integration.Tests
         [Fact]
         public async Task OnCreate_Should_Write_And_Deserialize_Data()
         {
-            var userId = AggregateGuid.Create<UserId>();
+            var userId = UserId.Create();
             var fullname = Fullname.Create(Faker.Name.FirstName(),Faker.Name.LastName());
             var email = Email.Create($"{Faker.Random.Word()}@example.com");
             var password = Password.Create("secret");
@@ -44,7 +44,7 @@ namespace Identity.Integration.Tests
         [Fact]
         public async Task OnUpdatePassword_Should_Write_And_Deserialize_Data()
         {
-            var userId = AggregateGuid.Create<UserId>();
+            var userId = UserId.Create();
             var fullname = Fullname.Create(Faker.Name.FirstName(),Faker.Name.LastName());
             var email = Email.Create($"{Faker.Random.Word()}@example.com");
             var password = Password.Create("secret");

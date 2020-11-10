@@ -20,7 +20,7 @@ namespace Identity.Application.Users.CreateUser
         
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new User(AggregateGuid.Create<UserId>());
+            var user = new User(UserId.Create());
             user.Create(
                 Fullname.Create(request.Firstname, request.Lastname),
                 Email.Create(request.Email),

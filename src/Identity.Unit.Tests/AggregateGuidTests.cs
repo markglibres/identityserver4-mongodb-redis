@@ -15,8 +15,7 @@ namespace Identity.Unit.Tests
         public void OnCreate_AggregateGuid_Using_For_Should_Generate_Values(string tenant, string expectedTenant)
         {
             var guid = Guid.NewGuid();
-            
-            var id = AggregateGuid.Create<UserId>(guid, tenant);
+            var id = UserId.Create(guid, tenant);
 
             id.Should().NotBeNull();
             id.TenantId.ToString().Should().Be(expectedTenant);

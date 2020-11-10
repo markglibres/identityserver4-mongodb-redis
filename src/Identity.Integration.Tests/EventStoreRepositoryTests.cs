@@ -26,7 +26,7 @@ namespace Identity.Integration.Tests
         {
             Given(repository => { });
 
-            var userId = AggregateGuid.Create<UserId>();
+            var userId = UserId.Create();
             var @event = new UserCreatedEvent(userId, 
                 Faker.Name.FirstName(), 
                 Faker.Name.LastName(), 

@@ -25,7 +25,7 @@ namespace Identity.Integration.Tests
         [Fact]
         public async Task OnCreateUser_Should_Update_ReadModel()
         {
-            var userId = AggregateGuid.Create<UserId>();
+            var userId = UserId.Create();
             var fullname = Fullname.Create(Faker.Name.FirstName(),Faker.Name.LastName());
             var email = Email.Create($"{Faker.Random.Word()}@example.com");
             var password = Password.Create("secret");
@@ -47,7 +47,7 @@ namespace Identity.Integration.Tests
         [Fact]
         public async Task OnUpdatePassword_Should_Update_ReadModel()
         {
-            var userId = AggregateGuid.Create<UserId>();
+            var userId = UserId.Create();
             var fullname = Fullname.Create(Faker.Name.FirstName(),Faker.Name.LastName());
             var email = Email.Create($"{Faker.Random.Word()}@example.com");
             var password = Password.Create("secret");

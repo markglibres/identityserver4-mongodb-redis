@@ -47,7 +47,7 @@ namespace Identity.Unit.Tests
                     });
             });
 
-            var aggregate = new User(AggregateGuid.Create<UserId>("dev"));
+            var aggregate = new User(UserId.Create("dev"));
             var fullname = Fullname.Create("Mark", "Libres");
             var email = Email.Create("me@example.com");
             var password = Password.Create("secret");
@@ -79,7 +79,7 @@ namespace Identity.Unit.Tests
         [Fact]
         public async Task Should_ReplayEvents_When_Loading_From_EventStore()
         {
-            var userId = AggregateGuid.Create<UserId>("dev");
+            var userId = UserId.Create("dev");
             var fullname = Fullname.Create("Mark", "Libres");
             var email = Email.Create("me@example.com");
             var passwordString = "secret";
