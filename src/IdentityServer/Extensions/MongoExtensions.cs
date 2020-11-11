@@ -1,6 +1,6 @@
 using System;
-using IdentityServer.Repositories;
-using IdentityServer.Repositories.Abstractions;
+using Identity.Common.Repositories;
+using Identity.Common.Repositories.Abstractions;
 using IdentityServer.Services;
 using IdentityServer4.Models;
 using Microsoft.Extensions.Configuration;
@@ -26,31 +26,31 @@ namespace IdentityServer.Extensions
 
             return services;
         }
-        
-        internal static IServiceCollection AddIdentityMongoDb(this IServiceCollection services, Action<IdentityMongoOptions> options)
+
+        internal static IServiceCollection AddIdentityMongoDb(this IServiceCollection services,
+            Action<IdentityMongoOptions> options)
         {
             var mongoOptions = new IdentityMongoOptions();
             options(mongoOptions);
-            
+
             services.Configure<IdentityMongoOptions>(o =>
             {
-                o.Database = string.IsNullOrWhiteSpace(mongoOptions.Database) 
-                    ? "IdentityServer" 
+                o.Database = string.IsNullOrWhiteSpace(mongoOptions.Database)
+                    ? "IdentityServer"
                     : mongoOptions.Database;
-                
+
                 o.ConnectionString = string.IsNullOrWhiteSpace(mongoOptions.ConnectionString)
                     ? "mongodb://root:foobar@localhost:27017/?readPreference=primaryPreferred&appname=IdentityServer"
                     : mongoOptions.ConnectionString;
             });
-            
+
             services.TryAddTransient(typeof(IIdentityRepository<>), typeof(IdentityMongoRepository<>));
 
             return services;
         }
-        
+
         internal static IIdentityServerBuilder AddMongoDbResources(this IIdentityServerBuilder identityServerBuilder)
         {
-            
             SetupDocument<IdentityResource>();
             SetupDocument<ApiResource>();
             SetupDocument<ApiScope>();
@@ -63,7 +63,7 @@ namespace IdentityServer.Extensions
             identityServerBuilder.AddResourceStore<ResourceStore>();
             return identityServerBuilder;
         }
-        
+
         internal static IIdentityServerBuilder AddMongoDbClientStore(this IIdentityServerBuilder identityServerBuilder)
         {
             BsonClassMap.RegisterClassMap<Client>(map =>
@@ -72,12 +72,11 @@ namespace IdentityServer.Extensions
                 map.SetIgnoreExtraElements(true);
             });
             identityServerBuilder.AddClientStore<ClientStore>();
-            
+
             return identityServerBuilder;
         }
 
 
-        
         private static void SetupDocument<T>()
         {
             BsonClassMap.RegisterClassMap<T>(map =>

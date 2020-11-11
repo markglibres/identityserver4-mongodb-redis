@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Seeders;
-using IdentityServer.Users.Abstractions;
+using Identity.Common.Seeders;
+using Identity.Common.Users.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Users
+namespace Identity.Common.Users
 {
     public class UserService<T> : IUserService<T>, ISeedService<T>
         where T: IdentityUser

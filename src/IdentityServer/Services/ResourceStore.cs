@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer.Repositories.Abstractions;
+using Identity.Common.Repositories.Abstractions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 

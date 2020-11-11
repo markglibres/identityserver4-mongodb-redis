@@ -1,7 +1,8 @@
+using Identity.Common.Seeders;
+using Identity.Common.Users;
 using IdentityServer.Seeders;
 using IdentityServer.Services;
 using IdentityServer.Services.Abstractions;
-using IdentityServer.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

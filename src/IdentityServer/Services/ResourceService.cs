@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Repositories.Abstractions;
-using IdentityServer.Seeders;
+using Identity.Common.Repositories.Abstractions;
+using Identity.Common.Seeders;
 using IdentityServer.Services.Abstractions;
 using IdentityServer4.Models;
 
 namespace IdentityServer.Services
 {
     public class ResourceService<T> : IResourceService<T>, ISeedService<T>
-        where T: Resource
+        where T : Resource
     {
         private readonly IIdentityRepository<T> _repository;
 
@@ -16,9 +16,10 @@ namespace IdentityServer.Services
         {
             _repository = repository;
         }
+
         public async Task Create(T apiResource, CancellationToken cancellationToken = default)
         {
-            if(cancellationToken.IsCancellationRequested) return;
+            if (cancellationToken.IsCancellationRequested) return;
 
             var result = await GetByName(apiResource.Name);
             if (result != null) return;

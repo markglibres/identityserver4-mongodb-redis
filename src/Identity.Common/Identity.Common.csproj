@@ -4,4 +4,11 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Humanizer" Version="2.8.26" />
+      <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+      <PackageReference Include="MongoDB.Driver" Version="2.11.2" />
+    </ItemGroup>
+
 </Project>

@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Repositories.Abstractions;
+using Identity.Common.Repositories.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Users
+namespace Identity.Common.Users
 {
     public class RoleStore<T> : IRoleStore<T>
         where T : IdentityRole

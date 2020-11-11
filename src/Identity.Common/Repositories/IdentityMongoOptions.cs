@@ -1,4 +1,4 @@
-namespace IdentityServer.Repositories
+namespace Identity.Common.Repositories
 {
     public class IdentityMongoOptions
     {
