@@ -1,5 +1,4 @@
 using Identity.Common.Seeders;
-using IdentityServer.Seeders;
 using IdentityServer.Services;
 using IdentityServer4.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +17,7 @@ namespace IdentityServer.Extensions
 
             return builder;
         }
-        
+
         public static IIdentityServerBuilder SeedApiResources<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<ApiResource>
         {
@@ -28,7 +27,7 @@ namespace IdentityServer.Extensions
 
             return builder;
         }
-        
+
         public static IIdentityServerBuilder SeedApiScope<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<ApiScope>
         {
@@ -38,7 +37,7 @@ namespace IdentityServer.Extensions
 
             return builder;
         }
-        
+
         public static IIdentityServerBuilder SeedIdentityResource<TSeeder>(this IIdentityServerBuilder builder)
             where TSeeder : class, ISeeder<IdentityResource>
         {
@@ -48,6 +47,5 @@ namespace IdentityServer.Extensions
 
             return builder;
         }
-        
     }
 }

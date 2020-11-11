@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Identity.Common.Seeders;
-using IdentityServer.Seeders;
 using IdentityServer.Services;
 using IdentityServer.Services.Abstractions;
 using IdentityServer4.Configuration;
@@ -9,6 +8,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdentityServer.Extensions
 {
@@ -19,7 +19,7 @@ namespace IdentityServer.Extensions
             Action<IdentityServerOptions> setupIdentityOption,
             Func<IServiceProvider, ICorsPolicyService> setupPolicy)
         {
-            services.AddTransient<IClientService, ClientService>();
+            services.TryAddTransient<IClientService, ClientService>();
             services.AddSingleton(setupPolicy);
 
             var builder = services
@@ -36,7 +36,7 @@ namespace IdentityServer.Extensions
             Func<IServiceProvider, ICorsPolicyService> setupPolicy)
             where TUser : IdentityUser
         {
-            services.AddTransient<IClientService, ClientService>();
+            services.TryAddTransient<IClientService, ClientService>();
             services.AddSingleton(setupPolicy);
 
             var builder = services
@@ -50,7 +50,7 @@ namespace IdentityServer.Extensions
 
         internal static IIdentityServerBuilder AddInMemoryClients(this IIdentityServerBuilder identityServerBuilder)
         {
-            identityServerBuilder.Services.AddTransient<IInMemorySettings<Client>, InMemorySettings<Client>>();
+            identityServerBuilder.Services.TryAddTransient<IInMemorySettings<Client>, InMemorySettings<Client>>();
             var provider = identityServerBuilder.Services.BuildServiceProvider();
             var items = provider.GetService<ISeeder<Client>>()?.GetSeeds();
 
@@ -62,7 +62,7 @@ namespace IdentityServer.Extensions
 
         internal static IIdentityServerBuilder AddInMemoryResources(this IIdentityServerBuilder identityServerBuilder)
         {
-            identityServerBuilder.Services.AddTransient<IInMemorySettings<Resource>, InMemorySettings<Resource>>();
+            identityServerBuilder.Services.TryAddTransient<IInMemorySettings<Resource>, InMemorySettings<Resource>>();
             var provider = identityServerBuilder.Services.BuildServiceProvider();
             var apiResources = provider.GetService<ISeeder<ApiResource>>()?.GetSeeds().ToList();
             var apiScopes = provider.GetService<ISeeder<ApiScope>>()?.GetSeeds().ToList();

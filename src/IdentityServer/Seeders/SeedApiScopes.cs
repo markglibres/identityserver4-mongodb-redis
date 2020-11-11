@@ -6,9 +6,12 @@ namespace IdentityServer.Seeders
 {
     public class SeedApiScopes : ISeeder<ApiScope>
     {
-        public IEnumerable<ApiScope> GetSeeds() => new[]
+        public IEnumerable<ApiScope> GetSeeds()
         {
-            new ApiScope("myapi.access", "Access API Backend")
-        };
+            return new[]
+            {
+                new ApiScope("myapi.access", "Access API Backend")
+            };
+        }
     }
 }

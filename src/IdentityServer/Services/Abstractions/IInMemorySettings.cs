@@ -1,6 +1,6 @@
 namespace IdentityServer.Services.Abstractions
 {
-    public interface IInMemorySettings<T> where T: class
+    public interface IInMemorySettings<T> where T : class
     {
         bool IsEnabled();
     }

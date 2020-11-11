@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Identity;
+using Identity.Common;
 using Identity.Common.Seeders;
 using Identity.Common.Users;
 using IdentityServer.Extensions;

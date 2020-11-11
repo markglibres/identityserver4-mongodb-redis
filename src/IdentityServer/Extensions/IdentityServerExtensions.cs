@@ -1,14 +1,13 @@
 using System;
-using Identity.Common.Users;
-using Identity.Common.Users.Abstractions;
-using IdentityServer.Repositories;
+using Identity.Common;
 using IdentityServer.Services;
 using IdentityServer.Services.Abstractions;
-using IdentityServer4.Configuration;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson.Serialization;
 
 namespace IdentityServer.Extensions
 {
@@ -19,48 +18,70 @@ namespace IdentityServer.Extensions
             Func<IServiceProvider, ICorsPolicyService> setupPolicy)
         {
             var config = services.AddIdentityConfig();
-            var builder =
-                services.AddIdentityServerMongoDb(options => { options.IssuerUri = config.Authority; }, setupPolicy);
+            services.AddIdentityMongoDb();
+            services.AddSingleton(setupPolicy);
+
+            var builder = services
+                .AddIdentityServer(options => { options.IssuerUri = config.Authority; })
+                .AddMongoResources()
+                .AddMongoClientStore();
 
             return builder;
         }
 
-        public static IIdentityServerBuilder AddIdentityServerMongoDb(
-            this IServiceCollection services,
-            Action<IdentityServerOptions> setupIdentityOption,
-            Func<IServiceProvider, ICorsPolicyService> setupPolicy)
+        public static IIdentityServerBuilder AddResourceOwnerPassword<TUser, TRole>(
+            this IIdentityServerBuilder builder)
+            where TUser : IdentityUser
+            where TRole : IdentityRole
         {
-            services.AddIdentityConfig();
-            services.AddIdentityMongoDb();
-            services.AddTransient<IClientService, ClientService>();
-            services.AddSingleton(setupPolicy);
-
-            var builder = services
-                .AddIdentityServer(setupIdentityOption)
-                .AddMongoDbResources()
-                .AddMongoDbClientStore();
+            var services = builder.Services;
+            services.AddIdentityUser<TUser, TRole>();
+            builder.AddAspNetIdentity<TUser>();
 
             return builder;
+        }
+
+
+        private static IIdentityServerBuilder AddMongoResources(this IIdentityServerBuilder identityServerBuilder)
+        {
+            SetupDocument<IdentityResource>();
+            SetupDocument<ApiResource>();
+            SetupDocument<ApiScope>();
+            SetupDocument<IdentityResources.OpenId>();
+            SetupDocument<IdentityResources.Email>();
+            SetupDocument<IdentityResources.Profile>();
+            SetupDocument<IdentityResources.Address>();
+            SetupDocument<IdentityResources.Phone>();
+
+            identityServerBuilder.AddResourceStore<ResourceStore>();
+            return identityServerBuilder;
+        }
+
+        private static void SetupDocument<T>()
+        {
+            BsonClassMap.RegisterClassMap<T>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
+        }
+
+        private static IIdentityServerBuilder AddMongoClientStore(this IIdentityServerBuilder identityServerBuilder)
+        {
+            BsonClassMap.RegisterClassMap<Client>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
+            identityServerBuilder.AddClientStore<ClientStore>();
+            identityServerBuilder.Services.TryAddTransient<IClientService, ClientService>();
+
+            return identityServerBuilder;
         }
 
         public static IIdentityServerBuilder AddRedisCache(this IIdentityServerBuilder identityServerBuilder)
         {
-            var config = new IdentityRedisOptions();
-
-            var provider = identityServerBuilder.Services.BuildServiceProvider();
-            var configuration = provider.GetRequiredService<IConfiguration>();
-            var configSection = configuration.GetSection("Identity:Redis")?.Get<IdentityRedisOptions>();
-
-            if (configSection != null)
-            {
-                if (!string.IsNullOrWhiteSpace(configSection.ConnectionString))
-                    config.ConnectionString = configSection.ConnectionString;
-
-                if (configSection.Db != 0) config.Db = configSection.Db;
-
-                if (!string.IsNullOrWhiteSpace(configSection.Prefix)) config.Prefix = configSection.Prefix;
-            }
-
+            var config = identityServerBuilder.Services.AddIdentityRedisConfig();
             identityServerBuilder
                 .AddOperationalStore(options =>
                 {
@@ -73,42 +94,6 @@ namespace IdentityServer.Extensions
                 });
 
             return identityServerBuilder;
-        }
-
-        public static IIdentityServerBuilder AddRedisCache(
-            this IIdentityServerBuilder identityServerBuilder,
-            Action<IdentityRedisOptions> redisOptions)
-        {
-            var config = new IdentityRedisOptions();
-            redisOptions?.Invoke(config);
-
-            identityServerBuilder
-                .AddOperationalStore(options =>
-                {
-                    options.RedisConnectionString = config.ConnectionString;
-                    options.Db = config.Db;
-                }).AddRedisCaching(options =>
-                {
-                    options.RedisConnectionString = config.ConnectionString;
-                    options.KeyPrefix = config.Prefix;
-                });
-
-            return identityServerBuilder;
-        }
-
-        internal static IServiceCollection AddIdentityUser<TUser, TRole>(this IServiceCollection services)
-            where TUser : IdentityUser
-            where TRole : IdentityRole
-        {
-            services.AddIdentityMongoDb();
-            services.AddIdentity<TUser, TRole>().AddDefaultTokenProviders();
-            services.AddTransient<IUserStore<TUser>, UserStore<TUser>>();
-            services.AddTransient<IUserPasswordStore<TUser>, UserStore<TUser>>();
-            services.AddTransient<IPasswordHasher<TUser>, UserPasswordHasher<TUser>>();
-            services.AddTransient<IRoleStore<TRole>, RoleStore<TRole>>();
-            services.AddTransient<IUserService<TUser>, UserService<TUser>>();
-
-            return services;
         }
 
         internal static IIdentityServerBuilder AddIdentityUser<TUser>(this IIdentityServerBuilder builder)

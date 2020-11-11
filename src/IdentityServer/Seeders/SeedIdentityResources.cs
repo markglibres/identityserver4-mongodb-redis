@@ -6,11 +6,14 @@ namespace IdentityServer.Seeders
 {
     public class SeedIdentityResources : ISeeder<IdentityResource>
     {
-        public IEnumerable<IdentityResource> GetSeeds() => new List<IdentityResource>
+        public IEnumerable<IdentityResource> GetSeeds()
         {
-            new IdentityResources.OpenId(),
-            new IdentityResources.Profile(),
-            new IdentityResources.Email()
-        };
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+                new IdentityResources.Email()
+            };
+        }
     }
 }

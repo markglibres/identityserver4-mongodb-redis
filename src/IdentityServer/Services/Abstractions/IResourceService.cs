@@ -5,7 +5,7 @@ using IdentityServer4.Models;
 namespace IdentityServer.Services.Abstractions
 {
     public interface IResourceService<T> where T : Resource
-    
+
     {
         Task Create(T apiResource, CancellationToken cancellationToken = default);
         Task<T> GetByName(string name);

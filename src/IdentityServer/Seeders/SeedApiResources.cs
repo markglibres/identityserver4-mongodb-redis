@@ -6,16 +6,19 @@ namespace IdentityServer.Seeders
 {
     public class SeedApiResources : ISeeder<ApiResource>
     {
-        public IEnumerable<ApiResource> GetSeeds() => new List<ApiResource>
+        public IEnumerable<ApiResource> GetSeeds()
         {
-            new ApiResource("myapi", "My API")
+            return new List<ApiResource>
             {
-                Scopes = new List<string>
+                new ApiResource("myapi", "My API")
                 {
-                    "myapi.access"
-                },
-                ApiSecrets = {new Secret("hardtoguess".Sha256())}
-            }
-        };
+                    Scopes = new List<string>
+                    {
+                        "myapi.access"
+                    },
+                    ApiSecrets = {new Secret("hardtoguess".Sha256())}
+                }
+            };
+        }
     }
 }

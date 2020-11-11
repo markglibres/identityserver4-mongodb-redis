@@ -2,9 +2,12 @@ using IdentityServer.Services.Abstractions;
 
 namespace IdentityServer.Services
 {
-    public class InMemorySettings<T> : IInMemorySettings<T> 
-        where T: class
+    public class InMemorySettings<T> : IInMemorySettings<T>
+        where T : class
     {
-        public bool IsEnabled() => true;
+        public bool IsEnabled()
+        {
+            return true;
+        }
     }
 }

@@ -19,45 +19,42 @@ namespace IdentityServer.Seeders
 
             var items = scope
                 .ServiceProvider
-                .GetService<ISeeder<TSeed>>()
+                .GetRequiredService<ISeeder<TSeed>>()
                 ?.GetSeeds();
 
             if (items == null) return;
 
             var service = scope
                 .ServiceProvider
-                .GetService<ISeedService<TSeed>>();
+                .GetRequiredService<ISeedService<TSeed>>();
 
             if (service == null) throw new NotImplementedException($"{typeof(ISeedService<TSeed>)} is not implemented");
 
             foreach (var item in items) await service.Create(item, cancellationToken);
         }
-        
+
         public static async Task Initialize(this IServiceProvider serviceProvider,
             CancellationToken cancellationToken = default)
         {
             using var scope = serviceProvider.CreateScope();
-            
+
             if (scope.ServiceProvider.GetService<IInMemorySettings<Client>>() == null)
-            {
-                await serviceProvider.Seed<Client>(cancellationToken);    
-            }
+                await serviceProvider.Seed<Client>(cancellationToken);
 
             if (scope.ServiceProvider.GetService<IInMemorySettings<Resource>>() == null)
             {
                 await serviceProvider.Seed<ApiResource>(cancellationToken);
                 await serviceProvider.Seed<ApiScope>(cancellationToken);
-                await serviceProvider.Seed<IdentityResource>(cancellationToken);    
+                await serviceProvider.Seed<IdentityResource>(cancellationToken);
             }
         }
-        
+
         public static async Task Initialize<TUser>(this IServiceProvider serviceProvider,
             CancellationToken cancellationToken = default)
-            where TUser: IdentityUser
+            where TUser : IdentityUser
         {
             using var scope = serviceProvider.CreateScope();
             await serviceProvider.Seed<TUser>(cancellationToken);
-            
         }
     }
 }
