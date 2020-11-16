@@ -26,8 +26,8 @@ namespace Identity.Integration.Tests
         public static IServiceCollection ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity(configuration);
+            //rvices.AddIdentityMongoDb();
             return services;
         }
-        
     }
 }

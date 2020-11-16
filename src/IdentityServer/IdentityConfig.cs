@@ -1,4 +1,3 @@
-using Identity.Common.Repositories;
 using IdentityServer.Repositories;
 
 namespace IdentityServer

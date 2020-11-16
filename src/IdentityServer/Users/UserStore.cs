@@ -1,12 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Identity.Common.Repositories.Abstractions;
+using IdentityServer.Repositories.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Common.Users
+namespace IdentityServer.Users
 {
     public class UserStore<T> : IUserStore<T>, IUserPasswordStore<T>
-        where T: IdentityUser
+        where T : IdentityUser
     {
         private readonly IIdentityRepository<T> _identityRepository;
 

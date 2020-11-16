@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using Identity;
-using Identity.Common;
-using Identity.Common.Seeders;
-using Identity.Common.Users;
 using IdentityServer.Extensions;
 using IdentityServer.Seeders;
+using IdentityServer.Users;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using IdentityServer_ApplicationUser = Identity.Common.Users.ApplicationUser;
+using IdentityServer_ApplicationUser = IdentityServer.Users.ApplicationUser;
 
 namespace IdentityServer.Web
 {
@@ -30,9 +26,8 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddIdentity();
-            
+            services.AddControllers();
+
             services.AddIdentityServerMongoDb(provider =>
                     new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
                     {
@@ -40,13 +35,12 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddResourceOwnerPassword<IdentityServer_ApplicationUser, ApplicationRole>()
-                .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
+                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>()
+                .SeedUsers<IdentityServer_ApplicationUser, SeedUsers<IdentityServer_ApplicationUser>>()
                 .SeedClients<SeedClients>()
                 .SeedApiResources<SeedApiResources>()
                 .SeedApiScope<SeedApiScopes>()
                 .SeedIdentityResource<SeedIdentityResources>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

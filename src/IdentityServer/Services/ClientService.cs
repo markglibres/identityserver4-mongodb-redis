@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Identity.Common.Repositories.Abstractions;
-using Identity.Common.Seeders;
+using IdentityServer.Repositories.Abstractions;
+using IdentityServer.Seeders;
 using IdentityServer.Services.Abstractions;
 using IdentityServer4.Models;
 

@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Identity.Common.Users;
-using Identity.Common.Users.Abstractions;
 using Identity.Domain;
 using Identity.Domain.User.Events;
+using IdentityServer.Users;
+using IdentityServer.Users.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

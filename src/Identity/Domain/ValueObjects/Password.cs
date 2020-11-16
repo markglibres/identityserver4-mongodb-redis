@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Identity.Common.Crypto;
 using Identity.Domain.Abstractions;
 using Identity.Domain.Extensions;
 
@@ -11,7 +10,7 @@ namespace Identity.Domain.ValueObjects
 
         private Password(string password, bool encrypt = true)
         {
-            _password = encrypt ? password.ToSha256() : password; 
+            _password = encrypt ? password.ToSha256() : password;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

@@ -1,7 +1,8 @@
-using Identity.Common;
-using Identity.Common.Seeders;
+using IdentityServer.Seeders;
+using IdentityServer.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdentityServer.Extensions
 {
@@ -12,7 +13,9 @@ namespace IdentityServer.Extensions
             where TSeeder : class, ISeeder<TUser>
         {
             var services = builder.Services;
-            services.AddIdentityUserSeeder<TUser, TSeeder>();
+            services.TryAddTransient<ISeedService<TUser>, UserService<TUser>>();
+            services.AddSingleton<ISeeder<TUser>, TSeeder>();
+
             return builder;
         }
     }

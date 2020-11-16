@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Common.Seeders
+namespace IdentityServer.Seeders
 {
     public class SeedUsers<T> : ISeeder<T>
-        where T: IdentityUser
+        where T : IdentityUser
     {
         private readonly IPasswordHasher<T> _passwordHasher;
 
@@ -21,8 +21,8 @@ namespace Identity.Common.Seeders
             instance.UserName = "dev";
             instance.PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess");
             instance.EmailConfirmed = true;
-            
-            return new List<T> { instance };
+
+            return new List<T> {instance};
         }
     }
 }

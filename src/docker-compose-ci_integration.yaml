@@ -34,25 +34,25 @@ services:
       - bizzpo
     restart: always
 
-  identityworker:
-    build:
-      context: .
-      dockerfile: Identity.Worker/Dockerfile
-    image: identityworker
-    environment:
-      - Environment=dev
-      - 'MongoDb__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
-      - MongoDb__DefaultDatabase=Identity_Worker
-      - EventStoreDb__ConnectionString=https://eventstore:2113
-      - EventStoreDb__Name=Identity
-      - 'Identity__Mongo__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
-      - Identity__Redis__ConnectionString=redis
-    container_name: identityworker
-    ports:
-      - 1100:80
-    networks:
-      - bizzpo
-    restart: always
+  # identityworker:
+  #   build:
+  #     context: .
+  #     dockerfile: Identity.Worker/Dockerfile
+  #   image: identityworker
+  #   environment:
+  #     - Environment=dev
+  #     - 'MongoDb__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
+  #     - MongoDb__DefaultDatabase=Identity_Worker
+  #     - EventStoreDb__ConnectionString=https://eventstore:2113
+  #     - EventStoreDb__Name=Identity
+  #     - 'Identity__Mongo__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
+  #     - Identity__Redis__ConnectionString=redis
+  #   container_name: identityworker
+  #   ports:
+  #     - 1100:80
+  #   networks:
+  #     - bizzpo
+  #   restart: always
 
 networks:
     bizzpo:

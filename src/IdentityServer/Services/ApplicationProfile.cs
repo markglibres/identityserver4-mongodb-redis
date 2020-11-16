@@ -1,4 +1,4 @@
-using Identity.Common.Users;
+using IdentityServer.Users;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Services

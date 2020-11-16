@@ -6,7 +6,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\IdentityServer\IdentityServer.csproj" />
-      <ProjectReference Include="..\Identity\Identity.csproj" />
     </ItemGroup>
 
 </Project>

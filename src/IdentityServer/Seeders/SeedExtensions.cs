@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Identity.Common.Seeders;
 using IdentityServer.Services.Abstractions;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Identity;

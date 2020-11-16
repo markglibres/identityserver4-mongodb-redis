@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Humanizer;
-using Identity.Common.Repositories.Abstractions;
+using IdentityServer.Repositories.Abstractions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace Identity.Common.Repositories
+namespace IdentityServer.Repositories
 {
     public class IdentityMongoRepository<T> : IIdentityRepository<T>
         where T : class, new()

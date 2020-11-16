@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Identity.Common.Seeders;
+using IdentityServer.Seeders;
 using IdentityServer.Services;
 using IdentityServer.Services.Abstractions;
 using IdentityServer4.Configuration;
