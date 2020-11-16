@@ -1,4 +1,5 @@
 using IdentityServer.Extensions;
+using IdentityServer.Management;
 using IdentityServer.Seeders;
 using IdentityServer.Users;
 using IdentityServer4.Services;
@@ -26,7 +27,7 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddIdentityServerUserManagement();
 
             services.AddIdentityServerMongoDb(provider =>
                     new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
@@ -35,8 +36,13 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>()
-                .SeedUsers<IdentityServer_ApplicationUser, SeedUsers<IdentityServer_ApplicationUser>>()
+                .AddIdentityServerUser<ApplicationUser, ApplicationRole>()
+                .AddIdentityServerUserManagement<ApplicationUser, ApplicationRole>(options =>
+                {
+                    options.Authority = "http://localhost:5000";
+                    options.Audience = "myapi.access";
+                })
+                .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<SeedClients>()
                 .SeedApiResources<SeedApiResources>()
                 .SeedApiScope<SeedApiScopes>()
@@ -50,7 +56,9 @@ namespace IdentityServer.Web
 
             app.UseRouting();
             app.UseIdentityServer();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
