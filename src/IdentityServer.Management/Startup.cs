@@ -1,4 +1,5 @@
 using System;
+using IdentityServer.Management.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,8 @@ namespace IdentityServer.Management
                     jwtBearerOptions.Audience = startupOptions.Audience; 
                     jwtBearerOptions.RequireHttpsMetadata = false; 
                 });
+
+            builder.Services.AddTransient<IMapper, Mapper>();
 
             return builder;
         }

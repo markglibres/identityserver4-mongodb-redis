@@ -1,8 +1,6 @@
-using MediatR;
-
-namespace IdentityServer.Management.Application.Users.CreateUser
+namespace IdentityServer.Management.Api.Requests
 {
-    public class CreateUserCommand : IRequest<CreateUserCommandResult>
+    public class CreateUserRequest
     {
         public string Firstname { get; set; }
         public string Lastname { get; set; }
