@@ -40,7 +40,7 @@ namespace IdentityServer.Web
                 .AddIdentityServerUserManagement<ApplicationUser, ApplicationRole>(options =>
                 {
                     options.Authority = "http://localhost:5000";
-                    options.Audience = "myapi.access";
+                    options.Audience = "myapi";
                 })
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<SeedClients>()
