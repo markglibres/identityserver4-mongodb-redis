@@ -3,11 +3,8 @@ using IdentityServer.Repositories;
 using IdentityServer.Repositories.Abstractions;
 using IdentityServer.Services;
 using IdentityServer.Services.Abstractions;
-using IdentityServer.Users;
-using IdentityServer.Users.Abstractions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -52,33 +49,6 @@ namespace IdentityServer.Extensions
             services.TryAddTransient(typeof(IIdentityRepository<>), typeof(IdentityMongoRepository<>));
 
             return services;
-        }
-
-        [Obsolete("Use AddIdentityServerUser instead")]
-        public static IIdentityServerBuilder AddResourceOwnerPassword<TUser, TRole>(
-            this IIdentityServerBuilder builder)
-            where TUser : IdentityUser
-            where TRole : IdentityRole
-        {
-            return builder.AddIdentityServerUser<TUser, TRole>();
-        }
-
-        public static IIdentityServerBuilder AddIdentityServerUser<TUser, TRole>(
-            this IIdentityServerBuilder builder)
-            where TUser : IdentityUser
-            where TRole : IdentityRole
-        {
-            var services = builder.Services;
-            services.AddIdentity<TUser, TRole>().AddDefaultTokenProviders();
-            services.AddTransient<IUserStore<TUser>, UserStore<TUser>>();
-            services.AddTransient<IUserPasswordStore<TUser>, UserStore<TUser>>();
-            services.AddTransient<IPasswordHasher<TUser>, UserPasswordHasher<TUser>>();
-            services.AddTransient<IRoleStore<TRole>, RoleStore<TRole>>();
-            services.AddTransient<IUserService<TUser>, UserService<TUser>>();
-
-            builder.AddAspNetIdentity<TUser>();
-
-            return builder;
         }
 
         private static IIdentityServerBuilder AddMongoResources(this IIdentityServerBuilder identityServerBuilder)
@@ -133,12 +103,6 @@ namespace IdentityServer.Extensions
                 });
 
             return identityServerBuilder;
-        }
-
-        internal static IIdentityServerBuilder AddIdentityUser<TUser>(this IIdentityServerBuilder builder)
-            where TUser : IdentityUser
-        {
-            return builder.AddAspNetIdentity<TUser>();
         }
     }
 }

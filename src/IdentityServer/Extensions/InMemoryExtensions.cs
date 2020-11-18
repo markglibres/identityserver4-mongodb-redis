@@ -42,8 +42,8 @@ namespace IdentityServer.Extensions
             var builder = services
                 .AddIdentityServer(setupIdentityOption)
                 .AddInMemoryResources()
-                .AddInMemoryClients()
-                .AddIdentityUser<TUser>();
+                .AddInMemoryClients();
+                //.AddIdentityUser<TUser>();
 
             return builder;
         }

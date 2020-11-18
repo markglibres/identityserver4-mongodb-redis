@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using IdentityServer.Management.Users;
 using IdentityServer.Seeders;
-using IdentityServer.Users;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;

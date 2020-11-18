@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Identity.Common\Identity.Common.csproj" />
+      <ProjectReference Include="..\IdentityServer.User\IdentityServer.User.csproj" />
       <ProjectReference Include="..\IdentityServer\IdentityServer.csproj" />
     </ItemGroup>
 

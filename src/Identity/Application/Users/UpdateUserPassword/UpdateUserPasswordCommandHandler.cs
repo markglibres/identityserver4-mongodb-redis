@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Identity.Application.Abstractions;
 using Identity.Domain.User;
-using IdentityServer.Users;
+using IdentityServer.Management.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

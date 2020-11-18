@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Worker", "Identity
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{47463C26-C930-4818-A44F-2B0316731D8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Management", "IdentityServer.Management\IdentityServer.Management.csproj", "{213D1B41-7B25-40C8-82AC-65C817D7F10B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.User", "IdentityServer.User\IdentityServer.User.csproj", "{86800DB1-F2D0-494C-BACB-5748A206041D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{9086BA6D-0A3D-4798-8508-3A426B73C805}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9086BA6D-0A3D-4798-8508-3A426B73C805}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9086BA6D-0A3D-4798-8508-3A426B73C805}.Release|Any CPU.Build.0 = Release|Any CPU
-		{213D1B41-7B25-40C8-82AC-65C817D7F10B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{213D1B41-7B25-40C8-82AC-65C817D7F10B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{213D1B41-7B25-40C8-82AC-65C817D7F10B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{213D1B41-7B25-40C8-82AC-65C817D7F10B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86800DB1-F2D0-494C-BACB-5748A206041D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86800DB1-F2D0-494C-BACB-5748A206041D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86800DB1-F2D0-494C-BACB-5748A206041D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86800DB1-F2D0-494C-BACB-5748A206041D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA1CDF0A-CDC7-4465-A1BF-D362739F2E8C} = {57016F4A-5225-4255-A940-04079752B441}

@@ -1,7 +1,8 @@
 using IdentityServer.Extensions;
 using IdentityServer.Management;
+using IdentityServer.Management.Extensions;
+using IdentityServer.Management.Users;
 using IdentityServer.Seeders;
-using IdentityServer.Users;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using IdentityServer_ApplicationUser = IdentityServer.Users.ApplicationUser;
+using IdentityServer_ApplicationUser = IdentityServer.Management.Users.ApplicationUser;
 
 namespace IdentityServer.Web
 {
@@ -36,8 +37,7 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddIdentityServerUser<ApplicationUser, ApplicationRole>()
-                .AddIdentityServerUserApi<ApplicationUser, ApplicationRole>()
+                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>()
                 .AddIdentityServerAudience(options =>
                 {
                     options.Authority = "http://localhost:5000";

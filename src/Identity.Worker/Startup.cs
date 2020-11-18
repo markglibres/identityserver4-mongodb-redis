@@ -1,5 +1,6 @@
 using IdentityServer.Extensions;
-using IdentityServer.Users;
+using IdentityServer.Management.Extensions;
+using IdentityServer.Management.Users;
 using IdentityServer4.Services;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +30,7 @@ namespace Identity.Worker
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddResourceOwnerPassword<ApplicationUser, ApplicationRole>();
+                .AddIdentityServerUser<ApplicationUser, ApplicationRole>();
 
             services.AddHostedService<HostedServices.Worker>();
 
