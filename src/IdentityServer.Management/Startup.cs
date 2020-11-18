@@ -1,4 +1,6 @@
 using System;
+using IdentityModel.AspNetCore.AccessTokenValidation;
+using IdentityModel.Client;
 using IdentityServer.Management.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,33 +16,49 @@ namespace IdentityServer.Management
             return mvcBuilder.AddApplicationPart(typeof(Startup).Assembly);
         }
         
-        public static IIdentityServerBuilder AddIdentityServerUserManagement<TUser, TRole>(
-            this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddIdentityServerUserManagement<TUser, TRole>(this IIdentityServerBuilder builder)
             where TUser : IdentityUser
             where TRole : IdentityRole
         {
-            return builder.AddIdentityServerUserManagement<TUser, TRole>(options => { });
+            builder.Services.AddMediatR(typeof(Startup).Assembly);
+            builder.Services.AddTransient<IMapper, Mapper>();
+
+            return builder;
         }
         
-        public static IIdentityServerBuilder AddIdentityServerUserManagement<TUser, TRole>(
+        public static IIdentityServerBuilder AddIdentityServerAudience(
             this IIdentityServerBuilder builder,
             Action<StartupOptions> options)
-            where TUser : IdentityUser
-            where TRole : IdentityRole
         {
             var startupOptions = GetDefaulOptions();
             options(startupOptions);
 
-            builder.Services.AddMediatR(typeof(Startup).Assembly);
-            
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) 
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions => { 
-                    jwtBearerOptions.Authority = startupOptions.Authority; 
-                    jwtBearerOptions.Audience = startupOptions.Audience; 
-                    jwtBearerOptions.RequireHttpsMetadata = false; 
+            var introspectionScheme = "introspection";
+            var authBuilder = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
+                {
+                    jwtBearerOptions.Authority = startupOptions.Authority;
+                    jwtBearerOptions.Audience = startupOptions.Audience;
+                    jwtBearerOptions.RequireHttpsMetadata = startupOptions.RequireSsl;
+                    
+                    if(startupOptions.Introspection == null) return;
+                    jwtBearerOptions.ForwardDefaultSelector = Selector.ForwardReferenceToken(introspectionScheme);
+                    
                 });
-
-            builder.Services.AddTransient<IMapper, Mapper>();
+            
+            if (startupOptions.Introspection != null)
+            {
+                authBuilder.AddOAuth2Introspection(introspectionScheme, options =>
+                {
+                    options.Authority = startupOptions.Authority;
+                    options.ClientId = startupOptions.Introspection.Audience;
+                    options.ClientSecret = startupOptions.Introspection.Secret;
+                    options.DiscoveryPolicy = new DiscoveryPolicy
+                    {
+                        RequireHttps = startupOptions.RequireSsl
+                    };
+                });
+            }   
 
             return builder;
         }
@@ -56,5 +74,13 @@ namespace IdentityServer.Management
     {
         public string Authority { get; set; }
         public string Audience { get; set; }
+        public Introspection Introspection { get; set; }
+        public bool RequireSsl { get; set; }
+    }
+
+    public class Introspection
+    {
+        public string Audience { get; set; }
+        public string Secret { get; set; }
     }
 }

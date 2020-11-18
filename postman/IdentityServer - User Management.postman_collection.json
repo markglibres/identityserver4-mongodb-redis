@@ -1,0 +1,503 @@
+{
+	"info": {
+		"_postman_id": "2b5b9cfc-be7c-49fb-b359-7afd70bac9c7",
+		"name": "IdentityServer - User Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Client Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9f923f5-72ec-4ada-9cb6-c3168fbee123",
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", jsonResponse.access_token);",
+							"pm.environment.set(\"refreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"requestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "spaWeb",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "hardtoguess",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "scope",
+							"value": "myapi.access",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "spaService",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8478e25f-6149-4239-80f0-f5b7f3ed2aef",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.environment.set(\"requestedUser\", JSON.parse(request.data));",
+							"pm.environment.set(\"requestedUserResult\", parseInt(responseBody));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"plainTextPassword\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/identity/users",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bb05a3fc-4cc3-48db-98e2-abc1a440851e",
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", jsonResponse.access_token);",
+							"pm.environment.set(\"refreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"requestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"    const scopes = request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    console.log(scopes);",
+							"",
+							"    const expectedResponse = {",
+							"        \"token_type\": \"Bearer\"",
+							"    }",
+							"    pm.expect(responseJson).to.include(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2b27f942-6378-4fd0-b141-3313ee286d9c",
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);",
+							"pm.collectionVariables.set(\"password\", requestedUser.plainTextPassword);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "myapi.access openid offline_access ",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "spaWeb",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "da2f56df-bc83-4764-8ab5-36f54d4535b4",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "reactWeb",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						},
+						{
+							"key": "token_type_hint",
+							"value": "access_token",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/revocation",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"revocation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e78135e-6e5c-4767-953e-0cb957b1c74d",
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", responseJson.access_token);",
+							"pm.environment.set(\"refreshtoken\", responseJson.refresh_token);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"",
+							"    const requestedScopes = pm.environment.get(\"requestedScopes\");",
+							"    const responseScopes = responseJson.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    ",
+							"    pm.expect(responseScopes).to.have.members(requestedScopes);",
+							"",
+							"    const expectedResponse = {",
+							"        \"token_type\": \"Bearer\"",
+							"    }",
+							"    pm.expect(responseJson).to.include(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "reactWeb",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{refreshtoken}}",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get UserInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4f5e3c7d-5ef9-4f28-9096-91ad6b8ab298",
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('User schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"sub\": { \"type\": \"string\" },",
+							"        \"tenantId\": { \"type\": \"string\" },",
+							"        \"userId\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{auth_host}}/connect/userinfo",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e64c69b2-81b9-470a-bb02-9f1b83177092",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "1e74ff5d-4e0c-4d94-8e54-f1ae31655a91",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "3d54b850-83fb-48e4-94a9-049dea01c7cd",
+			"key": "password",
+			"value": ""
+		},
+		{
+			"id": "f98b3d7e-712e-4123-bc85-d6470f5969ec",
+			"key": "username",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

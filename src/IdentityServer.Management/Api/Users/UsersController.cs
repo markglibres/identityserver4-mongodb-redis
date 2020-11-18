@@ -26,7 +26,7 @@ namespace IdentityServer.Management.Api
             var result = await _mediator.Send(command);
             var response = _mapper.Map<CreateUserResponse>(result);
             
-            return Ok(response);
+            return response.IsSuccess ? (IActionResult) Ok(response) : BadRequest(response);
         }
     }
 }

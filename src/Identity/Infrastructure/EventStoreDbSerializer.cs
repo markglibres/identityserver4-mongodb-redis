@@ -39,7 +39,8 @@ namespace Identity.Infrastructure
                 {
                     new StringEnumConverter()
                 },
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
             };
             
 
