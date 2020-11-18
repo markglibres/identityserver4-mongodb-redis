@@ -257,6 +257,7 @@ Steps below is for a sample C# API project
 	```csharp
 	* Microsoft.AspNetCore.Authentication.JwtBearer
 	* IdentityModel.AspNetCore.OAuth2Introspection
+	* IdentityModel.AspNetCore.AccessTokenValidation
 	```
 3. Configure authorization with JWT bearer token:
 	```csharp
