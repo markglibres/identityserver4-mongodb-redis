@@ -27,7 +27,7 @@ namespace IdentityServer.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddIdentityServerUserManagement();
+            services.AddControllers().AddIdentityServerUserApi();
 
             services.AddIdentityServerMongoDb(provider =>
                     new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
@@ -37,7 +37,7 @@ namespace IdentityServer.Web
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
                 .AddIdentityServerUser<ApplicationUser, ApplicationRole>()
-                .AddIdentityServerUserManagement<ApplicationUser, ApplicationRole>()
+                .AddIdentityServerUserApi<ApplicationUser, ApplicationRole>()
                 .AddIdentityServerAudience(options =>
                 {
                     options.Authority = "http://localhost:5000";

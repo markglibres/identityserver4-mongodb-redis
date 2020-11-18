@@ -11,12 +11,12 @@ namespace IdentityServer.Management
 {
     public static class Startup
     {
-        public static IMvcBuilder AddIdentityServerUserManagement(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder)
         {
             return mvcBuilder.AddApplicationPart(typeof(Startup).Assembly);
         }
         
-        public static IIdentityServerBuilder AddIdentityServerUserManagement<TUser, TRole>(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddIdentityServerUserApi<TUser, TRole>(this IIdentityServerBuilder builder)
             where TUser : IdentityUser
             where TRole : IdentityRole
         {
@@ -33,7 +33,7 @@ namespace IdentityServer.Management
             var startupOptions = GetDefaulOptions();
             options(startupOptions);
 
-            var introspectionScheme = "introspection";
+            const string introspectionScheme = "introspection";
             var authBuilder = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
                 {
@@ -48,12 +48,12 @@ namespace IdentityServer.Management
             
             if (startupOptions.Introspection != null)
             {
-                authBuilder.AddOAuth2Introspection(introspectionScheme, options =>
+                authBuilder.AddOAuth2Introspection(introspectionScheme, introspectionOptions =>
                 {
-                    options.Authority = startupOptions.Authority;
-                    options.ClientId = startupOptions.Introspection.Audience;
-                    options.ClientSecret = startupOptions.Introspection.Secret;
-                    options.DiscoveryPolicy = new DiscoveryPolicy
+                    introspectionOptions.Authority = startupOptions.Authority;
+                    introspectionOptions.ClientId = startupOptions.Introspection.Audience;
+                    introspectionOptions.ClientSecret = startupOptions.Introspection.Secret;
+                    introspectionOptions.DiscoveryPolicy = new DiscoveryPolicy
                     {
                         RequireHttps = startupOptions.RequireSsl
                     };
