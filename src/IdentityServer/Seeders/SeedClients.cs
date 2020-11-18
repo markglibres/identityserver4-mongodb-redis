@@ -46,7 +46,7 @@ namespace IdentityServer.Seeders
                     AlwaysSendClientClaims = true,
                     AlwaysIncludeUserClaimsInIdToken = true,
                     // this will generate reference tokens instead of access tokens
-                    AccessTokenType = AccessTokenType.Jwt // AccessTokenType.Reference
+                    AccessTokenType = AccessTokenType.Reference
                 }
             };
         }

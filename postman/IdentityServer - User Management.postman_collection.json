@@ -270,12 +270,12 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "secret",
+							"value": "hardtoguess",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "reactWeb",
+							"value": "spaWeb",
 							"type": "string"
 						}
 					]
@@ -489,12 +489,12 @@
 	],
 	"variable": [
 		{
-			"id": "3d54b850-83fb-48e4-94a9-049dea01c7cd",
+			"id": "3102b503-41aa-4ba0-b9e5-046ae30298b8",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "f98b3d7e-712e-4123-bc85-d6470f5969ec",
+			"id": "476ca008-6100-415c-b4f1-4f48d8074609",
 			"key": "username",
 			"value": ""
 		}
