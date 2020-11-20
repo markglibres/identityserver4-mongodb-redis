@@ -1,5 +1,5 @@
 using IdentityServer.Extensions;
-using IdentityServer.Management.Extensions;
+using IdentityServer.Management;
 using IdentityServer.Management.Users;
 using IdentityServer4.Services;
 using MediatR;

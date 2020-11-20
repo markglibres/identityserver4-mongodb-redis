@@ -40,6 +40,7 @@ namespace IdentityServer.Web
                 .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>(null, config =>
                 {
                     config.RequireConfirmEmail = true;
+                    config.BaseUrl = "http://localhost:500/identity/users";
                 })
                 .AddIdentityServerAudience(options =>
                 {
