@@ -37,7 +37,10 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>()
+                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>(null, config =>
+                {
+                    config.RequireConfirmEmail = true;
+                })
                 .AddIdentityServerAudience(options =>
                 {
                     options.Authority = "http://localhost:5000";
@@ -65,7 +68,7 @@ namespace IdentityServer.Web
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });

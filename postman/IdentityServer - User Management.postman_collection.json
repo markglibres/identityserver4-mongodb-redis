@@ -82,7 +82,7 @@
 			"response": []
 		},
 		{
-			"name": "Create User",
+			"name": "Register User",
 			"event": [
 				{
 					"listen": "test",
@@ -115,7 +115,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"plainTextPassword\": \"{{$randomPassword}}\"\n}",
+					"raw": "{\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"plainTextPassword\": \"{{$randomPassword}}$\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -489,12 +489,12 @@
 	],
 	"variable": [
 		{
-			"id": "3102b503-41aa-4ba0-b9e5-046ae30298b8",
+			"id": "0f95eff9-1059-45a4-8163-bad91099b2eb",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "476ca008-6100-415c-b4f1-4f48d8074609",
+			"id": "ce8fb80d-2b7f-43d2-9c30-805a8c795aeb",
 			"key": "username",
 			"value": ""
 		}
