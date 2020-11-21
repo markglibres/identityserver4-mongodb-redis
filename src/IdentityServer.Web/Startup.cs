@@ -38,17 +38,7 @@ namespace IdentityServer.Web
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
                 .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>()
-                .AddIdentityServerAudience(options =>
-                {
-                    options.Authority = "http://localhost:5000";
-                    options.Audience = "myapi";
-                    options.RequireSsl = false;
-                    options.Introspection = new Introspection
-                    {
-                        Audience = "myapi",
-                        Secret = "hardtoguess"
-                    };
-                })
+                .AddIdentityServerAudience()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<SeedClients>()
                 .SeedApiResources<SeedApiResources>()

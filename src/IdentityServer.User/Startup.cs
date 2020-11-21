@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AngleSharp;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
@@ -29,35 +30,41 @@ namespace IdentityServer.Management
         }
 
         public static IIdentityServerBuilder AddIdentityServerAudience(
-            this IIdentityServerBuilder builder,
-            Action<StartupOptions> options)
+            this IIdentityServerBuilder builder)
         {
-            var startupOptions = GetDefaulOptions();
-            options(startupOptions);
+            var services = builder.Services;
+            var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+            IdentityAudienceConfig identityAudienceConfig = null;
+            if (services.All(s => s.ServiceType != typeof(IdentityAudienceConfig)))
+            {
+                var config = configuration.GetSection("Identity:Audience");
+                services.Configure<IdentityAudienceConfig>(config);
+                identityAudienceConfig = config.Get<IdentityAudienceConfig>();
+            }
 
             const string introspectionScheme = "introspection";
             var authBuilder = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
                 {
-                    jwtBearerOptions.Authority = startupOptions.Authority;
-                    jwtBearerOptions.Audience = startupOptions.Audience;
-                    jwtBearerOptions.RequireHttpsMetadata = startupOptions.RequireSsl;
+                    jwtBearerOptions.Authority = identityAudienceConfig?.Authority;
+                    jwtBearerOptions.Audience = identityAudienceConfig?.ClientId;
+                    jwtBearerOptions.RequireHttpsMetadata = identityAudienceConfig?.RequireSsl ?? false;
 
-                    if(startupOptions.Introspection == null) return;
+                    if(identityAudienceConfig?.Introspection == null) return;
                     jwtBearerOptions.ForwardDefaultSelector = Selector.ForwardReferenceToken(introspectionScheme);
 
                 });
 
-            if (startupOptions.Introspection != null)
+            if (identityAudienceConfig?.Introspection != null)
             {
                 authBuilder.AddOAuth2Introspection(introspectionScheme, introspectionOptions =>
                 {
-                    introspectionOptions.Authority = startupOptions.Authority;
-                    introspectionOptions.ClientId = startupOptions.Introspection.Audience;
-                    introspectionOptions.ClientSecret = startupOptions.Introspection.Secret;
+                    introspectionOptions.Authority = identityAudienceConfig.Authority;
+                    introspectionOptions.ClientId = identityAudienceConfig.ClientId;
+                    introspectionOptions.ClientSecret = identityAudienceConfig.Introspection.ClientSecret;
                     introspectionOptions.DiscoveryPolicy = new DiscoveryPolicy
                     {
-                        RequireHttps = startupOptions.RequireSsl
+                        RequireHttps = identityAudienceConfig.RequireSsl
                     };
                 });
             }
@@ -83,11 +90,16 @@ namespace IdentityServer.Management
             var services = builder.Services;
 
             var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-            var identityUserConfig = configuration.GetSection("Identity:User");
-            var smtpConfig = configuration.GetSection("Smtp");
-
-            services.Configure<IdentityUserConfig>(identityUserConfig);
-            services.Configure<SmtpConfig>(smtpConfig);
+            if (services.All(s => s.ServiceType != typeof(IdentityUserConfig)))
+            {
+                var identityUserConfig = configuration.GetSection("Identity:User");
+                services.Configure<IdentityUserConfig>(identityUserConfig);
+            }
+            if (services.All(s => s.ServiceType != typeof(SmtpConfig)))
+            {
+                var smtpConfig = configuration.GetSection("Smtp");
+                services.Configure<SmtpConfig>(smtpConfig);
+            }
 
             services.AddIdentity<TUser, TRole>(identityOptions => { options?.Invoke(identityOptions); })
                 .AddDefaultTokenProviders();
@@ -120,24 +132,23 @@ namespace IdentityServer.Management
             return builder.AddAspNetIdentity<TUser>();
         }
 
-        private static StartupOptions GetDefaulOptions()
+        private static IdentityAudienceConfig GetDefaulOptions()
         {
-            var options = new StartupOptions();
+            var options = new IdentityAudienceConfig();
             return options;
         }
     }
 
-    public class StartupOptions
+    public class IdentityAudienceConfig
     {
         public string Authority { get; set; }
-        public string Audience { get; set; }
+        public string ClientId { get; set; }
         public Introspection Introspection { get; set; }
         public bool RequireSsl { get; set; }
     }
 
     public class Introspection
     {
-        public string Audience { get; set; }
-        public string Secret { get; set; }
+        public string ClientSecret { get; set; }
     }
 }
