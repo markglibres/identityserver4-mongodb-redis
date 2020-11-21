@@ -37,11 +37,7 @@ namespace IdentityServer.Web
                     })
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>(null, config =>
-                {
-                    config.RequireConfirmEmail = true;
-                    config.BaseUrl = "http://localhost:500/identity/users";
-                })
+                .AddIdentityServerUser<IdentityServer_ApplicationUser, ApplicationRole>()
                 .AddIdentityServerAudience(options =>
                 {
                     options.Authority = "http://localhost:5000";

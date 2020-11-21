@@ -1,10 +1,12 @@
 using System;
+using AngleSharp;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
 using IdentityServer.Management.Application.Abstractions;
 using IdentityServer.Management.Common;
 using IdentityServer.Management.Infrastructure;
 using IdentityServer.Management.Infrastructure.Abstractions;
+using IdentityServer.Management.Infrastructure.Messaging;
 using IdentityServer.Management.Infrastructure.System;
 using IdentityServer.Management.Infrastructure.Templates;
 using IdentityServer.Management.Users;
@@ -13,7 +15,9 @@ using IdentityServer4.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace IdentityServer.Management
 {
@@ -72,17 +76,18 @@ namespace IdentityServer.Management
 
         public static IIdentityServerBuilder AddIdentityServerUser<TUser, TRole>(
             this IIdentityServerBuilder builder,
-            Action<IdentityOptions> options = null,
-            Action<IdentityUserConfig> userOptions = null)
+            Action<IdentityOptions> options = null)
             where TUser : IdentityUser
             where TRole : IdentityRole
         {
             var services = builder.Services;
 
-            services.Configure<IdentityUserConfig>(config =>
-            {
-                userOptions?.Invoke(config);
-            });
+            var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+            var identityUserConfig = configuration.GetSection("Identity:User");
+            var smtpConfig = configuration.GetSection("Smtp");
+
+            services.Configure<IdentityUserConfig>(identityUserConfig);
+            services.Configure<IdentityUserConfig>(identityUserConfig);
 
             services.AddIdentity<TUser, TRole>(identityOptions => { options?.Invoke(identityOptions); })
                 .AddDefaultTokenProviders();
@@ -105,6 +110,7 @@ namespace IdentityServer.Management
             services.AddTransient<ITemplateParser, HandleBarsTemplateParser>();
             services.AddTransient<ITemplateProvider, EmbeddedResourceTemplateProvider>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
+            services.AddTransient<IEmailer, SmtpEmailer>();
 
             return builder;
         }

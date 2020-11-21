@@ -52,7 +52,7 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
                 Id = Guid.NewGuid().ToString(),
                 Email = request.Email,
                 UserName = request.Email,
-                EmailConfirmed = _userOptions.RequireConfirmEmail
+                EmailConfirmed = _userOptions.ConfirmationEmail.Require
             };
 
             var result = await _userManager.CreateAsync(user, request.PlainTextPassword);

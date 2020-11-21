@@ -17,22 +17,25 @@ namespace IdentityServer.Management.Application.Users.UserRegistered
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailTemplate _emailTemplate;
         private readonly IUserStore<ApplicationUser> _userStore;
+        private IEmailer _emailer;
 
         public SendUserConfirmationEmailHandler(
             IOptions<IdentityUserConfig> options,
             IUserStore<ApplicationUser> userStore,
             UserManager<ApplicationUser> userManager,
-            IEmailTemplate emailTemplate)
+            IEmailTemplate emailTemplate,
+            IEmailer emailer)
         {
             _options = options.Value;
             _userStore = userStore;
             _userManager = userManager;
             _emailTemplate = emailTemplate;
+            _emailer = emailer;
         }
 
         public async Task Handle(UserRegisteredEvent notification, CancellationToken cancellationToken)
         {
-            if (!_options.RequireConfirmEmail) return;
+            if (!_options.ConfirmationEmail.Require) return;
 
             var user = await _userStore.FindByIdAsync(notification.UserId, cancellationToken);
             var confirmationEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -43,6 +46,8 @@ namespace IdentityServer.Management.Application.Users.UserRegistered
             {
                 Url = url
             }, options => { options.File = "user-registered-confirmation.html"; });
+
+            await _emailer.Send(user.Email, _options.ConfirmationEmail.Subject, confirmationContent);
 
         }
     }

@@ -33,24 +33,25 @@ namespace IdentityServer.Management.Common
 
             var serializedSource = JsonConvert.SerializeObject(source, _serializerSettings);
             var destination = JsonConvert.DeserializeObject(serializedSource, typeof(T), _serializerSettings);
-            
+
             action?.Invoke(destination as T);
 
             return destination as T;
         }
+
     }
 
     public interface IMapper
     {
         T Map<T>(object source, Action<T> action = null) where T: class, new();
     }
-    
+
     class PrivateResolver : DefaultContractResolver {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var prop = base.CreateProperty(member, memberSerialization);
             if (prop.Writable) return prop;
-            
+
             var property = member as PropertyInfo;
             var hasPrivateSetter = property?.GetSetMethod(true) != null;
             prop.Writable = hasPrivateSetter;
