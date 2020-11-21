@@ -13,14 +13,14 @@ namespace IdentityServer.Management.Application.Users.UserRegistered
 {
     public class SendUserConfirmationEmailHandler : INotificationHandler<UserRegisteredEvent>
     {
-        private readonly IdentityUserConfig _options;
+        private readonly IdentityServerUserConfig _options;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailTemplate _emailTemplate;
         private readonly IUserStore<ApplicationUser> _userStore;
         private IEmailer _emailer;
 
         public SendUserConfirmationEmailHandler(
-            IOptions<IdentityUserConfig> options,
+            IOptions<IdentityServerUserConfig> options,
             IUserStore<ApplicationUser> userStore,
             UserManager<ApplicationUser> userManager,
             IEmailTemplate emailTemplate,

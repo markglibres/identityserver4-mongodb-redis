@@ -19,8 +19,8 @@ namespace IdentityServer.Extensions
             this IServiceCollection services,
             Func<IServiceProvider, ICorsPolicyService> setupPolicy)
         {
-            var config = services.AddIdentityConfig();
-            services.AddIdentityMongoDb();
+            var config = services.AddIdentityServerConfig();
+            services.TryAddTransient(typeof(IIdentityRepository<>), typeof(IdentityMongoRepository<>));
             services.AddSingleton(setupPolicy);
 
             var builder = services
@@ -29,26 +29,6 @@ namespace IdentityServer.Extensions
                 .AddMongoClientStore();
 
             return builder;
-        }
-
-        public static IServiceCollection AddIdentityMongoDb(
-            this IServiceCollection services)
-        {
-            var provider = services.BuildServiceProvider();
-            var configuration = provider.GetService<IConfiguration>();
-
-            var config = provider.GetService<IOptions<IdentityMongoOptions>>();
-
-            if (!string.IsNullOrWhiteSpace(config?.Value?.ConnectionString)) return services;
-
-            var mongoSection = configuration.GetSection("Identity:Mongo");
-
-            services.Configure<IdentityMongoOptions>(mongoSection);
-            mongoSection.Get<IdentityMongoOptions>();
-
-            services.TryAddTransient(typeof(IIdentityRepository<>), typeof(IdentityMongoRepository<>));
-
-            return services;
         }
 
         private static IIdentityServerBuilder AddMongoResources(this IIdentityServerBuilder identityServerBuilder)
@@ -90,16 +70,16 @@ namespace IdentityServer.Extensions
 
         public static IIdentityServerBuilder AddRedisCache(this IIdentityServerBuilder identityServerBuilder)
         {
-            var config = identityServerBuilder.Services.AddIdentityRedisConfig();
+            var config = identityServerBuilder.Services.AddIdentityServerConfig();
             identityServerBuilder
                 .AddOperationalStore(options =>
                 {
-                    options.RedisConnectionString = config.ConnectionString;
-                    options.Db = config.Db;
+                    options.RedisConnectionString = config.Redis.ConnectionString;
+                    options.Db = config.Redis.Db;
                 }).AddRedisCaching(options =>
                 {
-                    options.RedisConnectionString = config.ConnectionString;
-                    options.KeyPrefix = config.Prefix;
+                    options.RedisConnectionString = config.Redis.ConnectionString;
+                    options.KeyPrefix = config.Redis.Prefix;
                 });
 
             return identityServerBuilder;

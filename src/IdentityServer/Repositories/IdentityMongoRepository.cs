@@ -14,10 +14,10 @@ namespace IdentityServer.Repositories
     {
         private readonly IMongoDatabase _database;
 
-        public IdentityMongoRepository(IOptions<IdentityMongoOptions> options)
+        public IdentityMongoRepository(IOptions<IdentityServerConfig> options)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _database = client.GetDatabase(options.Value.Database);
+            var client = new MongoClient(options.Value.Mongo.ConnectionString);
+            _database = client.GetDatabase(options.Value.Mongo.Database);
         }
 
         public async Task<IList<T>> Find(Expression<Func<T, bool>> expression)

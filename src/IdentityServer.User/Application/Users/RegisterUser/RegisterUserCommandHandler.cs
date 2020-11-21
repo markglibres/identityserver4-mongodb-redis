@@ -20,20 +20,20 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
         private readonly IUserService<ApplicationUser> _userService;
         private readonly IApplicationEventPublisher _eventPublisher;
 
-        private readonly IdentityUserConfig _userOptions;
+        private readonly IdentityServerUserConfig _serverUserOptions;
 
         public RegisterUserCommandHandler(
             ILogger<RegisterUserCommandHandler> logger,
             UserManager<ApplicationUser> userManager,
             IUserService<ApplicationUser> userService,
-            IOptions<IdentityUserConfig> userOptions,
+            IOptions<IdentityServerUserConfig> userOptions,
             IApplicationEventPublisher eventPublisher)
         {
             _logger = logger;
             _userManager = userManager;
             _userService = userService;
             _eventPublisher = eventPublisher;
-            _userOptions = userOptions.Value;
+            _serverUserOptions = userOptions.Value;
         }
         public async Task<RegisterUserCommandResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
@@ -52,7 +52,7 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
                 Id = Guid.NewGuid().ToString(),
                 Email = request.Email,
                 UserName = request.Email,
-                EmailConfirmed = _userOptions.ConfirmationEmail.Require
+                EmailConfirmed = _serverUserOptions.ConfirmationEmail.Require
             };
 
             var result = await _userManager.CreateAsync(user, request.PlainTextPassword);

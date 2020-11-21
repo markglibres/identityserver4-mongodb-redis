@@ -2,7 +2,7 @@ using IdentityServer.Repositories;
 
 namespace IdentityServer
 {
-    public class IdentityConfig
+    public class IdentityServerConfig
     {
         public string Authority { get; set; }
         public IdentityMongoOptions Mongo { get; set; }

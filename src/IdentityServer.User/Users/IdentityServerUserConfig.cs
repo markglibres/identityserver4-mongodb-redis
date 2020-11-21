@@ -1,6 +1,6 @@
 namespace IdentityServer.Management.Users
 {
-    public class IdentityUserConfig
+    public class IdentityServerUserConfig
     {
         public ConfirmationEmailConfig ConfirmationEmail { get; set; }
         public string BaseUrl { get; set; }

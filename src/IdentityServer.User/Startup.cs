@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace IdentityServer.Management
@@ -33,13 +34,18 @@ namespace IdentityServer.Management
             this IIdentityServerBuilder builder)
         {
             var services = builder.Services;
-            var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+            var provider = services.BuildServiceProvider();
+            var configuration = provider.GetRequiredService<IConfiguration>();
             IdentityAudienceConfig identityAudienceConfig = null;
-            if (services.All(s => s.ServiceType != typeof(IdentityAudienceConfig)))
+            if (services.All(s => s.ServiceType != typeof(IOptions<IdentityAudienceConfig>)))
             {
                 var config = configuration.GetSection("Identity:Audience");
                 services.Configure<IdentityAudienceConfig>(config);
                 identityAudienceConfig = config.Get<IdentityAudienceConfig>();
+            }
+            else
+            {
+                identityAudienceConfig = provider.GetRequiredService<IOptions<IdentityAudienceConfig>>().Value;
             }
 
             const string introspectionScheme = "introspection";
@@ -90,12 +96,12 @@ namespace IdentityServer.Management
             var services = builder.Services;
 
             var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-            if (services.All(s => s.ServiceType != typeof(IdentityUserConfig)))
+            if (services.All(s => s.ServiceType != typeof(IOptions<IdentityServerUserConfig>)))
             {
-                var identityUserConfig = configuration.GetSection("Identity:User");
-                services.Configure<IdentityUserConfig>(identityUserConfig);
+                var identityUserConfig = configuration.GetSection("Identity:Server:User");
+                services.Configure<IdentityServerUserConfig>(identityUserConfig);
             }
-            if (services.All(s => s.ServiceType != typeof(SmtpConfig)))
+            if (services.All(s => s.ServiceType != typeof(IOptions<SmtpConfig>)))
             {
                 var smtpConfig = configuration.GetSection("Smtp");
                 services.Configure<SmtpConfig>(smtpConfig);
