@@ -9,4 +9,12 @@
       <ProjectReference Include="..\IdentityServer\IdentityServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="appsettings.Staging.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

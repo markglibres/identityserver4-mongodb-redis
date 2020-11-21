@@ -87,7 +87,7 @@ namespace IdentityServer.Management
             var smtpConfig = configuration.GetSection("Smtp");
 
             services.Configure<IdentityUserConfig>(identityUserConfig);
-            services.Configure<IdentityUserConfig>(identityUserConfig);
+            services.Configure<SmtpConfig>(smtpConfig);
 
             services.AddIdentity<TUser, TRole>(identityOptions => { options?.Invoke(identityOptions); })
                 .AddDefaultTokenProviders();
