@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Infrastructure.Abstractions;
+using IdentityServer.Management.Infrastructure.System;
 
 namespace IdentityServer.Management.Infrastructure.Templates
 {

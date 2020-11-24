@@ -1,12 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using AngleSharp;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
 using IdentityServer.Management.Application.Abstractions;
 using IdentityServer.Management.Common;
 using IdentityServer.Management.Infrastructure;
-using IdentityServer.Management.Infrastructure.Abstractions;
+using IdentityServer.Management.Infrastructure.Config;
 using IdentityServer.Management.Infrastructure.Messaging;
 using IdentityServer.Management.Infrastructure.System;
 using IdentityServer.Management.Infrastructure.Templates;
@@ -16,10 +16,13 @@ using IdentityServer4.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace IdentityServer.Management
 {
@@ -27,7 +30,43 @@ namespace IdentityServer.Management
     {
         public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder)
         {
-            return mvcBuilder.AddApplicationPart(typeof(Startup).Assembly);
+            var builder = mvcBuilder.AddApplicationPart(typeof(Startup).Assembly);
+            var services = mvcBuilder.Services;
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("IdentityUserV1", new OpenApiInfo
+                {
+                    Title = "Identity User",
+                    Version = "v1"
+                });
+
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        ClientCredentials = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost:5000"),
+                            TokenUrl = new Uri("http://localhost:5000/connect/token"),
+                            RefreshUrl = new Uri("http://localhost:5000/connect/token"),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "myapi.access", "API access" }
+                            }
+                        }
+                    },
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+
+                });
+
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+            services.AddSwaggerGenNewtonsoftSupport();
+
+            return builder;
         }
 
         public static IIdentityServerBuilder AddIdentityServerAudience(
@@ -56,13 +95,11 @@ namespace IdentityServer.Management
                     jwtBearerOptions.Audience = identityAudienceConfig?.ClientId;
                     jwtBearerOptions.RequireHttpsMetadata = identityAudienceConfig?.RequireSsl ?? false;
 
-                    if(identityAudienceConfig?.Introspection == null) return;
+                    if (identityAudienceConfig?.Introspection == null) return;
                     jwtBearerOptions.ForwardDefaultSelector = Selector.ForwardReferenceToken(introspectionScheme);
-
                 });
 
             if (identityAudienceConfig?.Introspection != null)
-            {
                 authBuilder.AddOAuth2Introspection(introspectionScheme, introspectionOptions =>
                 {
                     introspectionOptions.Authority = identityAudienceConfig.Authority;
@@ -73,7 +110,6 @@ namespace IdentityServer.Management
                         RequireHttps = identityAudienceConfig.RequireSsl
                     };
                 });
-            }
 
             return builder;
         }
@@ -101,6 +137,7 @@ namespace IdentityServer.Management
                 var identityUserConfig = configuration.GetSection("Identity:Server:User");
                 services.Configure<IdentityServerUserConfig>(identityUserConfig);
             }
+
             if (services.All(s => s.ServiceType != typeof(IOptions<SmtpConfig>)))
             {
                 var smtpConfig = configuration.GetSection("Smtp");
@@ -132,6 +169,7 @@ namespace IdentityServer.Management
 
             return builder;
         }
+
         internal static IIdentityServerBuilder AddIdentityUser<TUser>(this IIdentityServerBuilder builder)
             where TUser : IdentityUser
         {
@@ -143,18 +181,5 @@ namespace IdentityServer.Management
             var options = new IdentityAudienceConfig();
             return options;
         }
-    }
-
-    public class IdentityAudienceConfig
-    {
-        public string Authority { get; set; }
-        public string ClientId { get; set; }
-        public Introspection Introspection { get; set; }
-        public bool RequireSsl { get; set; }
-    }
-
-    public class Introspection
-    {
-        public string ClientSecret { get; set; }
     }
 }

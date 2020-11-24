@@ -55,6 +55,7 @@ namespace IdentityServer.Web
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseIdentityServerUser();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace IdentityServer.Management.Infrastructure.Abstractions
+namespace IdentityServer.Management.Infrastructure.System
 {
     public interface IFileReader
     {

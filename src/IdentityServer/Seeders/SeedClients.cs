@@ -12,6 +12,27 @@ namespace IdentityServer.Seeders
             {
                 new Client
                 {
+                    ClientId = "swagger",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("hardtoguess".Sha256())
+                    },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "myapi.access"
+                    },
+                    AllowOfflineAccess = true,
+                    AlwaysSendClientClaims = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AccessTokenType = AccessTokenType.Jwt
+                },
+                new Client
+                {
+
                     ClientId = "spaService",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =

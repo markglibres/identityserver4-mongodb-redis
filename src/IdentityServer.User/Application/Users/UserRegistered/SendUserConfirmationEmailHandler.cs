@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Events;
 using IdentityServer.Management.Application.Users.UserRegistered.Templates;
 using IdentityServer.Management.Users;
 using MediatR;
