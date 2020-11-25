@@ -14,7 +14,6 @@ namespace IdentityServer.Management
                 options.OAuthClientId("swagger");
                 options.OAuthClientSecret("hardtoguess");
                 options.OAuthAppName("BizzPo API");
-
             });
 
             return applicationBuilder;

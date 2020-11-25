@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using IdentityServer4;
 using IdentityServer4.Models;
 
@@ -13,7 +15,11 @@ namespace IdentityServer.Seeders
                 new Client
                 {
                     ClientId = "swagger",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedGrantTypes = new List<string>
+                    {
+                        GrantTypes.ClientCredentials.FirstOrDefault(),
+                        GrantTypes.ResourceOwnerPassword.First()
+                    },
                     ClientSecrets =
                     {
                         new Secret("hardtoguess".Sha256())

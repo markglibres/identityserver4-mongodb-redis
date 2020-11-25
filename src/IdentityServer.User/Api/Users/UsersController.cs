@@ -3,6 +3,8 @@ using IdentityServer.Management.Api.Users.RegisterUser;
 using IdentityServer.Management.Application.Users.RegisterUser;
 using IdentityServer.Management.Common;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Management.Api.Users

@@ -21,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -57,11 +58,8 @@ namespace IdentityServer.Management
                             }
                         }
                     },
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-
+                    In = ParameterLocation.Header
                 });
-
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
             services.AddSwaggerGenNewtonsoftSupport();
