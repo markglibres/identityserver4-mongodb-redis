@@ -54,7 +54,8 @@ namespace IdentityServer.Management
                             RefreshUrl = new Uri("http://localhost:5000/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
-                                { "myapi.access", "API access" }
+                                { "myapi.access", "API access" },
+                                { "myapi.user", "User Role" }
                             }
                         }
                     },

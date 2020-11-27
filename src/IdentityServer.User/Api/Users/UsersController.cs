@@ -3,9 +3,8 @@ using IdentityServer.Management.Api.Users.RegisterUser;
 using IdentityServer.Management.Application.Users.RegisterUser;
 using IdentityServer.Management.Common;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web;
 
 namespace IdentityServer.Management.Api.Users
 {
@@ -22,6 +21,7 @@ namespace IdentityServer.Management.Api.Users
         }
 
         [HttpPost]
+        [AuthorizeForScopes(Scopes = new[] {"myapi.user "})]
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);

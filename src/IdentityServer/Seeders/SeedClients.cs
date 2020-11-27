@@ -29,7 +29,8 @@ namespace IdentityServer.Seeders
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        "myapi.access"
+                        "myapi.access",
+                        "myapi.user"
                     },
                     AllowOfflineAccess = true,
                     AlwaysSendClientClaims = true,
