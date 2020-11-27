@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace IdentityServer.Management.Api
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public abstract class AuthorizedController : ControllerBase
     {
-        
+
     }
 }

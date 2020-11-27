@@ -86,7 +86,11 @@ namespace IdentityServer.Management
             }
 
             const string introspectionScheme = "introspection";
-            var authBuilder = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            var authBuilder = builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
                 {
                     jwtBearerOptions.Authority = identityAudienceConfig?.Authority;
