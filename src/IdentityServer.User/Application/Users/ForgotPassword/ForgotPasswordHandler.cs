@@ -1,6 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Exceptions;
+using IdentityServer.Management.Application.Abstractions;
+using IdentityServer.Management.Application.Users.Notifications.ForgotPasswordRequested;
 using IdentityServer.Management.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,10 +13,14 @@ namespace IdentityServer.Management.Application.Users.ForgotPassword
     public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, ForgotPasswordCommandResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IApplicationEventPublisher _eventPublisher;
 
-        public ForgotPasswordHandler(UserManager<ApplicationUser> userManager)
+        public ForgotPasswordHandler(
+            UserManager<ApplicationUser> userManager,
+            IApplicationEventPublisher eventPublisher)
         {
             _userManager = userManager;
+            _eventPublisher = eventPublisher;
         }
 
         public async Task<ForgotPasswordCommandResult> Handle(ForgotPasswordCommand request,
@@ -25,7 +31,15 @@ namespace IdentityServer.Management.Application.Users.ForgotPassword
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
-            var url = request.Url.Replace("{token}", token);
+            var url = request.UrlFormat.Replace("{token}", encodedToken);
+
+            var forgotPasswordRequestedEvent = new ForgotPasswordRequestedEvent
+            {
+                UserId = user.Id,
+                Url = url
+            };
+
+            await _eventPublisher.PublishAsync(forgotPasswordRequestedEvent);
 
             return new ForgotPasswordCommandResult
             {

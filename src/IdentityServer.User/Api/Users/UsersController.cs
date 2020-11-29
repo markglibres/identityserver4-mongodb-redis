@@ -42,7 +42,7 @@ namespace IdentityServer.Management.Api.Users
         {
             var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
             var command = _mapper.Map<ForgotPasswordCommand>(request);
-            command.Url = $"{baseUrl}?token={{token}}";
+            command.UrlFormat = $"{baseUrl}?token={{token}}";
             var result = await _mediator.Send(command);
             var response = _mapper.Map<ForgotPasswordResponse>(result);
             return Ok();

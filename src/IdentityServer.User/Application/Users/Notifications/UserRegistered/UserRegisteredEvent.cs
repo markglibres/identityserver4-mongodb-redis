@@ -1,10 +1,11 @@
 using IdentityServer.Management.Application.Abstractions;
 using MediatR;
 
-namespace IdentityServer.Management.Application.Users.UserRegistered
+namespace IdentityServer.Management.Application.Users.Notifications.UserRegistered
 {
     public class UserRegisteredEvent : IApplicationEvent, INotification
     {
         public string UserId { get; set; }
+
     }
 }

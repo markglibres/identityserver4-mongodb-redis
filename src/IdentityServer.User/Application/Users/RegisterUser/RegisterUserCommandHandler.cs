@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.UserRegistered;
+using IdentityServer.Management.Application.Users.Notifications.UserRegistered;
 using IdentityServer.Management.Users;
 using IdentityServer.Management.Users.Abstractions;
 using MediatR;

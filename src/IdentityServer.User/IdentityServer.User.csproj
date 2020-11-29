@@ -21,7 +21,16 @@
 
     <ItemGroup>
       <None Remove="Application\Users\UserRegistered\Templates\user-registered-confirmation.html" />
-      <EmbeddedResource Include="Application\Users\UserRegistered\Templates\user-registered-confirmation.html" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Application\Users\Notifications" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Application\Users\Notifications\UserRegistered\Templates\user-registered-confirmation.html" />
+      <None Remove="Application\Users\Notifications\ForgotPasswordRequested\Templates\user-forgotpassword-request.html" />
+      <EmbeddedResource Include="Application\Users\Notifications\ForgotPasswordRequested\Templates\user-forgotpassword-request.html" />
     </ItemGroup>
 
 </Project>
