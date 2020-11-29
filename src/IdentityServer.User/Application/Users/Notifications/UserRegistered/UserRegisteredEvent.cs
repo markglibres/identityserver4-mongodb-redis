@@ -6,6 +6,7 @@ namespace IdentityServer.Management.Application.Users.Notifications.UserRegister
     public class UserRegisteredEvent : IApplicationEvent, INotification
     {
         public string UserId { get; set; }
+        public string Url { get; set; }
 
     }
 }

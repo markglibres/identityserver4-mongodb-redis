@@ -10,6 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer.Management.Application.Users.RegisterUser
 {
@@ -65,10 +66,15 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
 
             if (!result.Succeeded) return response;
 
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = Base64UrlEncoder.Encode(token);
+
             var userRegisteredEvent = new UserRegisteredEvent
             {
-                UserId = user.Id
+                UserId = user.Id,
+                Url = request.ConfirmUrlFormat.Replace("{token}", encodedToken)
             };
+
             await _eventPublisher.PublishAsync(userRegisteredEvent);
 
             return response;

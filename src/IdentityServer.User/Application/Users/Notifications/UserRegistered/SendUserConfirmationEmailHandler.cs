@@ -37,13 +37,10 @@ namespace IdentityServer.Management.Application.Users.Notifications.UserRegister
             if (!_options.ConfirmationEmail.Require) return;
 
             var user = await _userStore.FindByIdAsync(notification.UserId, cancellationToken);
-            var confirmationEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var token = Base64UrlEncoder.Encode(confirmationEmailToken);
-            var url = $"{_options.BaseUrl}/{user.Id}/confirm?token={token}";
 
             var confirmationContent = await _emailTemplate.Generate(new ConfirmationEmailModel
             {
-                Url = url
+                Url = notification.Url
             }, options => { options.File = "user-registered-confirmation.html"; });
 
             await _emailer.Send(user.Email, _options.ConfirmationEmail.Subject, confirmationContent);

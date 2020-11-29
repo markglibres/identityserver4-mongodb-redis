@@ -31,20 +31,18 @@ namespace IdentityServer.Management.Application.Users.ForgotPassword
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
-            var url = request.UrlFormat.Replace("{token}", encodedToken);
 
             var forgotPasswordRequestedEvent = new ForgotPasswordRequestedEvent
             {
                 UserId = user.Id,
-                Url = url
+                Url = request.ResetPasswordUrlFormat.Replace("{token}", encodedToken)
             };
 
             await _eventPublisher.PublishAsync(forgotPasswordRequestedEvent);
 
             return new ForgotPasswordCommandResult
             {
-                Token = token,
-                Url = url
+                Token = token
             };
         }
     }

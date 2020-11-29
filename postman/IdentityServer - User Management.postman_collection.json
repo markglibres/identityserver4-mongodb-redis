@@ -94,7 +94,8 @@
 							"});",
 							"",
 							"pm.environment.set(\"requestedUser\", JSON.parse(request.data));",
-							"pm.environment.set(\"requestedUserResult\", parseInt(responseBody));"
+							"pm.environment.set(\"registeredUser\", JSON.parse(responseBody));",
+							"pm.environment.set(\"registeredUserId\", JSON.parse(responseBody).id);"
 						],
 						"type": "text/javascript"
 					}
@@ -130,6 +131,80 @@
 					"path": [
 						"identity",
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Confirmation Link",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6e5a10d8-c522-4268-8876-754365bdccf7",
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "54d2a33d-6624-4cca-8e77-f996fd71e0cb",
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Should contain token\", function() {",
+							"    const requestedUser = pm.environment.get(\"requestedUser\");",
+							"    var username = requestedUser.email;",
+							"    var result = responseJson.items.find(i => {",
+							"        var usernameMatched = i.Content.Headers.To.findIndex(t => t === username) >= 0;",
+							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'BizzPo User Registration Confirmation') >= 0;",
+							"        return usernameMatched && subjectMatched;",
+							"    });",
+							"    var decodedString = atob(result.Content.Body);",
+							"",
+							"    console.log(responseJson);",
+							"    console.log(result);",
+							"    console.log(decodedString);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8025/api/v2/search?kind=to&query={{username}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8025",
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{username}}"
+						}
 					]
 				}
 			},
@@ -372,12 +447,12 @@
 						},
 						{
 							"key": "client_id",
-							"value": "reactWeb",
+							"value": "spaWeb",
 							"type": "text"
 						},
 						{
 							"key": "client_secret",
-							"value": "secret",
+							"value": "hardtoguess",
 							"type": "text"
 						},
 						{
@@ -463,6 +538,50 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Request Forgot Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ba7c0293-0d4f-4230-80a8-28b2495107ee",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{auth_host}}/identity/users/{{registeredUserId}}",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users",
+						"{{registeredUserId}}"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -489,12 +608,12 @@
 	],
 	"variable": [
 		{
-			"id": "0f95eff9-1059-45a4-8163-bad91099b2eb",
+			"id": "46b1a5aa-818d-4629-8fd5-57f68689b907",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "ce8fb80d-2b7f-43d2-9c30-805a8c795aeb",
+			"id": "197db286-16cc-4c87-b2b5-1adfa3a16d04",
 			"key": "username",
 			"value": ""
 		}

@@ -24,12 +24,15 @@ namespace IdentityServer.Management.Api.Users
         {
             _mapper = mapper;
             _mediator = mediator;
+
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);
+            command.ConfirmUrlFormat = $"{GetBaseUrl()}/confirm?token={{token}}";
+
             var result = await _mediator.Send(command);
             var response = _mapper.Map<RegisterUserResponse>(result);
 
@@ -40,13 +43,14 @@ namespace IdentityServer.Management.Api.Users
         [Route("{Id}")]
         public async Task<IActionResult> ForgotPassword([FromRoute] ForgotPasswordRequest request)
         {
-            var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
             var command = _mapper.Map<ForgotPasswordCommand>(request);
-            command.UrlFormat = $"{baseUrl}?token={{token}}";
+            command.ResetPasswordUrlFormat = $"{GetBaseUrl()}/resetpassword?token={{token}}";
             var result = await _mediator.Send(command);
             var response = _mapper.Map<ForgotPasswordResponse>(result);
             return Ok();
         }
+
+        private string GetBaseUrl() => $"{Request.Scheme}://{Request.Host}{Request.Path}";
     }
 
 }
