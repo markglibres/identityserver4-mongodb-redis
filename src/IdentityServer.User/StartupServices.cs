@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
@@ -16,14 +15,9 @@ using IdentityServer4.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.Filters;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace IdentityServer.Management
 {
@@ -32,38 +26,6 @@ namespace IdentityServer.Management
         public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder)
         {
             var builder = mvcBuilder.AddApplicationPart(typeof(Startup).Assembly);
-            var services = mvcBuilder.Services;
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("IdentityUserV1", new OpenApiInfo
-                {
-                    Title = "Identity User",
-                    Version = "v1"
-                });
-
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        ClientCredentials = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("http://localhost:5000"),
-                            TokenUrl = new Uri("http://localhost:5000/connect/token"),
-                            RefreshUrl = new Uri("http://localhost:5000/connect/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { "myapi.access", "API access" },
-                                { "myapi.user", "User Role" }
-                            }
-                        }
-                    },
-                    In = ParameterLocation.Header
-                });
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
-            });
-            services.AddSwaggerGenNewtonsoftSupport();
 
             return builder;
         }

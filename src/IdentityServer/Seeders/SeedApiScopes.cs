@@ -10,7 +10,6 @@ namespace IdentityServer.Seeders
             return new[]
             {
                 new ApiScope("myapi.access", "Access API Backend"),
-                new ApiScope("myapi.user", "User API Backend")
             };
         }
     }

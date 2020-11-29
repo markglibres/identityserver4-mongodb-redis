@@ -13,8 +13,7 @@ namespace IdentityServer.Seeders
                 {
                     Scopes = new List<string>
                     {
-                        "myapi.access",
-                        "myapi.user"
+                        "myapi.access"
                     },
                     ApiSecrets = {new Secret("hardtoguess".Sha256())}
                 }
