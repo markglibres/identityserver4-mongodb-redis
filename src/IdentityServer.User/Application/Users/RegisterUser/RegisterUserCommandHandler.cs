@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Notifications.UserRegistered;
+using IdentityServer.Management.Application.Users.Events.UserRegistered;
 using IdentityServer.Management.Users;
 using IdentityServer.Management.Users.Abstractions;
 using MediatR;
@@ -53,7 +53,7 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
                 Id = Guid.NewGuid().ToString(),
                 Email = request.Email,
                 UserName = request.Email,
-                EmailConfirmed = _serverUserOptions.ConfirmationEmail.Require
+                EmailConfirmed = !_serverUserOptions.ConfirmationEmail.Require
             };
 
             var result = await _userManager.CreateAsync(user, request.PlainTextPassword);
@@ -69,10 +69,14 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
 
+            var confirmationUrl = request.ConfirmationUrl;
+            confirmationUrl.UserId = user.Id;
+            confirmationUrl.Token = encodedToken;
+
             var userRegisteredEvent = new UserRegisteredEvent
             {
                 UserId = user.Id,
-                Url = request.ConfirmUrlFormat.Replace("{token}", encodedToken)
+                Url = confirmationUrl.ToString()
             };
 
             await _eventPublisher.PublishAsync(userRegisteredEvent);

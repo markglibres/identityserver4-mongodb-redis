@@ -8,6 +8,8 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
         public string Lastname { get; set; }
         public string Email { get; set; }
         public string PlainTextPassword { get; set; }
-        public string ConfirmUrlFormat { get; set; }
+        public ConfirmationEmailUrlFormat ConfirmationUrl { get; set; }
     }
+
+
 }

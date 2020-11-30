@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Management.Users
 {
-    public class UserStore<T> : IUserStore<T>, IUserPasswordStore<T>
+    public class UserStore<T> : IUserStore<T>, IUserPasswordStore<T>, IUserEmailStore<T>
         where T : IdentityUser
     {
         private readonly IIdentityRepository<T> _identityRepository;
@@ -120,6 +120,61 @@ namespace IdentityServer.Management.Users
             if (result == null) IdentityResult.Failed();
             await _identityRepository.Update(user, u => u.Id == user.Id);
             return IdentityResult.Success;
+        }
+
+        public async Task<T> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(normalizedEmail)) throw new RequiredArgumentException(nameof(normalizedEmail));
+            var result = await _identityRepository.SingleOrDefault(u => u.Email.ToLowerInvariant() == normalizedEmail.ToLowerInvariant());
+            return result;
+        }
+
+        public Task<string> GetEmailAsync(T user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new RequiredArgumentException(nameof(user));
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(T user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new RequiredArgumentException(nameof(user));
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        public Task<string> GetNormalizedEmailAsync(T user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new RequiredArgumentException(nameof(user));
+            return Task.FromResult(user.NormalizedEmail.ToUpperInvariant());
+        }
+
+        public Task SetEmailAsync(T user, string email, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new RequiredArgumentException(nameof(user));
+            if (email == null) throw new RequiredArgumentException(nameof(email));
+            user.Email = email;
+            return Task.CompletedTask;
+        }
+
+        public Task SetEmailConfirmedAsync(T user, bool confirmed, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new RequiredArgumentException(nameof(user));
+            user.EmailConfirmed = confirmed;
+            return Task.CompletedTask;
+        }
+
+        public Task SetNormalizedEmailAsync(T user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new RequiredArgumentException(nameof(user));
+            if (normalizedEmail == null) throw new RequiredArgumentException(nameof(normalizedEmail));
+            user.NormalizedUserName = normalizedEmail;
+            return Task.CompletedTask;
         }
     }
 }

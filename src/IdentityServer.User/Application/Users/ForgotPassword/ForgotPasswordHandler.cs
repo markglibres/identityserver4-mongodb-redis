@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Exceptions;
 using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Notifications.ForgotPasswordRequested;
+using IdentityServer.Management.Application.Users.Events.ForgotPasswordRequested;
 using IdentityServer.Management.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
