@@ -20,7 +20,8 @@ namespace IdentityServer.Management.Api.Users
 {
 
     [Route("identity/[controller]")]
-    public class UsersController : AuthorizedController
+    [Authorize(Policy = Policies.UserManagement)]
+    public class UsersController : ApiController
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
@@ -35,7 +36,6 @@ namespace IdentityServer.Management.Api.Users
         }
 
         [HttpPost]
-        [AuthorizeForScopes(Scopes = new []{ "users.management" })]
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);

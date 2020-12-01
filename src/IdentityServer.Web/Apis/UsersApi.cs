@@ -28,7 +28,7 @@ namespace IdentityServer.Web.Apis
         {
             return new[]
             {
-                new ApiScope("users.management", "Manage Users Scope"),
+                new ApiScope("users.management", "Manage Users Scope")
             };
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
+using IdentityServer.Management.Api;
 using IdentityServer.Management.Application.Abstractions;
 using IdentityServer.Management.Common;
 using IdentityServer.Management.Infrastructure;
@@ -131,6 +132,12 @@ namespace IdentityServer.Management
             services.AddTransient<ITemplateProvider, EmbeddedResourceTemplateProvider>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
             services.AddTransient<IEmailer, SmtpEmailer>();
+
+            services.AddAuthorization(authorizationOptions =>
+            {
+                authorizationOptions.AddPolicy(Policies.UserManagement,
+                    policyBuilder => { policyBuilder.RequireScope(Policies.Scopes.UserManagement); });
+            });
 
             return builder;
         }

@@ -1,12 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Management.Api
 {
     [ApiController]
-    [AllowAnonymous]
-    public abstract class AnonymousController : ControllerBase
+    public abstract class ApiController : ControllerBase
     {
-        
+
     }
 }
