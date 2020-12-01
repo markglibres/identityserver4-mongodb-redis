@@ -3,6 +3,7 @@ using IdentityServer.Management;
 using IdentityServer.Management.Extensions;
 using IdentityServer.Management.Users;
 using IdentityServer.Seeders;
+using IdentityServer.Web.Apis;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,9 +41,10 @@ namespace IdentityServer.Web
                 .AddIdentityServerUser<ApplicationUser, ApplicationRole>()
                 .AddIdentityServerAudience()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
-                .SeedClients<SeedClients>()
-                .SeedApiResources<SeedApiResources>()
-                .SeedApiScope<SeedApiScopes>()
+                .SeedClients<ApiClients>()
+                .SeedClients<IdentityServerClients>()
+                .SeedApiResources<UsersApiResource>()
+                .SeedApiScope<UsersApiScopes>()
                 .SeedIdentityResource<SeedIdentityResources>();
 
             services.AddSwashbuckle();

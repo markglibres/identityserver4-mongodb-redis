@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Services.Abstractions;
@@ -18,8 +19,8 @@ namespace IdentityServer.Seeders
 
             var items = scope
                 .ServiceProvider
-                .GetRequiredService<ISeeder<TSeed>>()
-                ?.GetSeeds();
+                .GetServices<ISeeder<TSeed>>()
+                ?.SelectMany(s => s.GetSeeds());
 
             if (items == null) return;
 

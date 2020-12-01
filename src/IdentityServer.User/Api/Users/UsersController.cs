@@ -35,6 +35,7 @@ namespace IdentityServer.Management.Api.Users
         }
 
         [HttpPost]
+        [AuthorizeForScopes(Scopes = new []{ "users.management" })]
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);
