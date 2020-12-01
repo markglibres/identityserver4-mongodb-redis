@@ -35,25 +35,13 @@
 							"type": "text"
 						},
 						{
-							"key": "username",
-							"value": "spaWeb",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "hardtoguess",
-							"type": "text",
-							"disabled": true
-						},
-						{
 							"key": "scope",
-							"value": "myapi.access",
+							"value": "users.management",
 							"type": "text"
 						},
 						{
 							"key": "client_id",
-							"value": "spaService",
+							"value": "UserManagementApp",
 							"type": "text"
 						},
 						{
@@ -343,9 +331,9 @@
 						"id": "bb05a3fc-4cc3-48db-98e2-abc1a440851e",
 						"exec": [
 							"var jsonResponse = JSON.parse(responseBody);",
-							"pm.environment.set(\"token\", jsonResponse.access_token);",
-							"pm.environment.set(\"refreshtoken\", jsonResponse.refresh_token);",
-							"pm.environment.set(\"requestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							"pm.environment.set(\"userToken\", jsonResponse.access_token);",
+							"pm.environment.set(\"userRefreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"userRequestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
 							"",
 							"const responseJson = pm.response.json();",
 							"",
@@ -416,12 +404,12 @@
 						},
 						{
 							"key": "scope",
-							"value": "myapi.access openid offline_access ",
+							"value": "openid offline_access ",
 							"type": "text"
 						},
 						{
 							"key": "client_id",
-							"value": "spaWeb",
+							"value": "reactWebApp",
 							"type": "text"
 						},
 						{
@@ -468,13 +456,13 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "password",
-							"value": "hardtoguess",
+							"key": "username",
+							"value": "reactWebApp",
 							"type": "string"
 						},
 						{
-							"key": "username",
-							"value": "spaWeb",
+							"key": "password",
+							"value": "hardtoguess",
 							"type": "string"
 						}
 					]
@@ -486,7 +474,7 @@
 					"urlencoded": [
 						{
 							"key": "token",
-							"value": "{{token}}",
+							"value": "{{userToken}}",
 							"type": "text"
 						},
 						{
@@ -571,7 +559,7 @@
 						},
 						{
 							"key": "client_id",
-							"value": "spaWeb",
+							"value": "reactWebApp",
 							"type": "text"
 						},
 						{
@@ -581,7 +569,7 @@
 						},
 						{
 							"key": "refresh_token",
-							"value": "{{refreshtoken}}",
+							"value": "{{userRefreshtoken}}",
 							"type": "text"
 						}
 					],
@@ -864,9 +852,9 @@
 						"id": "a68e85de-f593-4439-8a05-a41b664a83f1",
 						"exec": [
 							"var jsonResponse = JSON.parse(responseBody);",
-							"pm.environment.set(\"token\", jsonResponse.access_token);",
-							"pm.environment.set(\"refreshtoken\", jsonResponse.refresh_token);",
-							"pm.environment.set(\"requestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							"pm.environment.set(\"userToken\", jsonResponse.access_token);",
+							"pm.environment.set(\"userRefreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"userRequestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
 							"",
 							"const responseJson = pm.response.json();",
 							"",
@@ -937,12 +925,12 @@
 						},
 						{
 							"key": "scope",
-							"value": "myapi.access openid offline_access ",
+							"value": "openid offline_access ",
 							"type": "text"
 						},
 						{
 							"key": "client_id",
-							"value": "spaWeb",
+							"value": "reactWebApp",
 							"type": "text"
 						},
 						{
@@ -993,12 +981,12 @@
 	],
 	"variable": [
 		{
-			"id": "d05de0fa-2d34-473e-82c6-3fa02ce37735",
+			"id": "355cba4f-0ea7-4621-88dc-fea834a3479a",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "eeb4010d-0cba-460b-935c-b3d579b1173a",
+			"id": "53bb7b44-709b-4a84-bc97-4f92d6c03a83",
 			"key": "username",
 			"value": ""
 		}

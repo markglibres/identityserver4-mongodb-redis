@@ -35,9 +35,9 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore ./src/IdentityServer.Web/IdentityServer.Web.csproj
+      run: dotnet restore ./src/IdentityServer.Api/IdentityServer.Api.csproj
     - name: Build
-      run: dotnet build ./src/IdentityServer.Web/IdentityServer.Web.csproj --configuration Release --no-restore
+      run: dotnet build ./src/IdentityServer.Api/IdentityServer.Api.csproj --configuration Release --no-restore
 
   functional:
     name: Api functional tests
@@ -112,14 +112,14 @@ jobs:
         run: |
           ls -al
           ls -al src
-          ls -al src/IdentityServer.Web
+          ls -al src/IdentityServer.Api
 
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ./src
-          file: src/IdentityServer.Web/Dockerfile
+          file: src/IdentityServer.Api/Dockerfile
           push: true
           tags: bizzpo/identityserver4:latest
       -
