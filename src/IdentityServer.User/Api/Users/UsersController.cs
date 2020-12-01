@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using IdentityServer.Management.Api.Users.ConfirmEmail;
 using IdentityServer.Management.Api.Users.ForgotPassword;
 using IdentityServer.Management.Api.Users.RegisterUser;
+using IdentityServer.Management.Api.Users.ResetPassword;
 using IdentityServer.Management.Application.Users.ConfirmEmail;
 using IdentityServer.Management.Application.Users.ForgotPassword;
 using IdentityServer.Management.Application.Users.RegisterUser;
+using IdentityServer.Management.Application.Users.ResetPassword;
 using IdentityServer.Management.Application.Users.Urls;
 using IdentityServer.Management.Common;
 using MediatR;
@@ -76,12 +78,12 @@ namespace IdentityServer.Management.Api.Users
         }
 
         [HttpPost]
-        [Route("forgot/{userId}/{token}")]
-        public async Task<IActionResult> ResetPassword([FromRoute] ResetPasswordRequest request)
+        [Route("reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            var query = _mapper.Map<ResetPasswordQuery>(request);
-            var result = await _mediator.Send(query);
-            var response = _mapper.Map<ResetPasswordQueryResponse>(result);
+            var command = _mapper.Map<ResetPasswordCommand>(request);
+            var result = await _mediator.Send(command);
+            var response = _mapper.Map<ResetPasswordResponse>(result);
 
             if (response.IsSuccess) return Ok();
 
@@ -91,17 +93,7 @@ namespace IdentityServer.Management.Api.Users
         private string GetBaseUrl() => $"{Request.Scheme}://{Request.Host}{Request.Path}";
     }
 
-    public class ResetPasswordQueryResponse
-    {
-        public bool IsSuccess { get; set; }
-        public IEnumerable<string> Errors { get; set; }
-    }
 
-    public class ResetPasswordQuery
-    {
-    }
 
-    public class ResetPasswordRequest
-    {
-    }
+
 }
