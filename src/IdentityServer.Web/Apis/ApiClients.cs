@@ -14,7 +14,6 @@ namespace IdentityServer.Web.Apis
             {
                 new Client
                 {
-
                     ClientId = "UserManagementApp",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
