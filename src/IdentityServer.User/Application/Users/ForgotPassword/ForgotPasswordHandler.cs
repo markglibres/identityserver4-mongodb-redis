@@ -26,16 +26,20 @@ namespace IdentityServer.Management.Application.Users.ForgotPassword
         public async Task<ForgotPasswordCommandResult> Handle(ForgotPasswordCommand request,
             CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.Id);
-            if (user == null) throw new DomainException($"User {request.Id} not found.");
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null) throw new DomainException($"User {request.Email} not found.");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
 
+            var resetUrl = request.ResetPasswordUrl;
+            resetUrl.UserId = user.Id;
+            resetUrl.Token = encodedToken;
+
             var forgotPasswordRequestedEvent = new ForgotPasswordRequestedEvent
             {
                 UserId = user.Id,
-                Url = request.ResetPasswordUrlFormat.Replace("{token}", encodedToken)
+                Url = resetUrl.ToString()
             };
 
             await _eventPublisher.PublishAsync(forgotPasswordRequestedEvent);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using IdentityServer.Management.Api.Users.ConfirmEmail;
 using IdentityServer.Management.Api.Users.ForgotPassword;
@@ -5,6 +6,7 @@ using IdentityServer.Management.Api.Users.RegisterUser;
 using IdentityServer.Management.Application.Users.ConfirmEmail;
 using IdentityServer.Management.Application.Users.ForgotPassword;
 using IdentityServer.Management.Application.Users.RegisterUser;
+using IdentityServer.Management.Application.Users.Urls;
 using IdentityServer.Management.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,9 +36,9 @@ namespace IdentityServer.Management.Api.Users
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);
-            command.ConfirmationUrl = new ConfirmationEmailUrlFormat
+            command.ConfirmUrl = new ConfirmEmailUrlFormat
             {
-                UrlFormat = $"{GetBaseUrl()}/{{{nameof(ConfirmationEmailUrlFormat.UserId)}}}/confirm/{{{nameof(ConfirmationEmailUrlFormat.Token)}}}"
+                UrlFormat = $"{GetBaseUrl()}/{{{nameof(ConfirmEmailUrlFormat.UserId)}}}/confirm/{{{nameof(ConfirmEmailUrlFormat.Token)}}}"
             };
 
             var result = await _mediator.Send(command);
@@ -46,7 +48,6 @@ namespace IdentityServer.Management.Api.Users
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("{userId}/confirm/{token}")]
         public async Task<IActionResult> Confirm([FromRoute] ConfirmEmailRequest request)
         {
@@ -60,17 +61,47 @@ namespace IdentityServer.Management.Api.Users
         }
 
         [HttpPost]
-        [Route("{Id}")]
-        public async Task<IActionResult> ForgotPassword([FromRoute] ForgotPasswordRequest request)
+        [Route("forgot")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
             var command = _mapper.Map<ForgotPasswordCommand>(request);
-            command.ResetPasswordUrlFormat = $"{GetBaseUrl()}/resetpassword?token={{token}}";
+            command.ResetPasswordUrl = new ResetPasswordUrlFormat
+            {
+                UrlFormat = request.ResetUrl
+            };
+
             var result = await _mediator.Send(command);
             var response = _mapper.Map<ForgotPasswordResponse>(result);
             return Ok();
         }
 
+        [HttpPost]
+        [Route("forgot/{userId}/{token}")]
+        public async Task<IActionResult> ResetPassword([FromRoute] ResetPasswordRequest request)
+        {
+            var query = _mapper.Map<ResetPasswordQuery>(request);
+            var result = await _mediator.Send(query);
+            var response = _mapper.Map<ResetPasswordQueryResponse>(result);
+
+            if (response.IsSuccess) return Ok();
+
+            return NotFound(response.Errors);
+        }
+
         private string GetBaseUrl() => $"{Request.Scheme}://{Request.Host}{Request.Path}";
     }
 
+    public class ResetPasswordQueryResponse
+    {
+        public bool IsSuccess { get; set; }
+        public IEnumerable<string> Errors { get; set; }
+    }
+
+    public class ResetPasswordQuery
+    {
+    }
+
+    public class ResetPasswordRequest
+    {
+    }
 }

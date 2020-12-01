@@ -1,6 +1,6 @@
-namespace IdentityServer.Management.Application.Users.RegisterUser
+namespace IdentityServer.Management.Application.Users.Urls
 {
-    public class ConfirmationEmailUrlFormat
+    public class ConfirmEmailUrlFormat
     {
         public string UserId { get; set; }
         public string Token { get; set; }

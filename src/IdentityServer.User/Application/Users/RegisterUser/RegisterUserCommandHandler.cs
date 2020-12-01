@@ -69,7 +69,7 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
 
-            var confirmationUrl = request.ConfirmationUrl;
+            var confirmationUrl = request.ConfirmUrl;
             confirmationUrl.UserId = user.Id;
             confirmationUrl.Token = encodedToken;
 

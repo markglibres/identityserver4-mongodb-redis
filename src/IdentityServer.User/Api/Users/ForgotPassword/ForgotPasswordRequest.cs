@@ -4,6 +4,7 @@ namespace IdentityServer.Management.Api.Users.ForgotPassword
 {
     public class ForgotPasswordRequest
     {
-        public string Id { get; set; }
+        public string Email { get; set; }
+        public string ResetUrl { get; set; }
     }
 }
