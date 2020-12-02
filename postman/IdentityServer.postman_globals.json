@@ -1,0 +1,14 @@
+{
+	"id": "a661a6ef-b9e1-4f4c-8582-475974dd95ca",
+	"values": [
+		{
+			"key": "retryOnFailure",
+			"value": "function retryOnFailure(code, maxRetry, interval) {\nvar counterKey = request.name.replace(\" \",\"_\") + \"_counter\";\nvar counter = pm.environment.get(counterKey) ? parseInt(pm.environment.get(counterKey)) + 1 : 1;\n\nif(counter > maxRetry || responseCode.code == code ) {\npm.environment.set(counterKey, 0);\npostman.setNextRequest();\nreturn;\n}\npm.environment.set(counterKey, counter);\nsetTimeout(() => {\nconsole.log(`retry count for ${request.name}: ${counter}`);\npostman.setNextRequest(request.name);\n}, interval);\n}",
+			"enabled": true
+		}
+	],
+	"name": "IdentityServer",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2020-12-01T11:04:32.121Z",
+	"_postman_exported_using": "Postman/7.34.0"
+}

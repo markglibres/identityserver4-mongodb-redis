@@ -77,6 +77,9 @@
 					"script": {
 						"id": "8478e25f-6149-4239-80f0-f5b7f3ed2aef",
 						"exec": [
+							"eval(pm.globals.get(\"retryOnFailure\"));",
+							"retryOnFailure(200, 5, 1000);",
+							"",
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
 							"});",
@@ -981,12 +984,12 @@
 	],
 	"variable": [
 		{
-			"id": "355cba4f-0ea7-4621-88dc-fea834a3479a",
+			"id": "2bc3b4c1-a041-4bef-a5a9-b9638211f205",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "53bb7b44-709b-4a84-bc97-4f92d6c03a83",
+			"id": "00c75c94-7f33-4db9-a10d-61074804de65",
 			"key": "username",
 			"value": ""
 		}
