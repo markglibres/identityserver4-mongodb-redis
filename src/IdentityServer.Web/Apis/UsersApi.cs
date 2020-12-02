@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using IdentityServer.Seeders;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Api.Apis
+namespace IdentityServer.Web.Apis
 {
     public class UsersApiResource : ISeeder<ApiResource>
     {

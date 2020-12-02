@@ -1,7 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All (local)" type="CompoundRunConfigurationType">
-    <toRun name="IdentityServer.Api" type="LaunchSettings" />
-    <toRun name="Identity.Worker" type="LaunchSettings" />
+    <toRun name="IdentityServer.Web" type="LaunchSettings" />
     <method v="2" />
   </configuration>
 </component>

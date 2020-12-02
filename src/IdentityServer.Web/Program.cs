@@ -5,7 +5,7 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace IdentityServer.Api
+namespace IdentityServer.Web
 {
     public class Program
     {

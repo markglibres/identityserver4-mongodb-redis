@@ -3,7 +3,7 @@ using IdentityServer.Seeders;
 using IdentityServer4;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Api.Apis
+namespace IdentityServer.Web.Apis
 {
 
     public class ApiClients : ISeeder<Client>

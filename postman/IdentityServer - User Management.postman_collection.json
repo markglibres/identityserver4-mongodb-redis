@@ -512,8 +512,8 @@
 						"id": "9e78135e-6e5c-4767-953e-0cb957b1c74d",
 						"exec": [
 							"var responseJson = JSON.parse(responseBody);",
-							"pm.environment.set(\"token\", responseJson.access_token);",
-							"pm.environment.set(\"refreshtoken\", responseJson.refresh_token);",
+							"pm.environment.set(\"userToken\", responseJson.access_token);",
+							"pm.environment.set(\"userRefreshtoken\", responseJson.refresh_token);",
 							"",
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
@@ -534,7 +534,7 @@
 							"",
 							"pm.test(\"Token values\", function () {",
 							"",
-							"    const requestedScopes = pm.environment.get(\"requestedScopes\");",
+							"    const requestedScopes = pm.environment.get(\"userRequestedScopes\");",
 							"    const responseScopes = responseJson.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
 							"    ",
 							"    pm.expect(responseScopes).to.have.members(requestedScopes);",
@@ -628,7 +628,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{token}}",
+							"value": "{{userToken}}",
 							"type": "string"
 						}
 					]
@@ -799,6 +799,9 @@
 					"script": {
 						"id": "f809e0d2-551a-429f-8816-e8f479713b9c",
 						"exec": [
+							"eval(pm.globals.get(\"retryOnFailure\"));",
+							"retryOnFailure(200, 5, 1000);",
+							"",
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
 							"});",
@@ -984,12 +987,12 @@
 	],
 	"variable": [
 		{
-			"id": "2bc3b4c1-a041-4bef-a5a9-b9638211f205",
+			"id": "6f0d9582-db82-4c09-8df0-a97e56be55c1",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "00c75c94-7f33-4db9-a10d-61074804de65",
+			"id": "704289ef-3264-49eb-8d54-6ca7952ab66c",
 			"key": "username",
 			"value": ""
 		}
