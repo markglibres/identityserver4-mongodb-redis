@@ -11,6 +11,7 @@ using IdentityServer.Management.Application.Users.ResetPassword;
 using IdentityServer.Management.Application.Users.Urls;
 using IdentityServer.Management.Common;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -20,7 +21,7 @@ namespace IdentityServer.Management.Api.Users
 {
 
     [Route("identity/[controller]")]
-    [Authorize(Policy = Policies.UserManagement)]
+    [Authorize(Policy = Policies.UserManagement, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ApiController
     {
         private readonly IMapper _mapper;

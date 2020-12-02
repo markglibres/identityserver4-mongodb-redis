@@ -23,11 +23,7 @@ namespace Identity.Worker
             services.AddIdentity(_configuration);
             services.AddIdentitySubscriber();
 
-            services.AddIdentityServerMongoDb(provider =>
-                    new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
-                    {
-                        AllowAll = true
-                    })
+            services.AddIdentityServerMongoDb()
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
                 .AddIdentityServerUser<ApplicationUser, ApplicationRole>();

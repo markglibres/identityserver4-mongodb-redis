@@ -5,6 +5,7 @@ using IdentityServer.Management.Users;
 using IdentityServer.Seeders;
 using IdentityServer.Web.Apis;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,15 +32,19 @@ namespace IdentityServer.Web
         {
             services.AddControllers().AddIdentityServerUserApi();
 
-            services.AddIdentityServerMongoDb(provider =>
-                    new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
-                    {
-                        AllowAll = true
-                    })
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddIdentityServerUserAuthentication();
+
+            services
+                .AddIdentityServerMongoDb()
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
                 .AddIdentityServerUser<ApplicationUser, ApplicationRole>()
-                .AddIdentityServerAudience()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<ApiClients>()
                 .SeedClients<IdentityServerClients>()

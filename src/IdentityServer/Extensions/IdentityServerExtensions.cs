@@ -3,11 +3,13 @@ using IdentityServer.Repositories;
 using IdentityServer.Repositories.Abstractions;
 using IdentityServer.Services;
 using IdentityServer.Services.Abstractions;
+using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 
@@ -17,14 +19,26 @@ namespace IdentityServer.Extensions
     {
         public static IIdentityServerBuilder AddIdentityServerMongoDb(
             this IServiceCollection services,
-            Func<IServiceProvider, ICorsPolicyService> setupPolicy)
+            Action<IdentityServerOptions> identityServerOptions = null,
+            Func<IServiceProvider, ICorsPolicyService> setupPolicy = null
+            )
         {
             var config = services.AddIdentityServerConfig();
             services.TryAddTransient(typeof(IIdentityRepository<>), typeof(IdentityMongoRepository<>));
-            services.AddSingleton(setupPolicy);
+
+            var provider = services.BuildServiceProvider();
+            var defaultPolicy = new DefaultCorsPolicyService(provider.GetService<ILogger<DefaultCorsPolicyService>>())
+            {
+                AllowAll = true
+            };
+            services.AddSingleton(setupPolicy?.Invoke(provider) ?? defaultPolicy);
 
             var builder = services
-                .AddIdentityServer(options => { options.IssuerUri = config.Authority; })
+                .AddIdentityServer(options =>
+                {
+                    options.IssuerUri = config.Authority;
+                    identityServerOptions?.Invoke(options);
+                })
                 .AddMongoResources()
                 .AddMongoClientStore();
 

@@ -14,6 +14,7 @@ using IdentityServer.Management.Users;
 using IdentityServer.Management.Users.Abstractions;
 using IdentityServer4.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -31,8 +32,9 @@ namespace IdentityServer.Management
             return builder;
         }
 
-        public static IIdentityServerBuilder AddIdentityServerAudience(
-            this IIdentityServerBuilder builder)
+        public static AuthenticationBuilder AddIdentityServerUserAuthentication(
+            this AuthenticationBuilder builder,
+            Action<IdentityAudienceConfig> audienceConfig = null)
         {
             var services = builder.Services;
             var provider = services.BuildServiceProvider();
@@ -49,12 +51,10 @@ namespace IdentityServer.Management
                 identityAudienceConfig = provider.GetRequiredService<IOptions<IdentityAudienceConfig>>().Value;
             }
 
+            audienceConfig?.Invoke(identityAudienceConfig);
+
             const string introspectionScheme = "introspection";
-            var authBuilder = builder.Services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            var authBuilder = builder
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
                 {
                     jwtBearerOptions.Authority = identityAudienceConfig?.Authority;
