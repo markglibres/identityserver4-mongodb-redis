@@ -94,8 +94,4 @@ namespace IdentityServer.Management.Api.Users
 
         private string GetBaseUrl() => $"{Request.Scheme}://{Request.Host}{Request.Path}";
     }
-
-
-
-
 }

@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{47463C26
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.User", "IdentityServer.User\IdentityServer.User.csproj", "{86800DB1-F2D0-494C-BACB-5748A206041D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.App.React", "IdentityServer.App.React\IdentityServer.App.React.csproj", "{0CCE3314-164E-4C54-BE25-1C0B29D31D63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{86800DB1-F2D0-494C-BACB-5748A206041D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86800DB1-F2D0-494C-BACB-5748A206041D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86800DB1-F2D0-494C-BACB-5748A206041D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CCE3314-164E-4C54-BE25-1C0B29D31D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CCE3314-164E-4C54-BE25-1C0B29D31D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CCE3314-164E-4C54-BE25-1C0B29D31D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CCE3314-164E-4C54-BE25-1C0B29D31D63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA1CDF0A-CDC7-4465-A1BF-D362739F2E8C} = {57016F4A-5225-4255-A940-04079752B441}
