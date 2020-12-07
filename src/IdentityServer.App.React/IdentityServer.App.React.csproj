@@ -11,6 +11,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.5" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,6 +26,11 @@
     <ItemGroup>
       <Folder Include="ClientApp\src\design-system\molecules" />
       <Folder Include="ClientApp\src\design-system\organisms" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\IdentityServer.User\IdentityServer.User.csproj" />
+      <ProjectReference Include="..\IdentityServer\IdentityServer.csproj" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
