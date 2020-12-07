@@ -4,24 +4,24 @@ import {Error} from "../design-system/atoms/Error";
 import * as Yup from 'yup';
 import {emailAddressSchema, passwordSchema} from "../validations/schema";
 
-interface LoginProps {
+interface FormLoginProps {
     email: string;
     password: string
 }
-const initialValues = {
+const formLoginInitialValues = {
     email: '',
     password: ''
 }
 
 export const Login: React.FC = () => {
 
-    const { errors, handleSubmit, handleChange } = useFormik<LoginProps>({
-        initialValues,
+    const { errors, handleSubmit, handleChange } = useFormik<FormLoginProps>({
+        initialValues: formLoginInitialValues,
         validationSchema: Yup.object({
             email: emailAddressSchema.required(),
             password: passwordSchema
         }),
-        onSubmit: (values: LoginProps) => {
+        onSubmit: (values: FormLoginProps) => {
             console.log(JSON.stringify(values));
         }
     });
