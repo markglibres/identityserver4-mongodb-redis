@@ -7,7 +7,7 @@ namespace IdentityServer.Management.Api
     [Route("identity/[controller]")]
     [ApiController]
     [Authorize(Policy = Policies.UserManagement, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public abstract class ApiController : ControllerBase
+    public abstract class AuthorizedController : ControllerBase
     {
 
     }

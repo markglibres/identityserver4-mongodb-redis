@@ -19,7 +19,7 @@ using Microsoft.Identity.Web;
 
 namespace IdentityServer.Management.Api.Users
 {
-    public class UsersController : ApiController
+    public class UsersController : AuthorizedController
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;

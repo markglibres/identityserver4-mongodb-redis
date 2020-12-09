@@ -3,7 +3,8 @@ import {useFormik} from "formik";
 import {Error} from "../design-system/atoms/Error";
 import * as Yup from 'yup';
 import {emailAddressSchema, passwordSchema} from "../validations/schema";
-import {IdentityConfig} from "../config";
+import {AccountsApi} from "../api/identityManagement";
+
 
 interface FormLoginProps {
     email: string;
@@ -22,8 +23,8 @@ export const Login: React.FC = () => {
             email: emailAddressSchema.required(),
             password: passwordSchema
         }),
-        onSubmit: (values: FormLoginProps) => {
-            console.log('config', JSON.stringify(IdentityConfig));
+        onSubmit: async (values: FormLoginProps) => {
+            console.log('login', await AccountsApi.Login({ username: 'mark' }) );
             console.log(JSON.stringify(values));
         }
     });
