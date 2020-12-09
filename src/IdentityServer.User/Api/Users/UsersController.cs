@@ -19,11 +19,7 @@ using Microsoft.Identity.Web;
 
 namespace IdentityServer.Management.Api.Users
 {
-
-    [Route("identity/[controller]")]
-    [ApiController]
-    [Authorize(Policy = Policies.UserManagement, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class UsersController : ControllerBase
+    public class UsersController : ApiController
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;

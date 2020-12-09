@@ -29,13 +29,8 @@ namespace IdentityServer.App.React
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddControllersWithViews();
-
-            services.AddControllers().AddIdentityServerUserApi();
-            //services.AddControllers();
-
-            // services.AddControllers()
-            //     .AddIdentityServerUserApi();
+                .AddControllersWithViews()
+                .AddIdentityServerUserApi();
 
             services
                 .AddAuthentication(options =>
@@ -71,6 +66,7 @@ namespace IdentityServer.App.React
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -80,9 +76,6 @@ namespace IdentityServer.App.React
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-                //endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-                endpoints.MapControllers();
-
             });
 
             app.UseSpa(spa =>
