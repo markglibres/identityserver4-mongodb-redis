@@ -30,6 +30,27 @@ namespace IdentityServer.Web.Apis
                     AlwaysIncludeUserClaimsInIdToken = true,
                     // this will generate reference tokens instead of access tokens
                     AccessTokenType = AccessTokenType.Reference
+                },
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Code,
+
+                    // where to redirect to after login
+                    RedirectUris = { "http://localhost:5002/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+                    RequirePkce = true
+
                 }
             };
         }

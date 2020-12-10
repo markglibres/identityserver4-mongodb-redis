@@ -4,7 +4,7 @@ export const Routes = [
     {
         props: {
             component: Login,
-            path: '/',
+            path: '/account/login',
             exact: true
         },
         title: 'Login'

@@ -12,8 +12,14 @@ const managementApi = Axios.create({
 
 getIdentityToken().then(token => managementApi.defaults.headers.common.Authorization = `Bearer ${token}`);
 
+interface LoginProps {
+    username: string;
+    password: string;
+    returnUrl: string;
+}
+
 export const AccountsApi = {
-    Login: async (data: any) => {
+    Login: async (data: LoginProps) => {
         const response = await managementApi.post(IdentityManagementConfig.accountsLoginUrl, data);
         return response.data;
     }

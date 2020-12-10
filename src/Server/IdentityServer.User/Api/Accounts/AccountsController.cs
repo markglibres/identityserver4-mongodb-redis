@@ -12,7 +12,9 @@ namespace IdentityServer.Management.Api.Accounts
             return Ok(new
             {
                 isSuccess = true,
-                username = request.Username
+                username = request.Username,
+                password = request.Password,
+                returnUrl = request.ReturnUrl
             });
         }
 
@@ -22,5 +24,6 @@ namespace IdentityServer.Management.Api.Accounts
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public string ReturnUrl { get; set; }
     }
 }

@@ -4,7 +4,8 @@ import {Error} from "../design-system/atoms/Error";
 import * as Yup from 'yup';
 import {emailAddressSchema, passwordSchema} from "../validations/schema";
 import {AccountsApi} from "../api/identityManagement";
-
+import queryString from 'query-string';
+import {useLocation} from "react-router";
 
 interface FormLoginProps {
     email: string;
@@ -15,7 +16,10 @@ const formLoginInitialValues = {
     password: ''
 }
 
-export const Login: React.FC = () => {
+export const Login: React.FC = ({...loginProps}) => {
+
+    const location = useLocation();
+    const queryStrings = queryString.parse(location.search);
 
     const { errors, handleSubmit, handleChange } = useFormik<FormLoginProps>({
         initialValues: formLoginInitialValues,
@@ -24,7 +28,11 @@ export const Login: React.FC = () => {
             password: passwordSchema
         }),
         onSubmit: async (values: FormLoginProps) => {
-            console.log('login', await AccountsApi.Login({ username: 'mark' }) );
+            console.log('login', await AccountsApi.Login({
+                username: values.email,
+                password: values.password,
+                returnUrl: queryStrings.ReturnUrl as string
+            }) );
             console.log(JSON.stringify(values));
         }
     });
