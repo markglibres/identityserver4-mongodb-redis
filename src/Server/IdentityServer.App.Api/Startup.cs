@@ -1,9 +1,9 @@
+using IdentityServer.App.Api.Apis;
 using IdentityServer.Extensions;
 using IdentityServer.Management;
 using IdentityServer.Management.Extensions;
 using IdentityServer.Management.Users;
 using IdentityServer.Seeders;
-using IdentityServer.Web.Apis;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using IdentityServer_ApplicationUser = IdentityServer.Management.Users.ApplicationUser;
 
-namespace IdentityServer.Web
+namespace IdentityServer.App.Api
 {
     public class Startup
     {
