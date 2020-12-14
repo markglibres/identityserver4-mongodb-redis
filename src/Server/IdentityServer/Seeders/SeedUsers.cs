@@ -18,7 +18,7 @@ namespace IdentityServer.Seeders
         {
             var instance = Activator.CreateInstance<T>();
             instance.Id = Guid.NewGuid().ToString();
-            instance.UserName = "dev";
+            instance.UserName = "dev@example.com";
             instance.PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess");
             instance.EmailConfirmed = true;
 

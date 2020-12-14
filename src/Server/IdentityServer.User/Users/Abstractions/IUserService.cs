@@ -8,5 +8,6 @@ namespace IdentityServer.Management.Users.Abstractions
         Task Create(T user, CancellationToken cancellationToken = default);
         Task Update(T user, CancellationToken cancellationToken = default);
         Task<T> GetByUsername(string username, CancellationToken cancellationToken = default);
+        Task<bool> ValidateCredentials(string username, string password);
     }
 }

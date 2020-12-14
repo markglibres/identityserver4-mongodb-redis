@@ -10,10 +10,14 @@ namespace IdentityServer.Management.Users
         where T : IdentityUser
     {
         private readonly IUserStore<T> _userStore;
+        private readonly IPasswordHasher<T> _passwordHasher;
 
-        public UserService(IUserStore<T> userStore)
+        public UserService(
+            IUserStore<T> userStore,
+            IPasswordHasher<T> passwordHasher)
         {
             _userStore = userStore;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task Create(T user, CancellationToken cancellationToken = default)
@@ -35,6 +39,12 @@ namespace IdentityServer.Management.Users
         {
             var user = await _userStore.FindByNameAsync(username, cancellationToken);
             return user;
+        }
+
+        public async Task<bool> ValidateCredentials(string username, string password)
+        {
+            var user = await GetByUsername(username);
+            return user != null && user.PasswordHash.Equals(_passwordHasher.HashPassword(user, password));
         }
     }
 }
