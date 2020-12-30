@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route } from 'react-router';
-import { Routes, Layout } from "./pages";
-
-const App: React.FC = () => {
-  return (
-      <Layout>
-        {Routes.map(page => (
-                <Route {...page.props} key={page.title} />
-         ))}
-      </Layout>
-  );
-};
+import { Layout } from './pages/Layout';
+import { pages } from './pages';
+const App = () => (
+    <Layout>
+      {pages.map(page => {
+          return (<Route {...page.props} key={page.props.component.name}/>);
+      })}
+    </Layout>
+);
 
 export default App;

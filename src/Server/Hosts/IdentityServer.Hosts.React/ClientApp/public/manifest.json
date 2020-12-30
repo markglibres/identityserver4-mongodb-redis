@@ -1,6 +1,6 @@
 {
-  "short_name": "IdentityServer.App.React",
-  "name": "IdentityServer.App.React",
+  "short_name": "IdentityServer.Hosts.React",
+  "name": "IdentityServer.Hosts.React",
   "icons": [
     {
       "src": "favicon.ico",

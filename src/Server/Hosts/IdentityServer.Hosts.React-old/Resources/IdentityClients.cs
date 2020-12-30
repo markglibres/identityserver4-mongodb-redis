@@ -3,7 +3,7 @@ using IdentityServer.Seeders;
 using IdentityServer4;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Web.Apis
+namespace IdentityServer.Hosts.React.Resources
 {
     public class IdentityServerClients : ISeeder<Client>
     {
@@ -34,24 +34,26 @@ namespace IdentityServer.Web.Apis
                 new Client
                 {
                     ClientId = "mvc",
+                    ClientName = "MVC Client",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.Code,
                     RequireConsent = false,
-                    AllowOfflineAccess = true,
+                    //RequireClientSecret = false,
+                    //AllowOfflineAccess = true,
 
                     // where to redirect to after login
-                    RedirectUris = { "http://localhost:5002/signin-oidc" },
+                    RedirectUris = { "http://localhost:5002/signin-oidc", "https://localhost:5002/signin-oidc" },
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc", "https://localhost:5002/signout-callback-oidc" },
 
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     },
-                    RequirePkce = true
+                    //RequirePkce = true
 
                 }
             };

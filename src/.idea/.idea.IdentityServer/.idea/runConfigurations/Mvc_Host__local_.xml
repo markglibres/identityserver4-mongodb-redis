@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All (local)" type="CompoundRunConfigurationType">
+  <configuration default="false" name="Mvc Host (local)" type="CompoundRunConfigurationType">
     <toRun name="IdentityServer.Hosts.Mvc" type="LaunchSettings" />
     <toRun name="IdentityServer.Client.Mvc" type="LaunchSettings" />
     <method v="2" />

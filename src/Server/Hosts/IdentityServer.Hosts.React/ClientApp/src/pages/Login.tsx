@@ -1,53 +1,48 @@
 import React from 'react';
 import {useFormik} from "formik";
-import {Error} from "../design-system/atoms/Error";
-import * as Yup from 'yup';
-import {emailAddressSchema, passwordSchema} from "../validations/schema";
-import {AccountsApi} from "../api/identityManagement";
-import queryString from 'query-string';
-import {useLocation} from "react-router";
+import {nameof} from "ts-simple-nameof";
+import {getQueryString} from "../utils/queryString";
+import {ILoginForm, ILoginQuery} from "../types/Login";
+import {login} from "../api/identity";
 
-interface FormLoginProps {
-    email: string;
-    password: string
-}
-const formLoginInitialValues = {
-    email: '',
-    password: ''
+const formInitialValues:ILoginForm = {
+    ReturnUrl: getQueryString(nameof<ILoginQuery>(p => p.ReturnUrl)),
+    Username: "",
+    Password: ""
 }
 
-export const Login: React.FC = ({...loginProps}) => {
+export const Login = () => {
 
-    const location = useLocation();
-    const queryStrings = queryString.parse(location.search);
+    const formik = useFormik({
+        initialValues: formInitialValues,
+        onSubmit: async values => {
+            console.log('form submitted', values);
 
-    const { errors, handleSubmit, handleChange } = useFormik<FormLoginProps>({
-        initialValues: formLoginInitialValues,
-        validationSchema: Yup.object({
-            email: emailAddressSchema.required(),
-            password: passwordSchema
-        }),
-        onSubmit: async (values: FormLoginProps) => {
-            const response = await AccountsApi.Login({
-                username: values.email,
-                password: values.password,
-                returnUrl: queryStrings.ReturnUrl as string
-            });
-            window.location = response.returnUrl;
+            const response = await login(values);
+            console.log('response', response);
+            window.location.href = response.returnUrl;
         }
-    });
+        }
+    );
 
     return (
-        <>
-          <form onSubmit={handleSubmit}>
-              <label htmlFor="email">Email</label>
-              <input id="email" name="email" type="text" autoComplete="on" onChange={handleChange}/>
-              <Error message={errors.email} />
-              <label htmlFor="password">Password</label>
-              <input id="password" name="password" type="password" autoComplete="on" onChange={handleChange}/>
-              <Error message={errors.password} />
-              <button type="submit">Login</button>
-          </form>
-        </>
+        <form onSubmit={formik.handleSubmit}>
+            <label>Username</label>
+            <input
+                type="text"
+                name={nameof<ILoginForm>(p => p.Username)}
+                onChange={formik.handleChange}
+                value={formik.values.Username}
+            />
+            <label>Password</label>
+            <input
+                type="password"
+                name={nameof<ILoginForm>(p => p.Password)}
+                onChange={formik.handleChange}
+                value={formik.values.Password}
+                autoComplete="on"
+            />
+            <input type="submit" value="Login"/>
+        </form>
     );
 };

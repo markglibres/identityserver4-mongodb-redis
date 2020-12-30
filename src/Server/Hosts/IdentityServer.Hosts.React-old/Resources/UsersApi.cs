@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using IdentityServer.Seeders;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Web.Apis
+namespace IdentityServer.Hosts.React.Resources
 {
     public class UsersApiResource : ISeeder<ApiResource>
     {

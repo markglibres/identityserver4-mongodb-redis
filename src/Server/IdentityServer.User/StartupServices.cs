@@ -139,7 +139,7 @@ namespace IdentityServer.Management
                     policyBuilder => { policyBuilder.RequireScope(Policies.Scopes.UserManagement); });
             });
 
-            //services.AddTransient<IReturnUrlParser, ReturnUrlParser>();
+            services.AddTransient<IReturnUrlParser, ReturnUrlParser>();
 
             return builder;
         }
