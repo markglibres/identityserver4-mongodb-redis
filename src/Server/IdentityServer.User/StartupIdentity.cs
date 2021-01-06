@@ -23,11 +23,11 @@ using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Management
 {
-    public static class Startup
+    public static class StartupIdentity
     {
         public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder)
         {
-            var builder = mvcBuilder.AddApplicationPart(typeof(Startup).Assembly);
+            var builder = mvcBuilder.AddApplicationPart(typeof(StartupIdentity).Assembly);
 
             return builder;
         }
@@ -119,7 +119,7 @@ namespace IdentityServer.Management
             services.AddTransient<IUserService<TUser>, UserService<TUser>>();
             services.AddTransient<IProfileService, ApplicationProfile>();
 
-            services.AddMediatR(typeof(Startup).Assembly);
+            services.AddMediatR(typeof(StartupIdentity).Assembly);
             services.AddTransient<IMapper, Mapper>();
 
             services.AddTransient<IApplicationEventPublisher, ApplicationEventService>();

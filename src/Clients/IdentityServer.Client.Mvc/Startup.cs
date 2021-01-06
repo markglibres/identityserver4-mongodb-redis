@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.Client.Mvc.Controllers;
+using IdentityServer.Management;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,29 +42,17 @@ namespace IdentityServer.Client.Mvc
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect("oidc", options =>
                 {
-                    //options.SignInScheme = "Cookies";
-
                     options.Authority = "https://localhost:5001";
-                    //options.RequireHttpsMetadata = false;
                     options.ClientId = "mvc";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code";
                     options.SaveTokens = true;
+                })
+                .AddUserInteraction(options =>
+                {
+                    options.Authority = "https://localhost:5001";
+                    options.ClientId = "mvc";
                 });
-
-                // .AddOpenIdConnect("oidc", options =>
-                // {
-                //     options.Authority = "http://localhost:5001";
-                //     options.ClientId = "mvc";
-                //     options.ClientSecret = "secret";
-                //     options.ResponseType = "code";
-                //
-                //     options.SaveTokens = true;
-                //     options.RequireHttpsMetadata = false;
-                //     // options.Scope.Add("openid");
-                //     // options.Scope.Add("profile");
-                //     // options.Scope.Add("offline_access");
-                // });
 
             services.AddCors(options =>
             {
