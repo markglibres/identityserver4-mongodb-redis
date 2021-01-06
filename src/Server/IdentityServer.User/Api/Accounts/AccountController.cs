@@ -70,16 +70,4 @@ namespace IdentityServer.Management.Api.Accounts
             });
         }
     }
-
-    public class LogoutRequest
-    {
-        public string LogoutId { get; set; }
-    }
-
-    public class LoginRequest
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string ReturnUrl { get; set; }
-    }
 }
