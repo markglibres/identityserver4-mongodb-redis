@@ -2,7 +2,7 @@ import React from 'react';
 import {useFormik} from "formik";
 import {nameof} from "ts-simple-nameof";
 import {getQueryString} from "../utils/queryString";
-import {ILoginForm, ILoginQuery} from "../types/Login";
+import {ILoginForm, ILoginQuery} from "../types";
 import {login} from "../api/identity";
 
 const formInitialValues:ILoginForm = {

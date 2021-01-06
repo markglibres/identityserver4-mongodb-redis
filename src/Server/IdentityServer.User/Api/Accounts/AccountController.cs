@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using IdentityServer.Management.Application.Accounts.Login;
+using IdentityServer.Management.Application.Accounts.Logout;
 using IdentityServer.Management.Common;
 using IdentityServer.Management.Users;
 using IdentityServer.Management.Users.Abstractions;
@@ -54,6 +55,25 @@ namespace IdentityServer.Management.Api.Accounts
                 returnUrl = result.ReturnUrl
             });
         }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        {
+            var command = _mapper.Map<LogoutCommand>(request, logoutCommand => logoutCommand.Identity = User?.Identity);
+            var result = await _mediator.Send(command);
+
+            return Ok(new
+            {
+                PostLogoutRedirectUri = result.PostLogoutRedirectUri,
+                ClientName = result.ClientName
+            });
+        }
+    }
+
+    public class LogoutRequest
+    {
+        public string LogoutId { get; set; }
     }
 
     public class LoginRequest

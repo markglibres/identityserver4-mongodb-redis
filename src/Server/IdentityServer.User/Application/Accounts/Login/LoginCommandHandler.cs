@@ -34,7 +34,7 @@ namespace IdentityServer.Management.Application.Accounts.Login
             var result = new LoginCommandResult
             {
                 IsSuccess = true,
-                ReturnUrl = context.RedirectUri
+                ReturnUrl = request.ReturnUrl
             };
 
             return result;
