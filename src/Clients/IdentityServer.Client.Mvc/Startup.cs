@@ -48,7 +48,7 @@ namespace IdentityServer.Client.Mvc
                     options.ResponseType = "code";
                     options.SaveTokens = true;
                 })
-                .AddUserInteraction();
+                .AddUserInteraction("oidc");
 
             services.AddCors(options =>
             {
