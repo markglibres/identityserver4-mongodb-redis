@@ -15,12 +15,9 @@ namespace IdentityServer.Client.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
-            var context = await _userInteractionService.GetRegistrationContext();
-            if (!string.IsNullOrWhiteSpace(context?.RegistrationUrl)) return Redirect(context.RegistrationUrl);
-
-            return View("Error", new ErrorViewModel());
+            return new RegistrationResult();
         }
     }
 }
