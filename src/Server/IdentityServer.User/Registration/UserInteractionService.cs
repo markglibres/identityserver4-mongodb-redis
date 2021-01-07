@@ -1,19 +1,23 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Management.Registration
 {
     public class UserInteractionService : IUserInteractionService
     {
-        private readonly UserInteractionOptions _interactionOptions;
+        private readonly IOptionsMonitor<OpenIdConnectOptions> _openIdConnectOptions;
+        private OpenIdConnectOptions _oidc;
 
-        public UserInteractionService(UserInteractionOptions interactionOptions)
+        public UserInteractionService(IOptionsMonitor<OpenIdConnectOptions> openIdConnectOptions)
         {
-            _interactionOptions = interactionOptions;
+            _openIdConnectOptions = openIdConnectOptions;
+            _oidc = _openIdConnectOptions.Get("oidc");
         }
 
         public Task<RegistrationContext> GetRegistrationContext()
         {
-            return Task.FromResult(new RegistrationContext($"{_interactionOptions.Authority}/identity/registration?cliendId={_interactionOptions.ClientId}"));
+            return Task.FromResult(new RegistrationContext($"{_oidc.Authority}/identity/registration?cliendId={_oidc.ClientId}"));
         }
     }
 }

@@ -48,11 +48,7 @@ namespace IdentityServer.Client.Mvc
                     options.ResponseType = "code";
                     options.SaveTokens = true;
                 })
-                .AddUserInteraction(options =>
-                {
-                    options.Authority = "https://localhost:5001";
-                    options.ClientId = "mvc";
-                });
+                .AddUserInteraction();
 
             services.AddCors(options =>
             {
