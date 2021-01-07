@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Management.Registration
+namespace IdentityServer.User.Client.Registration
 {
     public class UserInteractionService : IUserInteractionService
     {

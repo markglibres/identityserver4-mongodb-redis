@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Registration
+namespace IdentityServer.User.Client.Registration
 {
     public class RegistrationContext
     {

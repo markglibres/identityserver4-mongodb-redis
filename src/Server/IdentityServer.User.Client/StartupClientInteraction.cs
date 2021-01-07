@@ -1,8 +1,8 @@
-using IdentityServer.Management.Registration;
+using IdentityServer.User.Client.Registration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace IdentityServer.Management
+namespace IdentityServer.User.Client
 {
     public static class StartupClientInteraction
     {

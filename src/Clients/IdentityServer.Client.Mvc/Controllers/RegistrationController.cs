@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using IdentityServer.Client.Mvc.Models;
-using IdentityServer.Management;
-using IdentityServer.Management.Registration;
+using IdentityServer.User.Client.Registration;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Client.Mvc.Controllers
@@ -19,18 +18,9 @@ namespace IdentityServer.Client.Mvc.Controllers
         public async Task<IActionResult> Register()
         {
             var context = await _userInteractionService.GetRegistrationContext();
-            if (!string.IsNullOrWhiteSpace(context?.RegistrationUrl))
-            {
-                return Redirect(context.RegistrationUrl);
-            }
+            if (!string.IsNullOrWhiteSpace(context?.RegistrationUrl)) return Redirect(context.RegistrationUrl);
 
             return View("Error", new ErrorViewModel());
         }
     }
-
-
-
-
-
-
 }

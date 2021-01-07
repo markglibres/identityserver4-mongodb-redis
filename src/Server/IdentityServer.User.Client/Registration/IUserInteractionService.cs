@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace IdentityServer.Management.Registration
+namespace IdentityServer.User.Client.Registration
 {
     public interface IUserInteractionService
     {

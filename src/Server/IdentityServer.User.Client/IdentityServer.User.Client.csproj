@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,10 +6,6 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.10" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\Server\IdentityServer.User.Client\IdentityServer.User.Client.csproj" />
     </ItemGroup>
 
 </Project>
