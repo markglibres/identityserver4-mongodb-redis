@@ -1,4 +1,7 @@
+using System;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Options;
 
@@ -20,9 +23,13 @@ namespace IdentityServer.User.Client.Registration
 
         public Task<RegistrationContext> GetRegistrationContext()
         {
-            return Task.FromResult(new RegistrationContext($"{_oidc.Authority}/identity/registration?cliendId={_oidc.ClientId}"));
+            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_oidc?.ClientId}:{_oidc?.ClientSecret}"));
+            return Task.FromResult(new RegistrationContext(
+                _oidc?.ClientId,
+                _oidc?.ClientSecret,
+                $"{_oidc?.Authority}/registration/create?token={HttpUtility.UrlEncode(token)}"));
         }
-    }
+   }
 
     public class UserInteractionServiceOptions
     {
