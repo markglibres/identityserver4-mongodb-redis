@@ -21,13 +21,13 @@ namespace IdentityServer.Management.Application.Users.RegisterUser
         private readonly IUserService<ApplicationUser> _userService;
         private readonly IApplicationEventPublisher _eventPublisher;
 
-        private readonly IdentityServerUserConfig _serverUserOptions;
+        private readonly IdentityServerUserManagementConfig _serverUserOptions;
 
         public RegisterUserCommandHandler(
             ILogger<RegisterUserCommandHandler> logger,
             UserManager<ApplicationUser> userManager,
             IUserService<ApplicationUser> userService,
-            IOptions<IdentityServerUserConfig> userOptions,
+            IOptions<IdentityServerUserManagementConfig> userOptions,
             IApplicationEventPublisher eventPublisher)
         {
             _logger = logger;

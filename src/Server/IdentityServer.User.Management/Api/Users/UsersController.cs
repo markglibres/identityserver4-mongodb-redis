@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using IdentityServer.Management.Api.Users.ConfirmEmail;
 using IdentityServer.Management.Api.Users.ForgotPassword;
@@ -11,11 +10,7 @@ using IdentityServer.Management.Application.Users.ResetPassword;
 using IdentityServer.Management.Application.Users.Urls;
 using IdentityServer.Management.Common;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
 
 namespace IdentityServer.Management.Api.Users
 {
@@ -30,7 +25,6 @@ namespace IdentityServer.Management.Api.Users
         {
             _mapper = mapper;
             _mediator = mediator;
-
         }
 
         [HttpPost]
@@ -39,7 +33,8 @@ namespace IdentityServer.Management.Api.Users
             var command = _mapper.Map<RegisterUserCommand>(request);
             command.ConfirmUrl = new ConfirmEmailUrlFormat
             {
-                UrlFormat = $"{GetBaseUrl()}/{{{nameof(ConfirmEmailUrlFormat.UserId)}}}/confirm/{{{nameof(ConfirmEmailUrlFormat.Token)}}}"
+                UrlFormat =
+                    $"{GetBaseUrl()}/{{{nameof(ConfirmEmailUrlFormat.UserId)}}}/confirm/{{{nameof(ConfirmEmailUrlFormat.Token)}}}"
             };
 
             var result = await _mediator.Send(command);
@@ -89,6 +84,9 @@ namespace IdentityServer.Management.Api.Users
             return NotFound(response.Errors);
         }
 
-        private string GetBaseUrl() => $"{Request.Scheme}://{Request.Host}{Request.Path}";
+        private string GetBaseUrl()
+        {
+            return $"{Request.Scheme}://{Request.Host}{Request.Path}";
+        }
     }
 }

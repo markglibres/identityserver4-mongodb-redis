@@ -2,18 +2,18 @@ using Humanizer;
 
 namespace IdentityServer.Management.Users
 {
-    public class IdentityServerUserConfig
+    public class IdentityServerUserManagementConfig
     {
-        public IdentityServerUserConfig()
+        public IdentityServerUserManagementConfig()
         {
-            Interaction = new Interaction
+            Paths = new PathConfig
             {
                 CreateUserPath = "/Registration/Create"
             };
         }
         public ConfirmationEmailConfig ConfirmationEmail { get; set; }
         public string BaseUrl { get; set; }
-        public Interaction Interaction { get; set; }
+        public PathConfig Paths { get; set; }
     }
 
     public class ConfirmationEmailConfig
@@ -22,7 +22,7 @@ namespace IdentityServer.Management.Users
         public string Subject { get; set; }
     }
 
-    public class Interaction
+    public class PathConfig
     {
         public string CreateUserPath { get; set; }
     }

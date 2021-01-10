@@ -9,9 +9,9 @@ namespace IdentityServer.Management.Api.Config
     [Route("configurations")]
     public class ConfigurationController : Controller
     {
-        private IdentityServerUserConfig _options;
+        private IdentityServerUserManagementConfig _options;
 
-        public ConfigurationController(IOptions<IdentityServerUserConfig> options)
+        public ConfigurationController(IOptions<IdentityServerUserManagementConfig> options)
         {
             _options = options.Value;
         }
@@ -26,7 +26,7 @@ namespace IdentityServer.Management.Api.Config
             {
                 Interaction = new InteractionConfiguration
                 {
-                    CreateUserPath = $"{host}{_options.Interaction.CreateUserPath}"
+                    CreateUserPath = $"{host}{_options.Paths.CreateUserPath}"
                 }
             };
             return Json(config);

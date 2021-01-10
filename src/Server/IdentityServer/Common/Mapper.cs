@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using AngleSharp.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -29,6 +28,7 @@ namespace IdentityServer.Management.Common
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
         }
+
         public T Map<T>(object source, Action<T> action = null) where T : class, new()
         {
             if (source == null) return default;
@@ -46,25 +46,23 @@ namespace IdentityServer.Management.Common
             var sourceProps = source?.GetType().GetProperties();
             var destinationProps = destination?.GetType().GetProperties();
 
-            if(sourceProps == null || destinationProps == null) return;
+            if (sourceProps == null || destinationProps == null) return;
 
             foreach (var sourceProp in sourceProps)
             {
-                if(!sourceProp.CanRead) continue;
+                if (!sourceProp.CanRead) continue;
 
                 var sourceVal = sourceProp.GetValue(source);
-                if(sourceVal == null || sourceVal == GetTypeDefault(sourceVal)) return;
+                if (sourceVal == null || sourceVal == GetTypeDefault(sourceVal)) return;
 
                 var destinationProp = destinationProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.CanWrite);
-                if(destinationProp == null) continue;
+                if (destinationProp == null) continue;
 
                 if (!IsPrimitive(sourceProp.PropertyType))
                 {
                     var destinationVal = destinationProp.GetValue(destination);
                     if (destinationVal == null)
-                    {
                         destinationProp.SetValue(destination, Activator.CreateInstance(destinationProp.PropertyType));
-                    }
 
                     MapNotNullProperties(sourceVal, destinationProp.GetValue(destination));
                 }
@@ -78,7 +76,6 @@ namespace IdentityServer.Management.Common
                 //     BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty,
                 //     Type.DefaultBinder, destination, new[] {sourceVal});
             }
-
         }
 
         private static object GetTypeDefault(object obj)
@@ -88,7 +85,7 @@ namespace IdentityServer.Management.Common
 
         private static T GetDefaultGeneric<T>()
         {
-            return default(T);
+            return default;
         }
 
         private static bool IsPrimitive(Type type)
@@ -98,15 +95,15 @@ namespace IdentityServer.Management.Common
             return type.IsPrimitive || type.IsValueType ||
                    otherPrimitiveTypes.Contains(type.Name, StringComparer.OrdinalIgnoreCase);
         }
-
     }
 
     public interface IMapper
     {
-        T Map<T>(object source, Action<T> action = null) where T: class, new();
+        T Map<T>(object source, Action<T> action = null) where T : class, new();
     }
 
-    class PrivateResolver : DefaultContractResolver {
+    internal class PrivateResolver : DefaultContractResolver
+    {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var prop = base.CreateProperty(member, memberSerialization);
@@ -117,6 +114,5 @@ namespace IdentityServer.Management.Common
             prop.Writable = hasPrivateSetter;
             return prop;
         }
-
     }
 }

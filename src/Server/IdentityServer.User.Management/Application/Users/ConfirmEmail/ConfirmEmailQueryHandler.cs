@@ -18,10 +18,11 @@ namespace IdentityServer.Management.Application.Users.ConfirmEmail
             _userManager = userManager;
         }
 
-        public async Task<ConfirmEmailQueryResult> Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
+        public async Task<ConfirmEmailQueryResult> Handle(ConfirmEmailQuery request,
+            CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if(user == null) throw new DomainException($"User {request.UserId} is not found");
+            if (user == null) throw new DomainException($"User {request.UserId} is not found");
 
             var decodedToken = Base64UrlEncoder.Decode(request.Token);
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);

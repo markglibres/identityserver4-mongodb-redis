@@ -15,12 +15,12 @@ namespace IdentityServer.Hosts.Mvc.Controllers
     {
         private readonly IIdentityServerInteractionService _interactionService;
         private readonly IClientSecretValidator _clientSecretValidator;
-        private readonly IOptions<IdentityServerUserConfig> _options;
+        private readonly IOptions<IdentityServerUserManagementConfig> _options;
         private readonly IClientService _clientService;
 
         public RegistrationController(IIdentityServerInteractionService interactionService,
             IClientSecretValidator clientSecretValidator,
-            IOptions<IdentityServerUserConfig> options)
+            IOptions<IdentityServerUserManagementConfig> options)
         {
             _interactionService = interactionService;
             _clientSecretValidator = clientSecretValidator;
@@ -32,7 +32,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         {
             return View(new CreateRegistrationModel
             {
-                Token = _options.Value.Interaction.CreateUserPath
+                Token = _options.Value.Paths.CreateUserPath
             });
         }
 

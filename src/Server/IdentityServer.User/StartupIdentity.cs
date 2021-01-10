@@ -2,14 +2,8 @@ using System;
 using System.Linq;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
-using IdentityServer.Management.Api;
-using IdentityServer.Management.Application.Abstractions;
 using IdentityServer.Management.Common;
-using IdentityServer.Management.Infrastructure;
 using IdentityServer.Management.Infrastructure.Config;
-using IdentityServer.Management.Infrastructure.Messaging;
-using IdentityServer.Management.Infrastructure.System;
-using IdentityServer.Management.Infrastructure.Templates;
 using IdentityServer.Management.Users;
 using IdentityServer.Management.Users.Abstractions;
 using IdentityServer4.Services;
@@ -19,38 +13,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Management
 {
     public static class StartupIdentity
     {
-        public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder,
-            Action<IdentityServerUserConfig> userOptions = null,
-            Action<SmtpConfig> smtpOptions = null)
+        public static IMvcBuilder AddIdentityServerUser(this IMvcBuilder mvcBuilder)
         {
             var builder = mvcBuilder.AddApplicationPart(typeof(StartupIdentity).Assembly);
-
-            var services = builder.Services;
-            var provider = services.BuildServiceProvider();
-            var configuration = provider.GetRequiredService<IConfiguration>();
-
-            if (services.All(s => s.ServiceType != typeof(IOptions<IdentityServerUserConfig>)))
-            {
-                var identityUserConfig = configuration.GetSection("Identity:Server:User").Get<IdentityServerUserConfig>();
-                services.Configure<IdentityServerUserConfig>(userConfig =>
-                {
-                    Mapper.MapNotNullProperties(identityUserConfig, userConfig);
-                    userOptions?.Invoke(userConfig);
-                });
-            }
-
-            if (services.All(s => s.ServiceType != typeof(IOptions<SmtpConfig>)))
-            {
-                var smtpConfig = configuration.GetSection("Smtp");
-                services.Configure<SmtpConfig>(smtpConfig);
-            }
-
 
             return builder;
         }
@@ -130,40 +102,14 @@ namespace IdentityServer.Management
             services.AddTransient<IProfileService, ApplicationProfile>();
 
             services.AddMediatR(typeof(StartupIdentity).Assembly);
-            services.AddTransient<IMapper, Mapper>();
-
-            services.AddTransient<IApplicationEventPublisher, ApplicationEventService>();
+            services.TryAddTransient<IMapper, Mapper>();
 
             builder.AddAspNetIdentity<TUser>()
                 .AddProfileService<ApplicationProfile>();
 
-            services.AddTransient<IFileReader, FileReader>();
-            services.AddTransient<ITemplateParser, HandleBarsTemplateParser>();
-            services.AddTransient<ITemplateProvider, EmbeddedResourceTemplateProvider>();
-            services.AddTransient<IEmailTemplate, EmailTemplate>();
-            services.AddTransient<IEmailer, SmtpEmailer>();
-
-            services.AddAuthorization(authorizationOptions =>
-            {
-                authorizationOptions.AddPolicy(Policies.UserManagement,
-                    policyBuilder => { policyBuilder.RequireScope(Policies.Scopes.UserManagement); });
-            });
-
             services.AddTransient<IReturnUrlParser, ReturnUrlParser>();
 
             return builder;
-        }
-
-        internal static IIdentityServerBuilder AddIdentityUser<TUser>(this IIdentityServerBuilder builder)
-            where TUser : IdentityUser
-        {
-            return builder.AddAspNetIdentity<TUser>();
-        }
-
-        private static IdentityAudienceConfig GetDefaulOptions()
-        {
-            var options = new IdentityAudienceConfig();
-            return options;
         }
     }
 }

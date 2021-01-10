@@ -28,7 +28,7 @@ namespace IdentityServer.Hosts.React
         {
             services
                 .AddControllersWithViews()
-                .AddIdentityServerUserApi();
+                .AddIdentityServerUser();
 
             services
                 .AddAuthentication(options =>

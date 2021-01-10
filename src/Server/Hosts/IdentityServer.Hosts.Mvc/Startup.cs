@@ -32,10 +32,8 @@ namespace IdentityServer.Hosts.Mvc
         {
             services
                 .AddControllersWithViews()
-                .AddIdentityServerUserApi(config =>
-                {
-                    config.Interaction.CreateUserPath = "/Registration/Create";
-                });
+                .AddIdentityServerUser()
+                .AddIdentityServerUserManagement();
 
             services
                 .AddAuthentication(options =>
@@ -43,7 +41,8 @@ namespace IdentityServer.Hosts.Mvc
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
                 })
-                .AddIdentityServerUserAuthentication();
+                .AddIdentityServerUserAuthentication()
+                .AddIdentityServerUserManagement();
 
             services
                 .AddIdentityServerMongoDb()
