@@ -20,7 +20,7 @@ namespace IdentityServer.Management
 {
     public static class StartupIdentityUser
     {
-        public static AuthenticationBuilder AddIdentityServerUser(
+        public static AuthenticationBuilder AddIdentityServerUserAuthorization(
             this AuthenticationBuilder builder,
             Action<IdentityAudienceConfig> audienceConfig = null)
         {
@@ -74,10 +74,10 @@ namespace IdentityServer.Management
             where TUser : IdentityUser
             where TRole : IdentityRole
         {
-            return builder.AddIdentityServerUser<TUser, TRole>();
+            return builder.AddIdentityServerUserAuthorization<TUser, TRole>();
         }
 
-        public static IIdentityServerBuilder AddIdentityServerUser<TUser, TRole>(
+        public static IIdentityServerBuilder AddIdentityServerUserAuthorization<TUser, TRole>(
             this IIdentityServerBuilder builder,
             Action<IdentityOptions> options = null)
             where TUser : IdentityUser

@@ -37,13 +37,13 @@ namespace IdentityServer.Hosts.React
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
                 })
-                .AddIdentityServerUser();
+                .AddIdentityServerUserAuthorization();
 
             services
                 .AddIdentityServerMongoDb()
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
-                .AddIdentityServerUser<ApplicationUser, ApplicationRole>()
+                .AddIdentityServerUserAuthorization<ApplicationUser, ApplicationRole>()
                 .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
                 .SeedClients<ApiClients>()
                 .SeedClients<IdentityServerClients>()
