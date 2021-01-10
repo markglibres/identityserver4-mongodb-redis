@@ -13,10 +13,10 @@ namespace IdentityServer.Hosts.Mvc.Controllers
     [AllowAnonymous]
     public class RegistrationController : Controller
     {
-        private readonly IIdentityServerInteractionService _interactionService;
         private readonly IClientSecretValidator _clientSecretValidator;
-        private readonly IOptions<IdentityServerUserManagementConfig> _options;
         private readonly IClientService _clientService;
+        private readonly IIdentityServerInteractionService _interactionService;
+        private readonly IOptions<IdentityServerUserManagementConfig> _options;
 
         public RegistrationController(IIdentityServerInteractionService interactionService,
             IClientSecretValidator clientSecretValidator,
@@ -28,19 +28,28 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create(string token)
+        public async Task<IActionResult> CreateUser(string token)
         {
-            return View(new CreateRegistrationModel
+            return View(new CreateUserModel
             {
-                Token = _options.Value.Paths.CreateUserPath
+                Token = token
             });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(CreateUserRequest request, string button)
+        {
+            return View("UserCreated", new UserCreatedModel
+            {
+                Email = request.Email
+            });
+        }
     }
 
-    public class CreateRequest
+    public class CreateUserRequest
     {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
     }
 }

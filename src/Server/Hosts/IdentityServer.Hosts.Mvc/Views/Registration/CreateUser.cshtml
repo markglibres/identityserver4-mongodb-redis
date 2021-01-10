@@ -1,0 +1,22 @@
+@model CreateUserModel
+
+<div>
+    <h1>Create User</h1>
+    <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-route="CreateUser">
+                            <input type="hidden" asp-for="Token" />
+
+                            <div class="form-group">
+                                <label asp-for="Email"></label>
+                                <input class="form-control" placeholder="Email" asp-for="Email" autofocus>
+                            </div>
+                            <button class="btn btn-primary" name="button" value="login">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

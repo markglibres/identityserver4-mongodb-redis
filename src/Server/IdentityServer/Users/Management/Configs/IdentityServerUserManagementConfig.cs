@@ -6,7 +6,7 @@ namespace IdentityServer.Users.Management.Configs
         {
             Paths = new PathConfig
             {
-                CreateUserPath = "/Registration/Create"
+                CreateUserPath = "/Registration/CreateUser"
             };
         }
         public ConfirmationEmailConfig ConfirmationEmail { get; set; }
