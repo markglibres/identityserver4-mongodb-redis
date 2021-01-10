@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using AngleSharp.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -37,6 +39,64 @@ namespace IdentityServer.Management.Common
             action?.Invoke(destination as T);
 
             return destination as T;
+        }
+
+        public static void MapNotNullProperties<TSource, TDestination>(TSource source, TDestination destination)
+        {
+            var sourceProps = source?.GetType().GetProperties();
+            var destinationProps = destination?.GetType().GetProperties();
+
+            if(sourceProps == null || destinationProps == null) return;
+
+            foreach (var sourceProp in sourceProps)
+            {
+                if(!sourceProp.CanRead) continue;
+
+                var sourceVal = sourceProp.GetValue(source);
+                if(sourceVal == null || sourceVal == GetTypeDefault(sourceVal)) return;
+
+                var destinationProp = destinationProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.CanWrite);
+                if(destinationProp == null) continue;
+
+                if (!IsPrimitive(sourceProp.PropertyType))
+                {
+                    var destinationVal = destinationProp.GetValue(destination);
+                    if (destinationVal == null)
+                    {
+                        destinationProp.SetValue(destination, Activator.CreateInstance(destinationProp.PropertyType));
+                    }
+
+                    MapNotNullProperties(sourceVal, destinationProp.GetValue(destination));
+                }
+                else
+                {
+                    destinationProp.SetValue(destination, sourceVal);
+                }
+
+                // destination.GetType().InvokeMember(
+                //     destinationProp.Name,
+                //     BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty,
+                //     Type.DefaultBinder, destination, new[] {sourceVal});
+            }
+
+        }
+
+        private static object GetTypeDefault(object obj)
+        {
+            return obj.GetType().GetMethod("GetDefaultGeneric")?.MakeGenericMethod(obj.GetType()).Invoke(obj, null);
+        }
+
+        private static T GetDefaultGeneric<T>()
+        {
+            return default(T);
+        }
+
+        private static bool IsPrimitive(Type type)
+        {
+            var otherPrimitiveTypes = new List<string> {"string", "decimal", "datetime"};
+
+            return type.IsPrimitive || type.IsValueType ||
+                   otherPrimitiveTypes.Contains(type.Name, StringComparer.OrdinalIgnoreCase);
         }
 
     }

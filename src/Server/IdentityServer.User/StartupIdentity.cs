@@ -25,9 +25,32 @@ namespace IdentityServer.Management
 {
     public static class StartupIdentity
     {
-        public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddIdentityServerUserApi(this IMvcBuilder mvcBuilder,
+            Action<IdentityServerUserConfig> userOptions = null,
+            Action<SmtpConfig> smtpOptions = null)
         {
             var builder = mvcBuilder.AddApplicationPart(typeof(StartupIdentity).Assembly);
+
+            var services = builder.Services;
+            var provider = services.BuildServiceProvider();
+            var configuration = provider.GetRequiredService<IConfiguration>();
+
+            if (services.All(s => s.ServiceType != typeof(IOptions<IdentityServerUserConfig>)))
+            {
+                var identityUserConfig = configuration.GetSection("Identity:Server:User").Get<IdentityServerUserConfig>();
+                services.Configure<IdentityServerUserConfig>(userConfig =>
+                {
+                    Mapper.MapNotNullProperties(identityUserConfig, userConfig);
+                    userOptions?.Invoke(userConfig);
+                });
+            }
+
+            if (services.All(s => s.ServiceType != typeof(IOptions<SmtpConfig>)))
+            {
+                var smtpConfig = configuration.GetSection("Smtp");
+                services.Configure<SmtpConfig>(smtpConfig);
+            }
+
 
             return builder;
         }
@@ -96,19 +119,6 @@ namespace IdentityServer.Management
             where TRole : IdentityRole
         {
             var services = builder.Services;
-
-            var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-            if (services.All(s => s.ServiceType != typeof(IOptions<IdentityServerUserConfig>)))
-            {
-                var identityUserConfig = configuration.GetSection("Identity:Server:User");
-                services.Configure<IdentityServerUserConfig>(identityUserConfig);
-            }
-
-            if (services.All(s => s.ServiceType != typeof(IOptions<SmtpConfig>)))
-            {
-                var smtpConfig = configuration.GetSection("Smtp");
-                services.Configure<SmtpConfig>(smtpConfig);
-            }
 
             services.AddIdentity<TUser, TRole>(identityOptions => { options?.Invoke(identityOptions); })
                 .AddDefaultTokenProviders();

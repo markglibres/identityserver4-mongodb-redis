@@ -32,7 +32,10 @@ namespace IdentityServer.Hosts.Mvc
         {
             services
                 .AddControllersWithViews()
-                .AddIdentityServerUserApi();
+                .AddIdentityServerUserApi(config =>
+                {
+                    config.Interaction.CreateUserPath = "/Registration/Create";
+                });
 
             services
                 .AddAuthentication(options =>

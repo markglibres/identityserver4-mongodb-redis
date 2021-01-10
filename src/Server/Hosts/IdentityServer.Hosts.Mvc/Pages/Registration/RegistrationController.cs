@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using IdentityServer.Hosts.Mvc.ViewModels;
+using IdentityServer.Management.Users;
 using IdentityServer.Services.Abstractions;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Hosts.Mvc.Controllers
 {
@@ -13,14 +15,16 @@ namespace IdentityServer.Hosts.Mvc.Controllers
     {
         private readonly IIdentityServerInteractionService _interactionService;
         private readonly IClientSecretValidator _clientSecretValidator;
+        private readonly IOptions<IdentityServerUserConfig> _options;
         private readonly IClientService _clientService;
 
         public RegistrationController(IIdentityServerInteractionService interactionService,
-            IClientSecretValidator clientSecretValidator)
+            IClientSecretValidator clientSecretValidator,
+            IOptions<IdentityServerUserConfig> options)
         {
             _interactionService = interactionService;
             _clientSecretValidator = clientSecretValidator;
-
+            _options = options;
         }
 
         [HttpGet]
@@ -28,7 +32,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         {
             return View(new CreateRegistrationModel
             {
-                Token = token
+                Token = _options.Value.Interaction.CreateUserPath
             });
         }
 
