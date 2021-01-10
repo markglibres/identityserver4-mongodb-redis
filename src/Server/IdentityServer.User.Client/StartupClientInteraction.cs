@@ -6,7 +6,7 @@ namespace IdentityServer.User.Client
 {
     public static class StartupClientInteraction
     {
-        public static AuthenticationBuilder AddUserInteraction(this AuthenticationBuilder builder,
+        public static AuthenticationBuilder AddUserManagement(this AuthenticationBuilder builder,
             string authenticationScheme)
         {
             var services = builder.Services;
