@@ -41,8 +41,7 @@ namespace IdentityServer.Hosts.Mvc
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
                 })
-                .AddIdentityServerUserAuthentication()
-                .AddIdentityServerUserManagement();
+                .AddIdentityServerUser();
 
             services
                 .AddIdentityServerMongoDb()

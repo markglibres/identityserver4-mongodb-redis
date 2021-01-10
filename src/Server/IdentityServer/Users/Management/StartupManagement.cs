@@ -51,15 +51,6 @@ namespace IdentityServer.Management
                 services.Configure<SmtpConfig>(smtpConfig);
             }
 
-
-            return builder;
-        }
-
-        public static AuthenticationBuilder AddIdentityServerUserManagement(
-            this AuthenticationBuilder builder)
-        {
-            var services = builder.Services;
-
             services.AddMediatR(typeof(StartupManagement).Assembly);
             services.TryAddTransient<IMapper, Mapper>();
 
@@ -79,5 +70,6 @@ namespace IdentityServer.Management
 
             return builder;
         }
+
     }
 }

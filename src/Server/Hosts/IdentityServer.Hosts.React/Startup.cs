@@ -37,7 +37,7 @@ namespace IdentityServer.Hosts.React
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
                 })
-                .AddIdentityServerUserAuthentication();
+                .AddIdentityServerUser();
 
             services
                 .AddIdentityServerMongoDb()

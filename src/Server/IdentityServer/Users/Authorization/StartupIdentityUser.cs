@@ -20,7 +20,7 @@ namespace IdentityServer.Management
 {
     public static class StartupIdentityUser
     {
-        public static AuthenticationBuilder AddIdentityServerUserAuthentication(
+        public static AuthenticationBuilder AddIdentityServerUser(
             this AuthenticationBuilder builder,
             Action<IdentityAudienceConfig> audienceConfig = null)
         {
