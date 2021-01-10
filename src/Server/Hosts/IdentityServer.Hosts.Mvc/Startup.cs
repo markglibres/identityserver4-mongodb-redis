@@ -32,7 +32,7 @@ namespace IdentityServer.Hosts.Mvc
         {
             services
                 .AddControllersWithViews()
-                .AddIdentityServerUser()
+                .AddIdentityServerUserInteraction()
                 .AddIdentityServerUserManagement();
 
             services

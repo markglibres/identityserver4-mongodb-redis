@@ -18,15 +18,8 @@ using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Management
 {
-    public static class StartupIdentity
+    public static class StartupIdentityUser
     {
-        public static IMvcBuilder AddIdentityServerUser(this IMvcBuilder mvcBuilder)
-        {
-            var builder = mvcBuilder.AddApplicationPart(typeof(StartupIdentity).Assembly);
-
-            return builder;
-        }
-
         public static AuthenticationBuilder AddIdentityServerUserAuthentication(
             this AuthenticationBuilder builder,
             Action<IdentityAudienceConfig> audienceConfig = null)
@@ -101,13 +94,11 @@ namespace IdentityServer.Management
             services.AddTransient<IUserService<TUser>, UserService<TUser>>();
             services.AddTransient<IProfileService, ApplicationProfile>();
 
-            services.AddMediatR(typeof(StartupIdentity).Assembly);
+            services.AddMediatR(typeof(StartupIdentityUser).Assembly);
             services.TryAddTransient<IMapper, Mapper>();
 
             builder.AddAspNetIdentity<TUser>()
                 .AddProfileService<ApplicationProfile>();
-
-            services.AddTransient<IReturnUrlParser, ReturnUrlParser>();
 
             return builder;
         }
