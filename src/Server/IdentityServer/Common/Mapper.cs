@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace IdentityServer.Management.Common
+namespace IdentityServer.Common
 {
     public class Mapper : IMapper
     {

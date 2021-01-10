@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Seeders
+namespace IdentityServer.Authorization.Seeders
 {
     public interface ISeedService<in T> where T : class
     {

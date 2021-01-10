@@ -1,19 +1,17 @@
 using System;
-using IdentityServer.Repositories;
-using IdentityServer.Repositories.Abstractions;
-using IdentityServer.Services;
-using IdentityServer.Services.Abstractions;
+using IdentityServer.Authorization.Services;
+using IdentityServer.Authorization.Services.Abstractions;
+using IdentityServer.Common.Repositories;
+using IdentityServer.Common.Repositories.Abstractions;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 
-namespace IdentityServer.Extensions
+namespace IdentityServer.Authorization.Extensions
 {
     public static class IdentityServerExtensions
     {

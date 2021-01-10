@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using HandlebarsDotNet;
 
-namespace IdentityServer.Management.Infrastructure.Templates
+namespace IdentityServer.Users.Management.Infrastructure.Templates
 {
     public class HandleBarsTemplateParser : ITemplateParser
     {

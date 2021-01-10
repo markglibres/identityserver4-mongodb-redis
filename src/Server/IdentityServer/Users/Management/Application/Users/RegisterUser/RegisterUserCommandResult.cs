@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace IdentityServer.Management.Application.Users.RegisterUser
+namespace IdentityServer.Users.Management.Application.Users.RegisterUser
 {
     public class RegisterUserCommandResult
     {

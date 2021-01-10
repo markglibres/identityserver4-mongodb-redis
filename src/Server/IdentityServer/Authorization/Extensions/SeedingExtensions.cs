@@ -1,10 +1,10 @@
-using IdentityServer.Seeders;
-using IdentityServer.Services;
+using IdentityServer.Authorization.Seeders;
+using IdentityServer.Authorization.Services;
 using IdentityServer4.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace IdentityServer.Extensions
+namespace IdentityServer.Authorization.Extensions
 {
     public static class SeedingExtensions
     {

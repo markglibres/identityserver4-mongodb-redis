@@ -2,10 +2,10 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using IdentityServer.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Abstractions;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Management.Infrastructure.Messaging
+namespace IdentityServer.Users.Management.Infrastructure.Messaging
 {
     public class SmtpEmailer : IEmailer
     {

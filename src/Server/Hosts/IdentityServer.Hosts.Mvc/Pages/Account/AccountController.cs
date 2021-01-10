@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using IdentityServer.Common;
 using IdentityServer.Hosts.Mvc.ViewModels;
-using IdentityServer.Management.Application.Accounts.Login;
-using IdentityServer.Management.Application.Accounts.Logout;
-using IdentityServer.Management.Common;
+using IdentityServer.Users.Interactions.Application.Accounts.Login;
+using IdentityServer.Users.Interactions.Application.Accounts.Logout;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

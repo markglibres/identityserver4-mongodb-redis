@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace IdentityServer.Management.Application.Users.ConfirmEmail
+namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
 {
     public class ConfirmEmailQueryResult
     {

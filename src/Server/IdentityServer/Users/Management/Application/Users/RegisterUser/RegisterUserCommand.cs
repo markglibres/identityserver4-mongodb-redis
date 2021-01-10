@@ -1,7 +1,7 @@
-using IdentityServer.Management.Application.Users.Urls;
+using IdentityServer.Users.Management.Application.Users.Urls;
 using MediatR;
 
-namespace IdentityServer.Management.Application.Users.RegisterUser
+namespace IdentityServer.Users.Management.Application.Users.RegisterUser
 {
     public class RegisterUserCommand : IRequest<RegisterUserCommandResult>
     {

@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Application.Users.Events.UserRegistered.Templates
+namespace IdentityServer.Users.Management.Application.Users.Events.UserRegistered.Templates
 {
     public class ConfirmationEmailModel
     {

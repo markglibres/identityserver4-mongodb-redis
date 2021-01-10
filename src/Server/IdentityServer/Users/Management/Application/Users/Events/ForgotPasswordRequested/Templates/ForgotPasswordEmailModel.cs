@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Application.Users.Events.ForgotPasswordRequested.Templates
+namespace IdentityServer.Users.Management.Application.Users.Events.ForgotPasswordRequested.Templates
 {
     public class ForgotPasswordEmailModel
     {

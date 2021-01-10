@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using IdentityServer4;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Seeders
+namespace IdentityServer.Authorization.Seeders
 {
     public class SeedClients : ISeeder<Client>
     {

@@ -1,7 +1,7 @@
 using System.Security.Principal;
 using MediatR;
 
-namespace IdentityServer.Management.Application.Accounts.Logout
+namespace IdentityServer.Users.Interactions.Application.Accounts.Logout
 {
     public class LogoutCommand : IRequest<LogoutCommandResult>
     {

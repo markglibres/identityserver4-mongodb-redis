@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace IdentityServer.Management.Api.Users.ResetPassword
+namespace IdentityServer.Users.Management.Api.Users.ResetPassword
 {
     public class ResetPasswordRequest
     {

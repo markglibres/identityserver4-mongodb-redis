@@ -1,9 +1,9 @@
-using IdentityServer.Management.Users;
+using IdentityServer.Users.Management.Configs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Management.Api.Config
+namespace IdentityServer.Users.Management.Api.Configuration
 {
     [AllowAnonymous]
     [Route("configurations")]
@@ -24,10 +24,7 @@ namespace IdentityServer.Management.Api.Config
 
             var config = new ConfigurationResponse
             {
-                Interaction = new InteractionConfiguration
-                {
-                    CreateUserPath = $"{host}{_options.Paths.CreateUserPath}"
-                }
+                CreateUserPath = $"{host}{_options.Paths.CreateUserPath}"
             };
             return Json(config);
         }

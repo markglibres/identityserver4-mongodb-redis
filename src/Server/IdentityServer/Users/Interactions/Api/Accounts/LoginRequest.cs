@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Api.Accounts
+namespace IdentityServer.Users.Interactions.Api.Accounts
 {
     public class LoginRequest
     {

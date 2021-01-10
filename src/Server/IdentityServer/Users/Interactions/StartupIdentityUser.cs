@@ -1,11 +1,11 @@
-using IdentityServer.Management.Common;
-using IdentityServer.Management.Users;
+using IdentityServer.Common;
 using IdentityServer4.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ReturnUrlParser = IdentityServer.Users.Interactions.Application.ReturnUrlParser;
 
-namespace IdentityServer.Management
+namespace IdentityServer.Users.Interactions
 {
     public static class StartupIdentityUserInteraction
     {

@@ -2,10 +2,10 @@ using System;
 using System.Linq;
 using IdentityModel.AspNetCore.AccessTokenValidation;
 using IdentityModel.Client;
-using IdentityServer.Management.Common;
-using IdentityServer.Management.Infrastructure.Config;
-using IdentityServer.Management.Users;
-using IdentityServer.Management.Users.Abstractions;
+using IdentityServer.Common;
+using IdentityServer.Users.Authorization.Abstractions;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Interactions.Infrastructure.Config;
 using IdentityServer4.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Management
+namespace IdentityServer.Users.Authorization
 {
     public static class StartupIdentityUser
     {

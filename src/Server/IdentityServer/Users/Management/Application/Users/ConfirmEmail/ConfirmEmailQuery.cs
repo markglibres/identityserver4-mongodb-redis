@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer.Management.Application.Users.ConfirmEmail
+namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
 {
     public class ConfirmEmailQuery : IRequest<ConfirmEmailQueryResult>
     {

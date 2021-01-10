@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace IdentityServer.Management.Api.Users.ResetPassword
+namespace IdentityServer.Users.Management.Api.Users.ResetPassword
 {
     public class ResetPasswordResponse
     {

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using IdentityServer.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Abstractions;
 using MediatR;
 
-namespace IdentityServer.Management.Infrastructure
+namespace IdentityServer.Users.Management.Infrastructure
 {
     public class ApplicationEventService : IApplicationEventPublisher
     {

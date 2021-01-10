@@ -4,7 +4,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using MediatR;
 
-namespace IdentityServer.Management.Application.Accounts.Login
+namespace IdentityServer.Users.Interactions.Application.Accounts.Login
 {
     public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginQueryResult>
     {

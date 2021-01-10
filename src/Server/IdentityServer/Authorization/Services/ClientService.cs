@@ -1,11 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Repositories.Abstractions;
-using IdentityServer.Seeders;
-using IdentityServer.Services.Abstractions;
+using IdentityServer.Authorization.Seeders;
+using IdentityServer.Authorization.Services.Abstractions;
+using IdentityServer.Common.Repositories.Abstractions;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Services
+namespace IdentityServer.Authorization.Services
 {
     public class ClientService : IClientService, ISeedService<Client>
     {

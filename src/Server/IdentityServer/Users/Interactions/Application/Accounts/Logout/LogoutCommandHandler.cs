@@ -1,11 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Management.Users;
+using IdentityServer.Users.Authorization.Services;
 using IdentityServer4.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Management.Application.Accounts.Logout
+namespace IdentityServer.Users.Interactions.Application.Accounts.Logout
 {
     public class LogoutCommandHandler : IRequestHandler<LogoutCommand, LogoutCommandResult>
     {

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
-namespace IdentityServer.Exceptions
+namespace IdentityServer.Common
 {
     public class DomainException : Exception
     {

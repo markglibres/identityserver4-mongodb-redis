@@ -1,26 +1,21 @@
 using System;
 using System.Linq;
 using IdentityModel.AspNetCore.AccessTokenValidation;
-using IdentityModel.Client;
-using IdentityServer.Management.Api;
-using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Common;
-using IdentityServer.Management.Infrastructure;
-using IdentityServer.Management.Infrastructure.Config;
-using IdentityServer.Management.Infrastructure.Messaging;
-using IdentityServer.Management.Infrastructure.System;
-using IdentityServer.Management.Infrastructure.Templates;
-using IdentityServer.Management.Users;
+using IdentityServer.Common;
+using IdentityServer.Users.Management.Api;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Configs;
+using IdentityServer.Users.Management.Infrastructure;
+using IdentityServer.Users.Management.Infrastructure.Messaging;
+using IdentityServer.Users.Management.Infrastructure.System;
+using IdentityServer.Users.Management.Infrastructure.Templates;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Management
+namespace IdentityServer.Users.Management
 {
     public static class StartupManagement
     {
@@ -36,7 +31,7 @@ namespace IdentityServer.Management
 
             if (services.All(s => s.ServiceType != typeof(IOptions<IdentityServerUserManagementConfig>)))
             {
-                var identityUserConfig = configuration.GetSection("Identity:User:Management")
+                var identityUserConfig = configuration.GetSection("Identity:UserManagement")
                     .Get<IdentityServerUserManagementConfig>();
                 services.Configure<IdentityServerUserManagementConfig>(userConfig =>
                 {

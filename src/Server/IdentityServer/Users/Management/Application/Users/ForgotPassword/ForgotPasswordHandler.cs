@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Exceptions;
-using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Events.ForgotPasswordRequested;
-using IdentityServer.Management.Users;
+using IdentityServer.Common;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Users.Events.ForgotPasswordRequested;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityServer.Management.Application.Users.ForgotPassword
+namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
 {
     public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, ForgotPasswordCommandResult>
     {

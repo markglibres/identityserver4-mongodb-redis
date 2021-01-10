@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Application.Abstractions
+namespace IdentityServer.Users.Management.Application.Abstractions
 {
     public interface IApplicationEvent
     {

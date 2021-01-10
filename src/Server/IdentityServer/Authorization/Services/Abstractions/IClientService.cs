@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Services.Abstractions
+namespace IdentityServer.Authorization.Services.Abstractions
 {
     public interface IClientService
     {

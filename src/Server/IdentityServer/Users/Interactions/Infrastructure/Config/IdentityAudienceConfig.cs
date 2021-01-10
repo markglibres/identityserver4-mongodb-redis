@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Infrastructure.Config
+namespace IdentityServer.Users.Interactions.Infrastructure.Config
 {
     public class IdentityAudienceConfig
     {

@@ -1,7 +1,7 @@
-using IdentityServer.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Abstractions;
 using MediatR;
 
-namespace IdentityServer.Management.Application.Users.Events.UserRegistered
+namespace IdentityServer.Users.Management.Application.Users.Events.UserRegistered
 {
     public class UserRegisteredEvent : IApplicationEvent, INotification
     {

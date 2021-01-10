@@ -1,12 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Management.Users;
-using IdentityServer.Management.Users.Abstractions;
+using IdentityServer.Users.Authorization.Abstractions;
+using IdentityServer.Users.Authorization.Services;
 using IdentityServer4.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Management.Application.Accounts.Login
+namespace IdentityServer.Users.Interactions.Application.Accounts.Login
 {
     public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandResult>
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Management.Application.Abstractions
+namespace IdentityServer.Users.Management.Application.Abstractions
 {
     public interface IEmailTemplate
     {

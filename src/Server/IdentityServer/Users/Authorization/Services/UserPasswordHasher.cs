@@ -1,7 +1,7 @@
-using IdentityServer.Crypto;
+using IdentityServer.Common;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Management.Users
+namespace IdentityServer.Users.Authorization.Services
 {
     public class UserPasswordHasher<T> : PasswordHasher<T>
         where T : IdentityUser

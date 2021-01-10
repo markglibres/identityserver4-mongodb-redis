@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Seeders
+namespace IdentityServer.Authorization.Seeders
 {
     public class SeedUsers<T> : ISeeder<T>
         where T : IdentityUser

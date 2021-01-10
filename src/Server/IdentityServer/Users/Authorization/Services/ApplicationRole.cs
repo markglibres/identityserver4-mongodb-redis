@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Management.Users
+namespace IdentityServer.Users.Authorization.Services
 {
     public class ApplicationRole : IdentityRole
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using IdentityServer.Seeders;
-using IdentityServer.Services;
-using IdentityServer.Services.Abstractions;
+using IdentityServer.Authorization.Seeders;
+using IdentityServer.Authorization.Services;
+using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace IdentityServer.Extensions
+namespace IdentityServer.Authorization.Extensions
 {
     public static class InMemoryExtensions
     {

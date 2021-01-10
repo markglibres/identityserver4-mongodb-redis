@@ -1,7 +1,7 @@
-using IdentityServer.Services;
+using IdentityServer.Authorization.Services;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Management.Users
+namespace IdentityServer.Users.Authorization.Services
 {
     public class ApplicationProfile : ProfileService<ApplicationUser>
     {

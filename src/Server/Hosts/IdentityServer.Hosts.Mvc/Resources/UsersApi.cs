@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using IdentityServer.Seeders;
+using IdentityServer.Authorization.Seeders;
 using IdentityServer4.Models;
 
 namespace IdentityServer.Hosts.Mvc.Resources

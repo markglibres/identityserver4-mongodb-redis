@@ -1,13 +1,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Exceptions;
-using IdentityServer.Management.Users;
+using IdentityServer.Common;
+using IdentityServer.Users.Authorization.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityServer.Management.Application.Users.ConfirmEmail
+namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
 {
     public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, ConfirmEmailQueryResult>
     {

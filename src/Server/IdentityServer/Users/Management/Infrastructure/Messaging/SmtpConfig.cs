@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Infrastructure.Messaging
+namespace IdentityServer.Users.Management.Infrastructure.Messaging
 {
     public class SmtpConfig
     {

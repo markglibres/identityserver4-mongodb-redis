@@ -1,5 +1,6 @@
 using IdentityServer.User.Client.Registration;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdentityServer.User.Client
@@ -13,7 +14,7 @@ namespace IdentityServer.User.Client
             var options = new UserInteractionServiceOptions {AuthenticationScheme = authenticationScheme};
 
             services.TryAddSingleton(provider => options);
-            services.TryAddTransient<IUserInteractionService, UserInteractionService>();
+            services.AddHttpClient<IUserInteractionService, UserInteractionService>();
 
             return builder;
         }

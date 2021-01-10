@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace IdentityServer.Management.Infrastructure.Templates
+namespace IdentityServer.Users.Management.Infrastructure.Templates
 {
     public interface ITemplateParser
     {

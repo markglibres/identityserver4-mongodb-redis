@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace IdentityServer.Management.Application.Accounts.Login
+namespace IdentityServer.Users.Interactions.Application.Accounts.Login
 {
     public class LoginCommand : IRequest<LoginCommandResult>
     {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
+using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Hosts.Mvc.ViewModels;
-using IdentityServer.Management.Users;
-using IdentityServer.Services.Abstractions;
+using IdentityServer.Users.Management.Configs;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Authorization;

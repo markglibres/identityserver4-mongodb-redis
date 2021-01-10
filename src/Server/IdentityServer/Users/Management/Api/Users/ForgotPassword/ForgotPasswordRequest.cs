@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace IdentityServer.Management.Api.Users.ForgotPassword
+namespace IdentityServer.Users.Management.Api.Users.ForgotPassword
 {
     public class ForgotPasswordRequest
     {

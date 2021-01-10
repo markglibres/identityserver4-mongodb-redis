@@ -1,13 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Events.UserRegistered.Templates;
-using IdentityServer.Management.Users;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Users.Events.UserRegistered.Templates;
+using IdentityServer.Users.Management.Configs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Management.Application.Users.Events.UserRegistered
+namespace IdentityServer.Users.Management.Application.Users.Events.UserRegistered
 {
     public class SendUserConfirmationEmailHandler : INotificationHandler<UserRegisteredEvent>
     {

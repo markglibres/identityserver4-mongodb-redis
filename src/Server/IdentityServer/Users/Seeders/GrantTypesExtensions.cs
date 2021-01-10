@@ -1,10 +1,10 @@
-using IdentityServer.Management.Users;
-using IdentityServer.Seeders;
+using IdentityServer.Authorization.Seeders;
+using IdentityServer.Users.Authorization.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace IdentityServer.Management.Extensions
+namespace IdentityServer.Users.Seeders
 {
     public static class GrantTypesExtensions
     {

@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Api
+namespace IdentityServer.Users.Management.Api
 {
     public static class Policies
     {

@@ -1,7 +1,7 @@
-using IdentityServer.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Abstractions;
 using MediatR;
 
-namespace IdentityServer.Management.Application.Users.Events.ForgotPasswordRequested
+namespace IdentityServer.Users.Management.Application.Users.Events.ForgotPasswordRequested
 {
     public class ForgotPasswordRequestedEvent : IApplicationEvent, INotification
     {

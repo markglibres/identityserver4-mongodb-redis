@@ -14,7 +14,7 @@ using Microsoft.Extensions.Primitives;
 // copied from https://github.com/IdentityServer/IdentityServer4/blob/63a50d7838af25896fbf836ea4e4f37b5e179cd8/src/Services/Default/OidcReturnUrlParser.cs
 // class is internal and cannot be extended :/
 
-namespace IdentityServer.Management
+namespace IdentityServer.Users.Interactions.Application
 {
     public class ReturnUrlParser: IReturnUrlParser
     {

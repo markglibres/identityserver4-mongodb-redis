@@ -1,13 +1,13 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Exceptions;
-using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Events.ForgotPasswordRequested.Templates;
-using IdentityServer.Management.Users;
+using IdentityServer.Common;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Users.Events.ForgotPasswordRequested.Templates;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Management.Application.Users.Events.ForgotPasswordRequested
+namespace IdentityServer.Users.Management.Application.Users.Events.ForgotPasswordRequested
 {
     public class ForgotPasswordRequestedEventHandler : INotificationHandler<ForgotPasswordRequestedEvent>
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using IdentityServer4.Models;
 
-namespace IdentityServer.Seeders
+namespace IdentityServer.Authorization.Seeders
 {
     public class SeedApiResources : ISeeder<ApiResource>
     {

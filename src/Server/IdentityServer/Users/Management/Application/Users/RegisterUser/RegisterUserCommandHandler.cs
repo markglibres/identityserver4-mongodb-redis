@@ -2,17 +2,18 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Application.Users.Events.UserRegistered;
-using IdentityServer.Management.Users;
-using IdentityServer.Management.Users.Abstractions;
+using IdentityServer.Users.Authorization.Abstractions;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Application.Users.Events.UserRegistered;
+using IdentityServer.Users.Management.Configs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityServer.Management.Application.Users.RegisterUser
+namespace IdentityServer.Users.Management.Application.Users.RegisterUser
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, RegisterUserCommandResult>
     {

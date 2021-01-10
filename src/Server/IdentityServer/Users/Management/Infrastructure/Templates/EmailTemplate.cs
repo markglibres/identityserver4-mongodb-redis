@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using IdentityServer.Management.Application.Abstractions;
-using IdentityServer.Management.Infrastructure.System;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Infrastructure.System;
 
-namespace IdentityServer.Management.Infrastructure.Templates
+namespace IdentityServer.Users.Management.Infrastructure.Templates
 {
     public class EmailTemplate : IEmailTemplate
     {

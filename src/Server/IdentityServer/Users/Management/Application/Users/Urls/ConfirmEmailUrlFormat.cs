@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Application.Users.Urls
+namespace IdentityServer.Users.Management.Application.Users.Urls
 {
     public class ConfirmEmailUrlFormat
     {

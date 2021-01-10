@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Application.Users.ForgotPassword
+namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
 {
     public class ForgotPasswordCommandResult
     {

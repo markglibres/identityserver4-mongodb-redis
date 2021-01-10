@@ -3,9 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using NotImplementedException = System.NotImplementedException;
 
-namespace IdentityServer.Management.Infrastructure.Templates
+namespace IdentityServer.Users.Management.Infrastructure.Templates
 {
     public class EmbeddedResourceTemplateProvider : ITemplateProvider
     {

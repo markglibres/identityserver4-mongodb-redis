@@ -1,4 +1,4 @@
-namespace IdentityServer.Management.Application.Accounts.Logout
+namespace IdentityServer.Users.Interactions.Application.Accounts.Logout
 {
     public class LogoutCommandResult
     {

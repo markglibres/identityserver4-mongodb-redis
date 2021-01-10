@@ -1,17 +1,16 @@
 using System.Threading.Tasks;
-using IdentityServer.Management.Application.Accounts.Login;
-using IdentityServer.Management.Application.Accounts.Logout;
-using IdentityServer.Management.Common;
-using IdentityServer.Management.Users;
-using IdentityServer.Management.Users.Abstractions;
+using IdentityServer.Common;
+using IdentityServer.Users.Authorization.Abstractions;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Interactions.Application.Accounts.Login;
+using IdentityServer.Users.Interactions.Application.Accounts.Logout;
 using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer.Management.Api.Accounts
+namespace IdentityServer.Users.Interactions.Api.Accounts
 {
     [Route("identity/[controller]")]
     [ApiController]

@@ -1,6 +1,4 @@
-using Humanizer;
-
-namespace IdentityServer.Management.Users
+namespace IdentityServer.Users.Management.Configs
 {
     public class IdentityServerUserManagementConfig
     {

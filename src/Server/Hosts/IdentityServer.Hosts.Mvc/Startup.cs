@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using IdentityServer.Extensions;
+using IdentityServer.Authorization.Extensions;
+using IdentityServer.Authorization.Seeders;
 using IdentityServer.Hosts.Mvc.Resources;
-using IdentityServer.Management;
-using IdentityServer.Management.Extensions;
-using IdentityServer.Management.Users;
-using IdentityServer.Seeders;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using IdentityServer.Users.Authorization;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Interactions;
+using IdentityServer.Users.Management;
+using IdentityServer.Users.Seeders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -82,8 +78,8 @@ namespace IdentityServer.Hosts.Mvc
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

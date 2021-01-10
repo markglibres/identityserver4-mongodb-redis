@@ -1,6 +1,6 @@
-using IdentityServer.Repositories;
+using IdentityServer.Common.Repositories;
 
-namespace IdentityServer
+namespace IdentityServer.Authorization
 {
     public class IdentityServerConfig
     {

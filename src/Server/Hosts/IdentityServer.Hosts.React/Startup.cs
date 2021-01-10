@@ -1,9 +1,11 @@
-using IdentityServer.Extensions;
+using IdentityServer.Authorization.Extensions;
+using IdentityServer.Authorization.Seeders;
 using IdentityServer.Hosts.React.Resources;
-using IdentityServer.Management;
-using IdentityServer.Management.Extensions;
-using IdentityServer.Management.Users;
-using IdentityServer.Seeders;
+using IdentityServer.Users.Authorization;
+using IdentityServer.Users.Authorization.Services;
+using IdentityServer.Users.Interactions;
+using IdentityServer.Users.Management;
+using IdentityServer.Users.Seeders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

@@ -1,18 +1,18 @@
 using System.Threading.Tasks;
-using IdentityServer.Management.Api.Users.ConfirmEmail;
-using IdentityServer.Management.Api.Users.ForgotPassword;
-using IdentityServer.Management.Api.Users.RegisterUser;
-using IdentityServer.Management.Api.Users.ResetPassword;
-using IdentityServer.Management.Application.Users.ConfirmEmail;
-using IdentityServer.Management.Application.Users.ForgotPassword;
-using IdentityServer.Management.Application.Users.RegisterUser;
-using IdentityServer.Management.Application.Users.ResetPassword;
-using IdentityServer.Management.Application.Users.Urls;
-using IdentityServer.Management.Common;
+using IdentityServer.Common;
+using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
+using IdentityServer.Users.Management.Api.Users.ForgotPassword;
+using IdentityServer.Users.Management.Api.Users.RegisterUser;
+using IdentityServer.Users.Management.Api.Users.ResetPassword;
+using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
+using IdentityServer.Users.Management.Application.Users.ForgotPassword;
+using IdentityServer.Users.Management.Application.Users.RegisterUser;
+using IdentityServer.Users.Management.Application.Users.ResetPassword;
+using IdentityServer.Users.Management.Application.Users.Urls;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer.Management.Api.Users
+namespace IdentityServer.Users.Management.Api.Users
 {
     public class UsersController : AuthorizedController
     {

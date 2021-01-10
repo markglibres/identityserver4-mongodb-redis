@@ -1,10 +1,9 @@
 using System.Linq;
-using IdentityServer.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace IdentityServer.Extensions
+namespace IdentityServer.Authorization.Extensions
 {
     public static class IdentityConfigExtensions
     {

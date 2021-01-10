@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.Services.Abstractions;
+using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IdentityServer.Seeders
+namespace IdentityServer.Authorization.Seeders
 {
     public static class SeedExtensions
     {

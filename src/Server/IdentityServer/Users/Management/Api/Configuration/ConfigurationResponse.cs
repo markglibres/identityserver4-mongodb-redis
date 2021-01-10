@@ -1,8 +1,7 @@
-namespace IdentityServer.Management.Api.Config
+namespace IdentityServer.Users.Management.Api.Configuration
 {
     public class ConfigurationResponse
     {
-        public InteractionConfiguration Interaction { get; set; }
+        public string CreateUserPath { get; set; }
     }
-
 }

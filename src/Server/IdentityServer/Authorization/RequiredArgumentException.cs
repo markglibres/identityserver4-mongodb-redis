@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
-namespace IdentityServer
+namespace IdentityServer.Authorization
 {
     public class RequiredArgumentException : Exception
     {
