@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Hosts.Mvc.Controllers
@@ -9,5 +10,16 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         {
             return View();
         }
+
+        public IActionResult Error()
+        {
+            var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            return View("Error", new ErrorModel {Message = exceptionHandler.Error.Message});
+        }
+    }
+
+    public class ErrorModel
+    {
+        public string Message { get; set; }
     }
 }

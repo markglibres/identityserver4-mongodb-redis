@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Hosts.Mvc.ViewModels;
@@ -16,20 +17,26 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         private readonly IClientSecretValidator _clientSecretValidator;
         private readonly IClientService _clientService;
         private readonly IIdentityServerInteractionService _interactionService;
-        private readonly IOptions<IdentityServerUserManagementConfig> _options;
+        private readonly ITokenValidator _tokenValidator;
+        private IdentityServerUserManagementConfig _options;
 
         public RegistrationController(IIdentityServerInteractionService interactionService,
             IClientSecretValidator clientSecretValidator,
-            IOptions<IdentityServerUserManagementConfig> options)
+            IOptions<IdentityServerUserManagementConfig> options,
+            ITokenValidator tokenValidator)
         {
             _interactionService = interactionService;
             _clientSecretValidator = clientSecretValidator;
-            _options = options;
+            _options = options.Value;
+            _tokenValidator = tokenValidator;
         }
 
         [HttpGet]
         public async Task<IActionResult> CreateUser(string token)
         {
+            var validationResult = await _tokenValidator.ValidateAccessTokenAsync(token, _options.Scope);
+            if (validationResult.IsError) throw new Exception(validationResult.Error);
+
             return View(new CreateUserModel
             {
                 Token = token
@@ -40,6 +47,9 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(CreateUserRequest request, string button)
         {
+            var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token, _options.Scope);
+            if (validationResult.IsError) throw new Exception(validationResult.Error);
+
             return View("UserCreated", new UserCreatedModel
             {
                 Email = request.Email

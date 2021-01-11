@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using IdentityServer.Client.Mvc.Models;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace IdentityServer.Client.Mvc.Controllers
 {
@@ -31,7 +32,12 @@ namespace IdentityServer.Client.Mvc.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+            var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = exceptionHandler.Error.Message
+            });
         }
     }
 }

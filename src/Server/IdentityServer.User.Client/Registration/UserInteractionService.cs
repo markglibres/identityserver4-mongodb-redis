@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -29,9 +30,21 @@ namespace IdentityServer.User.Client.Registration
 
         public async Task<RegistrationContext> GetRegistrationContext()
         {
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync(_oidc.Authority);
+            if (disco.IsError) throw new Exception(disco.Error);
+
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = _oidc?.ClientId,
+                ClientSecret = _oidc?.ClientSecret,
+                Scope = _options.Scope
+            });
+            if (tokenResponse.IsError) throw new Exception(tokenResponse.Error);
             var config = await GetConfigurations();
-            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_oidc?.ClientId}:{_oidc?.ClientSecret}"));
-            return new RegistrationContext($"{config.CreateUserPath}?token={HttpUtility.UrlEncode(token)}");
+
+            return new RegistrationContext($"{config.CreateUserPath}?token={HttpUtility.UrlEncode(tokenResponse.AccessToken)}");
         }
 
         private async Task<IdentityServerConfig> GetConfigurations()
@@ -53,5 +66,6 @@ namespace IdentityServer.User.Client.Registration
     public class UserInteractionServiceOptions
     {
         public string AuthenticationScheme { get; set; }
+        public string Scope { get; set; }
     }
 }

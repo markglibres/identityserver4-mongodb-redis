@@ -37,9 +37,9 @@ namespace IdentityServer.Hosts.Mvc.Resources
                     ClientName = "MVC Client",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
-                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                     RequireConsent = false,
-                    //RequireClientSecret = false,
+                    RequireClientSecret = false,
                     //AllowOfflineAccess = true,
 
                     // where to redirect to after login
@@ -51,7 +51,8 @@ namespace IdentityServer.Hosts.Mvc.Resources
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "users.management"
                     },
                     //RequirePkce = true
 

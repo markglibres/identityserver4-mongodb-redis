@@ -12,6 +12,7 @@ namespace IdentityServer.Users.Management.Configs
         public ConfirmationEmailConfig ConfirmationEmail { get; set; }
         public string BaseUrl { get; set; }
         public PathConfig Paths { get; set; }
+        public string Scope { get; set; }
     }
 
     public class ConfirmationEmailConfig
