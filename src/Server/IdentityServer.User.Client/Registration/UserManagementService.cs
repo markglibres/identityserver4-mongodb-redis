@@ -10,14 +10,14 @@ using Newtonsoft.Json;
 
 namespace IdentityServer.User.Client.Registration
 {
-    public class UserInteractionService : IUserInteractionService
+    public class UserManagementService : IUserManagementService
     {
         private readonly UserInteractionServiceOptions _options;
         private readonly IOptionsMonitor<OpenIdConnectOptions> _openIdConnectOptions;
         private readonly HttpClient _httpClient;
         private OpenIdConnectOptions _oidc;
 
-        public UserInteractionService(
+        public UserManagementService(
             UserInteractionServiceOptions options,
             IOptionsMonitor<OpenIdConnectOptions> openIdConnectOptions,
             HttpClient httpClient)
@@ -42,6 +42,7 @@ namespace IdentityServer.User.Client.Registration
                 Scope = _options.Scope
             });
             if (tokenResponse.IsError) throw new Exception(tokenResponse.Error);
+
             var config = await GetConfigurations();
 
             return new RegistrationContext($"{config.CreateUserPath}?token={HttpUtility.UrlEncode(tokenResponse.AccessToken)}");

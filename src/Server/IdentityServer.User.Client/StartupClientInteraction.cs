@@ -19,7 +19,7 @@ namespace IdentityServer.User.Client
             options?.Invoke(defaultOptions);
 
             services.TryAddSingleton(provider => defaultOptions);
-            services.AddHttpClient<IUserInteractionService, UserInteractionService>();
+            services.AddHttpClient<IUserManagementService, UserManagementService>();
 
             return builder;
         }

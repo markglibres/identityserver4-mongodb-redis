@@ -13,7 +13,7 @@ namespace IdentityServer.User.Client.Registration
             if (context == null) throw new ArgumentException(nameof(context));
 
             var userInteractionService =
-                context.HttpContext.RequestServices.GetRequiredService<IUserInteractionService>();
+                context.HttpContext.RequestServices.GetRequiredService<IUserManagementService>();
 
             var registrationContext = await userInteractionService.GetRegistrationContext();
 
