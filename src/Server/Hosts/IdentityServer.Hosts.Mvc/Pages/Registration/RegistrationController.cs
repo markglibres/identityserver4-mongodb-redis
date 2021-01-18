@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Hosts.Mvc.ViewModels;
@@ -37,7 +38,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             var validationResult = await _tokenValidator.ValidateAccessTokenAsync(token, _options.Scope);
             if (validationResult.IsError) throw new Exception(validationResult.Error);
 
-            return View(new CreateUserModel
+            return View(new CreateUserRequest
             {
                 Token = token
             });
@@ -47,6 +48,8 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(CreateUserRequest request, string button)
         {
+            if (!ModelState.IsValid) return View(request);
+
             var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token, _options.Scope);
             if (validationResult.IsError) throw new Exception(validationResult.Error);
 
@@ -59,7 +62,13 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
     public class CreateUserRequest
     {
+        [Required]
         public string Email { get; set; }
+        [Required]
         public string Token { get; set; }
+        [Required]
+        public string Password { get; set; }
+        [Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]
+        public string ConfirmPassword { get; set; }
     }
 }

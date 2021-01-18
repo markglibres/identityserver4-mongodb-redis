@@ -1,4 +1,4 @@
-@model CreateUserModel
+@model CreateUserRequest
 
 <div>
     <h1>Create User</h1>
@@ -11,6 +11,11 @@
                             <div class="form-group">
                                 <label asp-for="Email"></label>
                                 <input class="form-control" placeholder="Email" asp-for="Email" autofocus>
+                                <label asp-for="Password"></label>
+                                <input class="form-control" placeholder="Password" asp-for="Password" autofocus>
+                                <label asp-for="ConfirmPassword"></label>
+                                <input class="form-control" placeholder="Confirm Password" asp-for="ConfirmPassword" autofocus>
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword)
                             </div>
                             <button class="btn btn-primary" name="button" value="login">Register</button>
                         </form>
