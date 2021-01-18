@@ -1,8 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Common;
 using IdentityServer.Hosts.Mvc.ViewModels;
+using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
+using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Application.Users.RegisterUser;
 using IdentityServer.Users.Management.Configs;
 using IdentityServer4.Services;
@@ -80,10 +83,19 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> Confirm(string userId, string token)
         {
-            return View(new ConfirmUserRequest
+            var query = new ConfirmEmailQuery { Token = token, UserId = userId };
+            var result = await _mediator.Send(query);
+            var response = _mapper.Map<ConfirmEmailResponse>(result);
+
+            if (response.IsSuccess)
             {
-                Token = token
-            });
+                return View( "UserEmailConfirmed", new UserEmailConfirmedModel
+                {
+                    Token = token
+                });
+            }
+
+            return View("ConfirmError", new ErrorModel {Message = string.Join(" ", response.Errors)});
         }
 
         private string GetCurrentPath()

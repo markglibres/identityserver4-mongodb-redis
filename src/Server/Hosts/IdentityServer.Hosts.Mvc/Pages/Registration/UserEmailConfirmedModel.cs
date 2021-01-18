@@ -1,6 +1,6 @@
 namespace IdentityServer.Hosts.Mvc.ViewModels
 {
-    public class ConfirmUserRequest
+    public class UserEmailConfirmedModel
     {
         public string Token { get; set; }
         public string Firstname { get; set; }

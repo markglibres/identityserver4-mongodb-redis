@@ -1,3 +1,4 @@
+using IdentityServer.Hosts.Mvc.ViewModels;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +19,4 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
     }
 
-    public class ErrorModel
-    {
-        public string Message { get; set; }
-    }
 }
