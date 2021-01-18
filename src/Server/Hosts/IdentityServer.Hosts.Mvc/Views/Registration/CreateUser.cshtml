@@ -16,6 +16,7 @@
                                 <label asp-for="ConfirmPassword"></label>
                                 <input class="form-control" placeholder="Confirm Password" asp-for="ConfirmPassword" autofocus>
                                 @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                                <span asp-validation-for="Validations" class="text-danger"></span>
                             </div>
                             <button class="btn btn-primary" name="button" value="login">Register</button>
                         </form>

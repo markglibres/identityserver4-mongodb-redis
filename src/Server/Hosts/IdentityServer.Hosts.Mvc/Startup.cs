@@ -1,5 +1,6 @@
 using IdentityServer.Authorization.Extensions;
 using IdentityServer.Authorization.Seeders;
+using IdentityServer.Hosts.Mvc.Controllers;
 using IdentityServer.Hosts.Mvc.Resources;
 using IdentityServer.Users.Authorization;
 using IdentityServer.Users.Authorization.Services;

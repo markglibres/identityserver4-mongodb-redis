@@ -10,6 +10,7 @@ using IdentityServer.Users.Management.Infrastructure.Messaging;
 using IdentityServer.Users.Management.Infrastructure.System;
 using IdentityServer.Users.Management.Infrastructure.Templates;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

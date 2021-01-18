@@ -31,11 +31,7 @@ namespace IdentityServer.Users.Management.Api.Users
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);
-            command.ConfirmUrl = new ConfirmEmailUrlFormat
-            {
-                UrlFormat =
-                    $"{GetBaseUrl()}/{{{nameof(ConfirmEmailUrlFormat.UserId)}}}/confirm/{{{nameof(ConfirmEmailUrlFormat.Token)}}}"
-            };
+            command.ConfirmUrlFormatter = (userId, token) => $"{GetBaseUrl()}/{userId}/confirm/{token}";
 
             var result = await _mediator.Send(command);
             var response = _mapper.Map<RegisterUserResponse>(result);
