@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using IdentityServer.Authorization.Services;
 using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Common.Repositories;
@@ -38,7 +39,8 @@ namespace IdentityServer.Authorization.Extensions
                     identityServerOptions?.Invoke(options);
                 })
                 .AddMongoResources()
-                .AddMongoClientStore();
+                .AddMongoClientStore()
+                .AddMongoUserStore();
 
             return builder;
         }
@@ -76,6 +78,24 @@ namespace IdentityServer.Authorization.Extensions
             });
             identityServerBuilder.AddClientStore<ClientStore>();
             identityServerBuilder.Services.TryAddTransient<IClientService, ClientService>();
+
+            return identityServerBuilder;
+        }
+
+        private static IIdentityServerBuilder AddMongoUserStore(this IIdentityServerBuilder identityServerBuilder)
+        {
+            BsonClassMap.RegisterClassMap<Claim>(cm =>
+            {
+                cm.SetIgnoreExtraElements(true);
+                cm.MapMember(c => c.Issuer);
+                cm.MapMember(c => c.OriginalIssuer);
+                cm.MapMember(c => c.Properties);
+                cm.MapMember(c => c.Subject);
+                cm.MapMember(c => c.Type);
+                cm.MapMember(c => c.Value);
+                cm.MapMember(c => c.ValueType);
+                cm.MapCreator(c => new Claim(c.Type, c.Value, c.ValueType, c.Issuer, c.OriginalIssuer, c.Subject));
+            });
 
             return identityServerBuilder;
         }

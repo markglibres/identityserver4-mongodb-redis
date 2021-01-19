@@ -21,7 +21,6 @@ namespace IdentityServer.Hosts.Mvc.Controllers
     public class RegistrationController : Controller
     {
         private readonly IClientSecretValidator _clientSecretValidator;
-        private readonly IClientService _clientService;
         private readonly IIdentityServerInteractionService _interactionService;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
@@ -99,9 +98,10 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(UpdateProfileModel request)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileModel request, string button)
         {
-            return View("ProfileUpdated");
+            return View("ProfileUpdated", new ProfileUpdatedModel());
         }
 
 

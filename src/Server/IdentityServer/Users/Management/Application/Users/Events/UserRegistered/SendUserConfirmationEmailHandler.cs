@@ -38,7 +38,7 @@ namespace IdentityServer.Users.Management.Application.Users.Events.UserRegistere
 
         public async Task Handle(UserRegisteredEvent notification, CancellationToken cancellationToken)
         {
-            if (!_options.RequireConfirmedEmail) return;
+            if (!_options.RequireConfirmedEmail || string.IsNullOrWhiteSpace(notification.Url)) return;
 
             var user = await _userStore.FindByIdAsync(notification.UserId, cancellationToken);
 

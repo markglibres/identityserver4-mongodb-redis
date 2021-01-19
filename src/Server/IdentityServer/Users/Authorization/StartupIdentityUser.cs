@@ -88,6 +88,7 @@ namespace IdentityServer.Users.Authorization
             services.AddIdentity<TUser, TRole>(identityOptions => { options?.Invoke(identityOptions); })
                 .AddDefaultTokenProviders();
             services.AddTransient<IUserStore<TUser>, UserStore<TUser>>();
+            services.AddTransient<IUserClaimStore<TUser>, UserStore<TUser>>();
             services.AddTransient<IUserPasswordStore<TUser>, UserStore<TUser>>();
             services.AddTransient<IPasswordHasher<TUser>, UserPasswordHasher<TUser>>();
             services.AddTransient<IRoleStore<TRole>, RoleStore<TRole>>();

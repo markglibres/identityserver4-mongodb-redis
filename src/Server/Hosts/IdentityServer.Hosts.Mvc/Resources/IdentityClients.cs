@@ -55,6 +55,7 @@ namespace IdentityServer.Hosts.Mvc.Resources
                         "users.management"
                     },
                     //RequirePkce = true
+                    AlwaysIncludeUserClaimsInIdToken = true
 
                 }
             };

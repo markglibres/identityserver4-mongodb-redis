@@ -27,7 +27,7 @@ namespace IdentityServer.Authorization.Services
         public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var user = await GetUser(context.Subject);
-            context.IssuedClaims = GetClaims(user).ToList();
+            context.IssuedClaims = (await GetClaims(user)).ToList();
         }
 
         public virtual async Task IsActiveAsync(IsActiveContext context)
@@ -42,9 +42,9 @@ namespace IdentityServer.Authorization.Services
             return await UserManager.FindByIdAsync(userId);
         }
 
-        protected virtual IEnumerable<Claim> GetClaims(T user)
+        protected virtual async Task<IList<Claim>> GetClaims(T user)
         {
-            return new List<Claim>();
+            return await UserManager.GetClaimsAsync(user);
         }
     }
 }

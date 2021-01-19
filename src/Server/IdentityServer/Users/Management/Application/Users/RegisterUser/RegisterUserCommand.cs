@@ -5,6 +5,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
 {
     public class RegisterUserCommand : IRequest<RegisterUserCommandResult>
     {
+        public string Token { get; set; }
         public string Email { get; set; }
         public string PlainTextPassword { get; set; }
         public ConfirmUrlFormatter ConfirmUrlFormatter { get; set; }

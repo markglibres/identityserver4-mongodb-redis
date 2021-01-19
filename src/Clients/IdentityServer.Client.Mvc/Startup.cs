@@ -39,6 +39,7 @@ namespace IdentityServer.Client.Mvc
                     options.ClientSecret = "secret";
                     options.ResponseType = "code";
                     options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
                 })
                 .AddUserManagement(options =>
                 {

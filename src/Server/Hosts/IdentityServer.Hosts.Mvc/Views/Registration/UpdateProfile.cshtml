@@ -6,7 +6,7 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                        <form asp-route="UpdateProfile">
+                        <form asp-controller="Registration" asp-action="UpdateProfile">
                             <input type="hidden" asp-for="Token" />
                             <div class="form-group">
                                 <label asp-for="Firstname"></label>
