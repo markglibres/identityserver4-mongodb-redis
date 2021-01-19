@@ -1,6 +1,6 @@
 namespace IdentityServer.Hosts.Mvc.ViewModels
 {
-    public class UserEmailConfirmedModel
+    public class UpdateProfileModel
     {
         public string Token { get; set; }
         public string Firstname { get; set; }

@@ -26,7 +26,10 @@ namespace IdentityServer.Users.Interactions.Application.Accounts.Login
         {
             var context = await _interaction.GetAuthorizationContextAsync(request.ReturnUrl);
             if (context == null || !await _userService.ValidateCredentials(request.Username, request.Password))
-                return new LoginCommandResult { IsSuccess = false };
+                return new LoginCommandResult { IsSuccess = false, ErrorCode = LoginErrorCode.InvalidCredentials};
+
+            if(!await _userService.IsActive(request.Username))
+                return new LoginCommandResult { IsSuccess = false, ErrorCode = LoginErrorCode.UnconfirmedEmail};
 
             var user = await _userService.GetByUsername(request.Username);
             await _signInManager.SignInAsync(user, true);

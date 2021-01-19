@@ -41,7 +41,11 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             var commandResult = await _mediator.Send(command);
 
             if (!commandResult.IsSuccess)
-                ModelState.AddModelError(string.Empty, "An error occured while logging in. Please try again.");
+            {
+                ModelState.AddModelError(nameof(model.Validations), "An error occured while logging in. Please try again.");
+                return View(model);
+            }
+
 
             //native client
             if (!commandResult.ReturnUrl.StartsWith("https", StringComparison.Ordinal)

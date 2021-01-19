@@ -7,6 +7,7 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Authorization.Services
 {
@@ -14,10 +15,13 @@ namespace IdentityServer.Authorization.Services
         where T : IdentityUser
     {
         protected readonly UserManager<T> UserManager;
+        private readonly IdentityServerConfig _options;
 
-        protected ProfileService(UserManager<T> userManager)
+        protected ProfileService(UserManager<T> userManager,
+            IOptions<IdentityServerConfig> options)
         {
             UserManager = userManager;
+            _options = options.Value;
         }
 
         public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -29,7 +33,7 @@ namespace IdentityServer.Authorization.Services
         public virtual async Task IsActiveAsync(IsActiveContext context)
         {
             var user = await GetUser(context.Subject);
-            context.IsActive = user?.EmailConfirmed ?? false;
+            context.IsActive = !_options.RequireConfirmedEmail || (user?.EmailConfirmed ?? false);
         }
 
         private async Task<T> GetUser(IPrincipal principal)

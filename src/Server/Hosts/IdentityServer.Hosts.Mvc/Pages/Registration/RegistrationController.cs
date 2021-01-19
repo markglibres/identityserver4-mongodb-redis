@@ -89,7 +89,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
             if (response.IsSuccess)
             {
-                return View( "UserEmailConfirmed", new UserEmailConfirmedModel
+                return View( "UpdateProfile", new UpdateProfileModel
                 {
                     Token = token
                 });
@@ -97,6 +97,13 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
             return View("ConfirmError", new ErrorModel {Message = string.Join(" ", response.Errors)});
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileModel request)
+        {
+            return View("ProfileUpdated");
+        }
+
 
         private string GetCurrentPath()
         {

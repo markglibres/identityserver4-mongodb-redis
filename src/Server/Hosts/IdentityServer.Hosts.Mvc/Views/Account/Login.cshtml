@@ -18,6 +18,9 @@
                             <label asp-for="Password"></label>
                             <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
                         </div>
+                        <div>
+                            <span asp-validation-for="Validations" class="text-danger"></span>
+                        </div>
                         <button class="btn btn-primary" name="button" value="login">Login</button>
                         <button class="btn btn-secondary" name="button" value="cancel">Cancel</button>
                     </form>

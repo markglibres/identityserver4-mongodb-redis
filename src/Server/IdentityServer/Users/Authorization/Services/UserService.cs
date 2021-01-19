@@ -1,8 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
+using IdentityServer.Authorization;
 using IdentityServer.Authorization.Seeders;
 using IdentityServer.Users.Authorization.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Users.Authorization.Services
 {
@@ -11,13 +13,16 @@ namespace IdentityServer.Users.Authorization.Services
     {
         private readonly IUserStore<T> _userStore;
         private readonly IPasswordHasher<T> _passwordHasher;
+        private readonly IdentityServerConfig _options;
 
         public UserService(
             IUserStore<T> userStore,
-            IPasswordHasher<T> passwordHasher)
+            IPasswordHasher<T> passwordHasher,
+            IOptions<IdentityServerConfig> options)
         {
             _userStore = userStore;
             _passwordHasher = passwordHasher;
+            _options = options.Value;
         }
 
         public async Task Create(T user, CancellationToken cancellationToken = default)
@@ -45,6 +50,12 @@ namespace IdentityServer.Users.Authorization.Services
         {
             var user = await GetByUsername(username);
             return user != null && user.PasswordHash.Equals(_passwordHasher.HashPassword(user, password));
+        }
+
+        public async Task<bool> IsActive(string username)
+        {
+            var user = await GetByUsername(username);
+            return !_options.RequireConfirmedEmail || (user?.EmailConfirmed ?? false);
         }
     }
 }
