@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.Routing
+@using System.Text.Encodings.Web
+@using System.Web
 @model LoginModel
 <div class="login-page">
     <div class="lead">
@@ -23,6 +26,7 @@
                         </div>
                         <button class="btn btn-primary" name="button" value="login">Login</button>
                         <button class="btn btn-secondary" name="button" value="cancel">Cancel</button>
+                        <a href="/registration/register?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Register</a>
                     </form>
                 </div>
             </div>

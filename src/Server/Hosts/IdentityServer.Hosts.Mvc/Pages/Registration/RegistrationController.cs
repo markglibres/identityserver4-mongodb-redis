@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer.Authorization.Services.Abstractions;
+using System.Web;
 using IdentityServer.Common;
 using IdentityServer.Hosts.Mvc.ViewModels;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
@@ -43,6 +42,15 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Register(string returnUrl)
+        {
+            return View("CreateUser",new CreateUserRequest
+            {
+                ReturnUrl = returnUrl
+            });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CreateUser(string token)
         {
             var validationResult = await _tokenValidator.ValidateAccessTokenAsync(token, _options.Scope);
@@ -60,12 +68,16 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         {
             if (!ModelState.IsValid) return View(request);
 
-            var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token, _options.Scope);
-            if (validationResult.IsError) throw new Exception(validationResult.Error);
+            if (!string.IsNullOrWhiteSpace(request.Token))
+            {
+                var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token, _options.Scope);
+                if (validationResult.IsError) throw new Exception(validationResult.Error);
+            }
 
             var command = _mapper.Map<RegisterUserCommand>(request,
                 userCommand => userCommand.PlainTextPassword = request.Password);
-            command.ConfirmUrlFormatter = (userId, token) => $"{GetCurrentPath()}/confirm?userId={userId}&token={token}";
+            command.ConfirmUrlFormatter = (userId, token, returnUrl) =>
+                $"{GetCurrentPath()}/confirm?userId={userId}&token={token}&returnUrl={HttpUtility.UrlEncode(returnUrl)}";
 
             var result = await _mediator.Send(command);
 

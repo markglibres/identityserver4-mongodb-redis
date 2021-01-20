@@ -11,6 +11,7 @@ using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Management.Application.Abstractions;
 using IdentityServer.Users.Management.Application.Users.Events.UserRegistered;
 using IdentityServer.Users.Management.Configs;
+using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
         private readonly IdentityServerConfig _options;
         private readonly IApplicationEventPublisher _eventPublisher;
         private readonly ITokenValidator _tokenValidator;
+        private readonly IIdentityServerInteractionService _interactionService;
 
         private readonly IdentityServerUserManagementConfig _managementOptions;
 
@@ -38,7 +40,8 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             IOptions<IdentityServerUserManagementConfig> managementOptions,
             IOptions<IdentityServerConfig> options,
             IApplicationEventPublisher eventPublisher,
-            ITokenValidator tokenValidator)
+            ITokenValidator tokenValidator,
+            IIdentityServerInteractionService interactionService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -46,16 +49,29 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             _options = options.Value;
             _eventPublisher = eventPublisher;
             _tokenValidator = tokenValidator;
+            _interactionService = interactionService;
             _managementOptions = managementOptions.Value;
         }
 
         public async Task<RegisterUserCommandResult> Handle(RegisterUserCommand request,
             CancellationToken cancellationToken)
         {
-            var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token);
-            if(validationResult.IsError) throw new DomainException(validationResult.Error);
+            var clientId = string.Empty;
 
-            var clientId = validationResult.Client.ClientId;
+            if (!string.IsNullOrWhiteSpace(request.Token))
+            {
+                var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token);
+                if(validationResult.IsError) throw new DomainException(validationResult.Error);
+
+                clientId = validationResult.Client.ClientId;
+            } else if (!string.IsNullOrWhiteSpace(request.ReturnUrl))
+            {
+                var context = await _interactionService.GetAuthorizationContextAsync(request.ReturnUrl);
+                if(context == null) throw new DomainException("Invalid context");
+
+                clientId = context.Client.ClientId;
+            }
+
             var claimType = $"app_{clientId}";
             var claimValue = true.ToString();
 
@@ -104,7 +120,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
 
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var encodedToken = Base64UrlEncoder.Encode(token);
-                var confirmationUrl = request.ConfirmUrlFormatter?.Invoke(user.Id, encodedToken);
+                var confirmationUrl = request.ConfirmUrlFormatter?.Invoke(user.Id, encodedToken, request.ReturnUrl);
 
                 var response = new RegisterUserCommandResult
                 {

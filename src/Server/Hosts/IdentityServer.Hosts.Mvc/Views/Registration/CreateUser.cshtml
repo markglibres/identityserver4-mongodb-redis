@@ -6,8 +6,9 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                        <form asp-route="CreateUser">
+                        <form asp-controller="Registration" asp-action="CreateUser">
                             <input type="hidden" asp-for="Token" />
+                            <input type="hidden" asp-for="ReturnUrl" />
                             <div class="form-group">
                                 <label asp-for="Email"></label>
                                 <input class="form-control" placeholder="Email" asp-for="Email" autofocus>
