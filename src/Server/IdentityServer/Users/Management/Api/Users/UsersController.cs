@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System.Web;
 using IdentityServer.Common;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Api.Users.ForgotPassword;
@@ -8,7 +9,6 @@ using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Application.Users.ForgotPassword;
 using IdentityServer.Users.Management.Application.Users.RegisterUser;
 using IdentityServer.Users.Management.Application.Users.ResetPassword;
-using IdentityServer.Users.Management.Application.Users.Urls;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +31,8 @@ namespace IdentityServer.Users.Management.Api.Users
         public async Task<IActionResult> Create([FromBody] RegisterUserRequest request)
         {
             var command = _mapper.Map<RegisterUserCommand>(request);
-            command.ConfirmUrlFormatter = (userId, token, returnUrl) => $"{GetBaseUrl()}/{userId}/confirm/{token}?ReturnUrl={returnUrl}";
+            command.ConfirmUrlFormatter = (userId, token, returnUrl) =>
+                $"{GetBaseUrl()}/{userId}/confirm/{token}?ReturnUrl={returnUrl}";
 
             var result = await _mediator.Send(command);
             var response = _mapper.Map<RegisterUserResponse>(result);
@@ -57,10 +58,8 @@ namespace IdentityServer.Users.Management.Api.Users
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
             var command = _mapper.Map<ForgotPasswordCommand>(request);
-            command.ResetPasswordUrl = new ResetPasswordUrlFormat
-            {
-                UrlFormat = request.ResetUrl
-            };
+            command.ResetUrlFormatter = (userId, token, returnUrl) =>
+                $"{GetBaseUrl()}/reset?userId={userId}&token={token}&ReturnUrl={HttpUtility.UrlEncode(returnUrl)}";
 
             var result = await _mediator.Send(command);
             var response = _mapper.Map<ForgotPasswordResponse>(result);

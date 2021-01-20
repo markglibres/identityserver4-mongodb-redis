@@ -10,12 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
 {
-    public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, ForgotPasswordCommandResult>
+    public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, ForgotPasswordCommandResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationEventPublisher _eventPublisher;
 
-        public ForgotPasswordHandler(
+        public ForgotPasswordCommandHandler(
             UserManager<ApplicationUser> userManager,
             IApplicationEventPublisher eventPublisher)
         {
@@ -27,26 +27,29 @@ namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
             CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null) throw new DomainException($"User {request.Email} not found.");
+            if (user == null) return new ForgotPasswordCommandResult
+            {
+                IsSuccess = false,
+                Message = $"User {request.Email} not found."
+            };
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
 
-            var resetUrl = request.ResetPasswordUrl;
-            resetUrl.UserId = user.Id;
-            resetUrl.Token = encodedToken;
+            var resetUrl = request.ResetUrlFormatter?.Invoke(user.Id, encodedToken, request.ReturnUrl);
 
             var forgotPasswordRequestedEvent = new ForgotPasswordRequestedEvent
             {
                 UserId = user.Id,
-                Url = resetUrl.ToString()
+                Url = resetUrl
             };
 
             await _eventPublisher.PublishAsync(forgotPasswordRequestedEvent);
 
             return new ForgotPasswordCommandResult
             {
-                Token = token
+                Token = token,
+                IsSuccess = true
             };
         }
     }

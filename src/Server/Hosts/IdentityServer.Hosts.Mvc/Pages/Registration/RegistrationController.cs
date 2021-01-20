@@ -5,8 +5,12 @@ using HandlebarsDotNet.Helpers;
 using IdentityServer.Common;
 using IdentityServer.Hosts.Mvc.ViewModels;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
+using IdentityServer.Users.Management.Api.Users.ForgotPassword;
+using IdentityServer.Users.Management.Api.Users.ResetPassword;
 using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
+using IdentityServer.Users.Management.Application.Users.ForgotPassword;
 using IdentityServer.Users.Management.Application.Users.RegisterUser;
+using IdentityServer.Users.Management.Application.Users.ResetPassword;
 using IdentityServer.Users.Management.Configs;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
@@ -14,6 +18,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using ForgotPasswordRequest = IdentityServer.Hosts.Mvc.ViewModels.ForgotPasswordRequest;
+using ResetPasswordRequest = IdentityServer.Hosts.Mvc.ViewModels.ResetPasswordRequest;
 
 namespace IdentityServer.Hosts.Mvc.Controllers
 {
@@ -119,6 +125,59 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             return Redirect(request.ReturnUrl);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ForgotPassword(string returnUrl)
+        {
+            return View("ForgotPassword",new ForgotPasswordRequest
+            {
+                ReturnUrl = returnUrl
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request, string button)
+        {
+            var command = _mapper.Map<ForgotPasswordCommand>(request);
+            command.ResetUrlFormatter = (userId, token, returnUrl) =>
+                $"{GetCurrentPath()}/resetpassword?userId={userId}&token={token}&ReturnUrl={HttpUtility.UrlEncode(returnUrl)}";
+
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+                return View("ResetPasswordSent", new ResetPasswordSent
+                {
+                    Email = request.Email
+                });
+
+            ModelState.AddModelError(nameof(request.Email), result.Message);
+            return View(request);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string userId, string token, string returnUrl)
+        {
+            return View("ResetPassword",new ResetPasswordRequest
+            {
+                UserId = userId,
+                Token = token,
+                ReturnUrl = returnUrl
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        {
+            var command = _mapper.Map<ResetPasswordCommand>(request);
+            var result = await _mediator.Send(command);
+            var response = _mapper.Map<ResetPasswordResponse>(result);
+
+            if (response.IsSuccess) return Redirect(request.ReturnUrl);
+
+            ModelState.AddModelError(nameof(request.ValidationMessage), string.Join(" ", response.Errors));
+            return View(request);
+        }
 
         private string GetCurrentPath()
         {

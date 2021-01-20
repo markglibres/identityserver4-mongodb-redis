@@ -21,6 +21,7 @@ namespace IdentityServer.Authorization.Seeders
             instance.UserName = "dev@example.com";
             instance.PasswordHash = _passwordHasher.HashPassword(null, "hardtoguess");
             instance.EmailConfirmed = true;
+            instance.Email = instance.UserName;
 
             return new List<T> {instance};
         }

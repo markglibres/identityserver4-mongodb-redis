@@ -26,6 +26,7 @@
                         <button class="btn btn-primary" name="button" value="login">Login</button>
                         <input type="button" class="btn btn-secondary" onclick="window.history.back();" value="Cancel" />
                         <a href="/registration/register?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Register</a>
+                        <a href="/registration/forgotpassword?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Forgot Password</a>
                     </form>
                 </div>
             </div>
