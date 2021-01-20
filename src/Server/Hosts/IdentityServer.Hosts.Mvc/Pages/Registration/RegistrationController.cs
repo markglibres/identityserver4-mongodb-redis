@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Web;
+using HandlebarsDotNet.Helpers;
 using IdentityServer.Common;
 using IdentityServer.Hosts.Mvc.ViewModels;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
@@ -92,9 +93,9 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Confirm(string userId, string token)
+        public async Task<IActionResult> Confirm(string userId, string token, string returnUrl = "")
         {
-            var query = new ConfirmEmailQuery { Token = token, UserId = userId };
+            var query = new ConfirmEmailQuery { Token = token, UserId = userId, ReturnUrl = returnUrl };
             var result = await _mediator.Send(query);
             var response = _mapper.Map<ConfirmEmailResponse>(result);
 
@@ -102,7 +103,8 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             {
                 return View( "UpdateProfile", new UpdateProfileModel
                 {
-                    Token = token
+                    Token = token,
+                    ReturnUrl = response.ReturnUrl
                 });
             }
 
@@ -113,7 +115,8 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile(UpdateProfileModel request, string button)
         {
-            return View("ProfileUpdated", new ProfileUpdatedModel());
+            //return View("ProfileUpdated", new ProfileUpdatedModel());
+            return Redirect(request.ReturnUrl);
         }
 
 

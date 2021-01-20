@@ -6,6 +6,7 @@ namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
     {
         public bool IsSuccess { get; set; }
         public IEnumerable<string> Errors { get; set; }
+        public string ReturnUrl { get; set; }
     }
 
 }

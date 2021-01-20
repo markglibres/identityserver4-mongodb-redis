@@ -8,6 +8,7 @@
                     <div class="card-body">
                         <form asp-controller="Registration" asp-action="UpdateProfile">
                             <input type="hidden" asp-for="Token" />
+                            <input type="hidden" asp-for="ReturnUrl" />
                             <div class="form-group">
                                 <label asp-for="Firstname"></label>
                                 <input class="form-control" placeholder="Firstname" asp-for="Firstname" autofocus>

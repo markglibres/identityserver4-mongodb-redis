@@ -12,7 +12,6 @@
                 <div class="card-body">
                     <form asp-route="Login">
                         <input type="hidden" asp-for="ReturnUrl" />
-
                         <div class="form-group">
                             <label asp-for="Username"></label>
                             <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
@@ -25,7 +24,7 @@
                             <span asp-validation-for="Validations" class="text-danger"></span>
                         </div>
                         <button class="btn btn-primary" name="button" value="login">Login</button>
-                        <button class="btn btn-secondary" name="button" value="cancel">Cancel</button>
+                        <input type="button" class="btn btn-secondary" onclick="window.history.back();" value="Cancel" />
                         <a href="/registration/register?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Register</a>
                     </form>
                 </div>

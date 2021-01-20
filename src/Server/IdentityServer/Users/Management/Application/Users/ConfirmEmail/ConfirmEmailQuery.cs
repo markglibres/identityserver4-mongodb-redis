@@ -5,10 +5,9 @@ namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
 {
     public class ConfirmEmailQuery : IRequest<ConfirmEmailQueryResult>
     {
-        [FromRoute]
         public string UserId { get; set; }
-        [FromQuery]
         public string Token { get; set; }
+        public string ReturnUrl { get; set; }
     }
 
 

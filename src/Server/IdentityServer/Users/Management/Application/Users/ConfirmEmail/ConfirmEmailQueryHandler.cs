@@ -30,7 +30,8 @@ namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
             return new ConfirmEmailQueryResult
             {
                 IsSuccess = result.Succeeded,
-                Errors = result.Errors.Select(e => e.Description)
+                Errors = result.Errors.Select(e => e.Description),
+                ReturnUrl = request.ReturnUrl
             };
         }
     }
