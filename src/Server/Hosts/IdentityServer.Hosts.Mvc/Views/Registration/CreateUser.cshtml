@@ -12,13 +12,8 @@
                             <div class="form-group">
                                 <label asp-for="Email"></label>
                                 <input class="form-control" placeholder="Email" asp-for="Email" autofocus>
-                                <label asp-for="Password"></label>
-                                <input class="form-control" placeholder="Password" asp-for="Password" autofocus>
-                                <label asp-for="ConfirmPassword"></label>
-                                <input class="form-control" placeholder="Confirm Password" asp-for="ConfirmPassword" autofocus>
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                <span asp-validation-for="Validations" class="text-danger"></span>
                             </div>
+                            <span asp-validation-for="Validations" class="text-danger"></span>
                             <button class="btn btn-primary" name="button" value="login">Register</button>
                         </form>
                     </div>

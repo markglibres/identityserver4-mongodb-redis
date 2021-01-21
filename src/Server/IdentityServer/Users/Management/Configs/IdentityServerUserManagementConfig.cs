@@ -36,7 +36,7 @@ namespace IdentityServer.Users.Management.Configs
 
     public class Emails
     {
-        public EmailConfig UserConfirmation { get; set; }
+        public EmailConfig EmailConfirmation { get; set; }
         public EmailConfig ForgotPassword { get; set; }
     }
 }

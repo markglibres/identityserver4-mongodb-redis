@@ -42,13 +42,13 @@ namespace IdentityServer.Users.Management.Application.Users.Events.UserRegistere
 
             var user = await _userStore.FindByIdAsync(notification.UserId, cancellationToken);
 
-            var templateOptions = _managementOptions.Emails?.UserConfirmation?.TemplateOptions ??
+            var templateOptions = _managementOptions.Emails?.EmailConfirmation?.TemplateOptions ??
                                   new EmailTemplateOptions
                                   {
                                       File = "user-registered-confirmation.html",
                                       FileStorageType = FileStorageTypes.Embedded
                                   };
-            var subject = _managementOptions.Emails?.UserConfirmation?.Subject ??
+            var subject = _managementOptions.Emails?.EmailConfirmation?.Subject ??
                           "User registration email confirmation";
             var confirmationContent = await _emailTemplate.Generate(new ConfirmationEmailModel
             {

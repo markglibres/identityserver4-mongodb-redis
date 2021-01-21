@@ -41,7 +41,7 @@ namespace IdentityServer.Hosts.Mvc
                     };
                     config.Emails = new Emails
                     {
-                        UserConfirmation = new EmailConfig
+                        EmailConfirmation = new EmailConfig
                         {
                             Subject = "Confirm user registration",
                             TemplateOptions = new EmailTemplateOptions

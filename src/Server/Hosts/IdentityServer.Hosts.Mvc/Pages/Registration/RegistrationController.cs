@@ -7,6 +7,7 @@ using IdentityServer.Hosts.Mvc.ViewModels;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Api.Users.ForgotPassword;
 using IdentityServer.Users.Management.Api.Users.ResetPassword;
+using IdentityServer.Users.Management.Application.Users;
 using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Application.Users.ForgotPassword;
 using IdentityServer.Users.Management.Application.Users.RegisterUser;
@@ -81,8 +82,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
                 if (validationResult.IsError) throw new Exception(validationResult.Error);
             }
 
-            var command = _mapper.Map<RegisterUserCommand>(request,
-                userCommand => userCommand.PlainTextPassword = request.Password);
+            var command = _mapper.Map<RegisterUserCommand>(request);
             command.ConfirmUrlFormatter = (userId, token, returnUrl) =>
                 $"{GetCurrentPath()}/confirm?userId={userId}&token={token}&returnUrl={HttpUtility.UrlEncode(returnUrl)}";
 
@@ -107,10 +107,12 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
             if (response.IsSuccess)
             {
-                return View( "UpdateProfile", new UpdateProfileModel
+                return View( "UpdatePassword", new UpdatePasswordModel
                 {
                     Token = token,
-                    ReturnUrl = response.ReturnUrl
+                    ReturnUrl = response.ReturnUrl,
+                    UserId = userId,
+                    ResetPasswordToken = response.ResetPasswordToken
                 });
             }
 
@@ -119,10 +121,21 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(UpdateProfileModel request, string button)
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordModel request, string button)
         {
-            //return View("ProfileUpdated", new ProfileUpdatedModel());
-            return Redirect(request.ReturnUrl);
+            if (!ModelState.IsValid) return View(request);
+
+            var command = _mapper.Map<UpdatePasswordCommand>(
+                request,
+                passwordCommand => passwordCommand.NewPassword = request.Password);
+
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess) return Redirect(request.ReturnUrl);
+
+            ModelState.AddModelError(nameof(request.Password), string.Join(" ", result.Errors));
+            return View(request);
+
         }
 
         [HttpGet]

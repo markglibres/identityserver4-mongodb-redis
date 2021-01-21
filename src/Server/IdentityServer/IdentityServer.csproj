@@ -32,4 +32,16 @@
       <EmbeddedResource Include="Users\Management\Application\Users\Events\UserRegistered\Templates\user-registered-confirmation.html" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommand.cs">
+        <Link>Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommand.cs</Link>
+      </Compile>
+      <Compile Update="Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandResult.cs">
+        <Link>Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandResult.cs</Link>
+      </Compile>
+      <Compile Update="Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandHandler.cs">
+        <Link>Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandHandler.cs</Link>
+      </Compile>
+    </ItemGroup>
+
 </Project>

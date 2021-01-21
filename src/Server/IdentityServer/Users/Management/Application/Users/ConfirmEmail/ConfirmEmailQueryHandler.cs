@@ -27,11 +27,15 @@ namespace IdentityServer.Users.Management.Application.Users.ConfirmEmail
             var decodedToken = Base64UrlEncoder.Decode(request.Token);
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = Base64UrlEncoder.Encode(token);
+
             return new ConfirmEmailQueryResult
             {
                 IsSuccess = result.Succeeded,
                 Errors = result.Errors.Select(e => e.Description),
-                ReturnUrl = request.ReturnUrl
+                ReturnUrl = request.ReturnUrl,
+                ResetPasswordToken = encodedToken
             };
         }
     }

@@ -56,90 +56,61 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
         public async Task<RegisterUserCommandResult> Handle(RegisterUserCommand request,
             CancellationToken cancellationToken)
         {
-            var clientId = string.Empty;
-
             if (!string.IsNullOrWhiteSpace(request.Token))
             {
                 var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token);
                 if(validationResult.IsError) throw new DomainException(validationResult.Error);
 
-                clientId = validationResult.Client.ClientId;
             } else if (!string.IsNullOrWhiteSpace(request.ReturnUrl))
             {
                 var context = await _interactionService.GetAuthorizationContextAsync(request.ReturnUrl);
                 if(context == null) throw new DomainException("Invalid context");
-
-                clientId = context.Client.ClientId;
             }
-
-            var claimType = $"app_{clientId}";
-            var claimValue = true.ToString();
 
             var user = await _userService.GetByUsername(request.Email, cancellationToken);
-            if (user != null)
+            if (user != null) return new RegisterUserCommandResult
             {
-                var claims = await _userManager.GetClaimsAsync(user);
-                var hasClaim = claims.Any(c => c.Type == claimType && c.Value == claimValue);
-
-                if (hasClaim)
+                IsSuccess = false,
+                Errors = new List<string>
                 {
-                    var error = $"User {request.Email} already exists";
-                    _logger.LogError(error);
-                    return new RegisterUserCommandResult
-                    {
-                        IsSuccess = false,
-                        Errors = new List<string> { error }
-                    };
+                    $"Email {request.Email} already exists."
                 }
+            };
 
-                await _userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
-                var userRegisteredEvent = new UserRegisteredEvent
-                {
-                    UserId = user.Id,
-                    ClientId = clientId
-                };
-
-                await _eventPublisher.PublishAsync(userRegisteredEvent);
-                return new RegisterUserCommandResult
-                {
-                    IsSuccess = true
-                };
-            }
-            else
+            user = new ApplicationUser
             {
-                user = new ApplicationUser
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Email = request.Email,
-                    UserName = request.Email,
-                    EmailConfirmed = !_options.RequireConfirmedEmail
-                };
+                Id = Guid.NewGuid().ToString(),
+                Email = request.Email,
+                UserName = request.Email,
+                EmailConfirmed = !_options.RequireConfirmedEmail
+            };
 
-                var result = await _userManager.CreateAsync(user, request.PlainTextPassword);
-                await _userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
+            var password = !string.IsNullOrWhiteSpace(request.PlainTextPassword)
+                ? request.PlainTextPassword
+                : Guid.NewGuid().ToString().ToSha256();
 
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var encodedToken = Base64UrlEncoder.Encode(token);
-                var confirmationUrl = request.ConfirmUrlFormatter?.Invoke(user.Id, encodedToken, request.ReturnUrl);
+            var result = await _userManager.CreateAsync(user, password);
 
-                var response = new RegisterUserCommandResult
-                {
-                    Id = result.Succeeded ? user.Id : string.Empty,
-                    IsSuccess = result.Succeeded,
-                    Errors = result.Errors.Select(e => e.Description)
-                };
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = Base64UrlEncoder.Encode(token);
+            var confirmationUrl = request.ConfirmUrlFormatter?.Invoke(user.Id, encodedToken, request.ReturnUrl);
 
-                if (!result.Succeeded) return response;
-                var userRegisteredEvent = new UserRegisteredEvent
-                {
-                    UserId = user.Id,
-                    Url = confirmationUrl,
-                    ClientId = clientId
-                };
+            var response = new RegisterUserCommandResult
+            {
+                Id = result.Succeeded ? user.Id : string.Empty,
+                IsSuccess = result.Succeeded,
+                Errors = result.Errors.Select(e => e.Description)
+            };
 
-                await _eventPublisher.PublishAsync(userRegisteredEvent);
-                return response;
-            }
+            if (!result.Succeeded) return response;
+            var userRegisteredEvent = new UserRegisteredEvent
+            {
+                UserId = user.Id,
+                Url = confirmationUrl
+            };
+
+            await _eventPublisher.PublishAsync(userRegisteredEvent);
+            return response;
 
         }
     }
