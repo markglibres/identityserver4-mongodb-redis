@@ -1,17 +1,19 @@
+using IdentityServer.Users.Management.Application.Abstractions;
+
 namespace IdentityServer.Users.Management.Configs
 {
     public class IdentityServerUserManagementConfig
     {
         public IdentityServerUserManagementConfig()
         {
-            Paths = new PathConfig
+            Routes = new RouteConfig
             {
-                CreateUserPath = "/Registration/CreateUser"
+                CreateUser = "/Registration/CreateUser"
             };
         }
-        public ConfirmationEmailConfig ConfirmationEmail { get; set; }
+        public Emails Emails { get; set; }
         public string BaseUrl { get; set; }
-        public PathConfig Paths { get; set; }
+        public RouteConfig Routes { get; set; }
         public string Scope { get; set; }
     }
 
@@ -21,8 +23,20 @@ namespace IdentityServer.Users.Management.Configs
         public string Subject { get; set; }
     }
 
-    public class PathConfig
+    public class RouteConfig
     {
-        public string CreateUserPath { get; set; }
+        public string CreateUser { get; set; }
+    }
+
+    public class EmailConfig
+    {
+        public string Subject { get; set; }
+        public EmailTemplateOptions TemplateOptions { get; set; }
+    }
+
+    public class Emails
+    {
+        public EmailConfig UserConfirmation { get; set; }
+        public EmailConfig ForgotPassword { get; set; }
     }
 }

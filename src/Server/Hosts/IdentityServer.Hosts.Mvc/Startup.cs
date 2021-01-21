@@ -6,6 +6,8 @@ using IdentityServer.Users.Authorization;
 using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Interactions;
 using IdentityServer.Users.Management;
+using IdentityServer.Users.Management.Application.Abstractions;
+using IdentityServer.Users.Management.Configs;
 using IdentityServer.Users.Seeders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +35,31 @@ namespace IdentityServer.Hosts.Mvc
                 .AddIdentityServerUserManagement(config =>
                 {
                     config.Scope = "users.management";
+                    config.Routes = new RouteConfig
+                    {
+                        CreateUser = "/Registration/CreateUser"
+                    };
+                    config.Emails = new Emails
+                    {
+                        UserConfirmation = new EmailConfig
+                        {
+                            Subject = "Confirm user registration",
+                            TemplateOptions = new EmailTemplateOptions
+                            {
+                                File = "user-registered-confirmation.html",
+                                FileStorageType = FileStorageTypes.Embedded
+                            }
+                        },
+                        ForgotPassword = new EmailConfig
+                        {
+                            Subject = "Reset password link",
+                            TemplateOptions = new EmailTemplateOptions
+                            {
+                                File = "user-forgotpassword-request.html",
+                                FileStorageType = FileStorageTypes.Embedded
+                            }
+                        }
+                    };
                 });
 
             services

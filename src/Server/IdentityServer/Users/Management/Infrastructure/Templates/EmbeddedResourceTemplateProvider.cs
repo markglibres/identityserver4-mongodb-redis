@@ -3,13 +3,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using IdentityServer.Users.Management.Application.Abstractions;
 
 namespace IdentityServer.Users.Management.Infrastructure.Templates
 {
     public class EmbeddedResourceTemplateProvider : ITemplateProvider
     {
-        public async Task<string> GetContents(string filename)
+        public async Task<string> GetContents(EmailTemplateOptions templateOptions)
         {
+            if (!CanHandle(templateOptions)) return string.Empty;
+
+            var filename = templateOptions.File;
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = assembly
                 .GetManifestResourceNames()
@@ -24,6 +28,11 @@ namespace IdentityServer.Users.Management.Infrastructure.Templates
 
             return await streamReader.ReadToEndAsync();
 
+        }
+
+        public bool CanHandle(EmailTemplateOptions options)
+        {
+            return options.FileStorageType == FileStorageTypes.Embedded;
         }
     }
 }

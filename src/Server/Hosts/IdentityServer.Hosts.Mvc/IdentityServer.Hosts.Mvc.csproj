@@ -17,4 +17,8 @@
       <_ContentIncludedByDefault Remove="Views\Grants\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="Pages\Registration\Templates\user-email-confirmation.html" />
+    </ItemGroup>
+
 </Project>

@@ -24,7 +24,7 @@ namespace IdentityServer.Users.Management.Api.Configuration
 
             var config = new ConfigurationResponse
             {
-                CreateUserPath = $"{host}{_options.Paths.CreateUserPath}"
+                CreateUserPath = $"{host}{_options.Routes.CreateUser}"
             };
             return Json(config);
         }
