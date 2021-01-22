@@ -38,7 +38,8 @@ namespace IdentityServer.Hosts.Mvc
                     config.Routes = new RouteConfig
                     {
                         CreateUser = "/Registration/CreateUser",
-                        ConfirmUser = "/Registration/Confirm"
+                        ConfirmUser = "/Registration/Confirm",
+                        ResetPassword = "/Registration/ResetPassword"
                     };
                     config.Emails = new Emails
                     {

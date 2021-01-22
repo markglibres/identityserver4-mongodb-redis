@@ -27,6 +27,7 @@ namespace IdentityServer.Users.Management.Configs
     {
         public string CreateUser { get; set; }
         public string ConfirmUser { get; set; }
+        public string ResetPassword { get; set; }
     }
 
     public class EmailConfig

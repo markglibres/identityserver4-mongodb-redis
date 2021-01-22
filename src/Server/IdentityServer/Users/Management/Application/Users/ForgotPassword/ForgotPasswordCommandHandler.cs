@@ -4,8 +4,10 @@ using IdentityServer.Common;
 using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Management.Application.Abstractions;
 using IdentityServer.Users.Management.Application.Users.Events.ForgotPasswordRequested;
+using IdentityServer.Users.Management.Configs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
@@ -14,13 +16,19 @@ namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationEventPublisher _eventPublisher;
+        private readonly IdentityServerUserManagementConfig _managementOptions;
+        private readonly IUrlBuilder _urlBuilder;
 
         public ForgotPasswordCommandHandler(
             UserManager<ApplicationUser> userManager,
-            IApplicationEventPublisher eventPublisher)
+            IApplicationEventPublisher eventPublisher,
+            IOptions<IdentityServerUserManagementConfig> managementOptions,
+            IUrlBuilder urlBuilder)
         {
             _userManager = userManager;
             _eventPublisher = eventPublisher;
+            _managementOptions = managementOptions.Value;
+            _urlBuilder = urlBuilder;
         }
 
         public async Task<ForgotPasswordCommandResult> Handle(ForgotPasswordCommand request,
@@ -36,12 +44,18 @@ namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
 
-            var resetUrl = request.ResetUrlFormatter?.Invoke(user.Id, encodedToken, request.ReturnUrl);
+            _urlBuilder
+                .Create()
+                .Path(_managementOptions.Routes.ResetPassword)
+                .AddQuery("userId", user.Id)
+                .AddQuery("token", encodedToken)
+                .AddQuery("returnUrl", request.ReturnUrl);
+
 
             var forgotPasswordRequestedEvent = new ForgotPasswordRequestedEvent
             {
                 UserId = user.Id,
-                Url = resetUrl
+                Url = _urlBuilder.ToString()
             };
 
             await _eventPublisher.PublishAsync(forgotPasswordRequestedEvent);

@@ -149,9 +149,6 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request, string button)
         {
             var command = _mapper.Map<ForgotPasswordCommand>(request);
-            command.ResetUrlFormatter = (userId, token, returnUrl) =>
-                $"{GetCurrentPath()}/resetpassword?userId={userId}&token={token}&ReturnUrl={HttpUtility.UrlEncode(returnUrl)}";
-
             var result = await _mediator.Send(command);
 
             if (result.IsSuccess)
