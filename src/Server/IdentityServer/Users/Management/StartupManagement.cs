@@ -55,6 +55,7 @@ namespace IdentityServer.Users.Management
             services.AddTransient<IFileReader, FileReader>();
             services.AddTransient<ITemplateParser, HandleBarsTemplateParser>();
             services.AddTransient<ITemplateProvider, EmbeddedResourceTemplateProvider>();
+            services.AddTransient<ITemplateProvider, LocalFileTemplateProvider>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
             services.AddTransient<IEmailer, SmtpEmailer>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

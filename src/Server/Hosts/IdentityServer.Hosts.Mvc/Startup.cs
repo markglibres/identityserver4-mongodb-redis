@@ -48,8 +48,8 @@ namespace IdentityServer.Hosts.Mvc
                             Subject = "Confirm user registration",
                             TemplateOptions = new EmailTemplateOptions
                             {
-                                File = "user-registered-confirmation.html",
-                                FileStorageType = FileStorageTypes.Embedded
+                                File = "~/Pages/Registration/Templates/user-email-confirmation.html",
+                                FileStorageType = FileStorageTypes.Local
                             }
                         },
                         ForgotPassword = new EmailConfig
