@@ -39,10 +39,15 @@ namespace IdentityServer.Users.Management.Api.Users
         }
 
         [HttpGet]
-        [Route("{userId}/confirm/{token}")]
-        public async Task<IActionResult> Confirm([FromRoute] ConfirmEmailRequest request)
+        [Route("confirm")]
+        public async Task<IActionResult> Confirm(string userId, string token, string returnUrl = "")
         {
-            var query = _mapper.Map<ConfirmEmailQuery>(request);
+            var query = new ConfirmEmailQuery
+            {
+                UserId = userId,
+                Token = token,
+                ReturnUrl = returnUrl
+            };
             var result = await _mediator.Send(query);
             var response = _mapper.Map<ConfirmEmailResponse>(result);
 

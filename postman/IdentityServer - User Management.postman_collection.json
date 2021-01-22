@@ -11,7 +11,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e9f923f5-72ec-4ada-9cb6-c3168fbee123",
 						"exec": [
 							"var jsonResponse = JSON.parse(responseBody);",
 							"pm.environment.set(\"token\", jsonResponse.access_token);",
@@ -41,12 +40,12 @@
 						},
 						{
 							"key": "client_id",
-							"value": "UserManagementApp",
+							"value": "mvc",
 							"type": "text"
 						},
 						{
 							"key": "client_secret",
-							"value": "hardtoguess",
+							"value": "secret",
 							"type": "text"
 						}
 					],
@@ -75,7 +74,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8478e25f-6149-4239-80f0-f5b7f3ed2aef",
 						"exec": [
 							"eval(pm.globals.get(\"retryOnFailure\"));",
 							"retryOnFailure(200, 5, 1000);",
@@ -134,7 +132,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9e904260-7ba3-4fd8-ba8e-3681ba589398",
 						"exec": [
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
@@ -147,7 +144,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "1f0b6df0-313e-410f-ae08-5e47fbb348de",
 						"exec": [
 							"const requestedUser = pm.environment.get(\"requestedUser\");",
 							"",
@@ -194,10 +190,7 @@
 							"value": "hardtoguess",
 							"type": "text"
 						}
-					],
-					"options": {
-						"urlencoded": {}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{auth_host}}/connect/token",
@@ -218,7 +211,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "6e5a10d8-c522-4268-8876-754365bdccf7",
 						"exec": [
 							"const requestedUser = pm.environment.get(\"requestedUser\");",
 							"",
@@ -230,7 +222,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "54d2a33d-6624-4cca-8e77-f996fd71e0cb",
 						"exec": [
 							"var responseJson = JSON.parse(responseBody);",
 							"",
@@ -243,16 +234,19 @@
 							"    var username = requestedUser.email;",
 							"    var result = responseJson.items.find(i => {",
 							"        var usernameMatched = i.Content.Headers.To.findIndex(t => t === username) >= 0;",
-							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'BizzPo User Registration Confirmation') >= 0;",
+							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'Confirm user registration') >= 0;",
 							"        return usernameMatched && subjectMatched;",
 							"    });",
 							"    var decodedString = atob(result.Content.Body);",
 							"",
-							"    var confirmUrl = decodedString.match(/[^\"]+identity\\/users.+confirm\\/[^\\\"]+/)[0];",
+							"    var confirmUrl = decodedString.match(/[^\"]+Registration\\/Confirm[^\\\"]+/)[0];",
+							"    var confirmUrlQuery = confirmUrl.split('?')[1];",
 							"",
 							"    pm.expect(confirmUrl).to.be.not.empty;",
-							"",
+							"    pm.expect(confirmUrlQuery).to.be.not.empty;",
+							"  ",
 							"    pm.environment.set(\"confirmationLink\", confirmUrl);",
+							"    pm.environment.set(\"confirmUrlQuery\", decodeURIComponent(confirmUrlQuery).replace('&amp;','&'));",
 							"        ",
 							"});"
 						],
@@ -293,7 +287,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "6b4a7bba-11a7-41a7-be45-1db152a83dc6",
 						"exec": [
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
@@ -317,9 +310,20 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{confirmationLink}}",
+					"raw": "{{auth_host}}/identity/users/confirm?{{confirmUrlQuery}}",
 					"host": [
-						"{{confirmationLink}}"
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users",
+						"confirm"
+					],
+					"query": [
+						{
+							"key": "{{confirmUrlQuery}}",
+							"value": null
+						}
 					]
 				}
 			},
@@ -331,7 +335,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "bb05a3fc-4cc3-48db-98e2-abc1a440851e",
 						"exec": [
 							"var jsonResponse = JSON.parse(responseBody);",
 							"pm.environment.set(\"userToken\", jsonResponse.access_token);",
@@ -373,7 +376,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "2b27f942-6378-4fd0-b141-3313ee286d9c",
 						"exec": [
 							"const requestedUser = pm.environment.get(\"requestedUser\");",
 							"",
@@ -420,10 +422,7 @@
 							"value": "hardtoguess",
 							"type": "text"
 						}
-					],
-					"options": {
-						"urlencoded": {}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{auth_host}}/connect/token",
@@ -444,7 +443,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "da2f56df-bc83-4764-8ab5-36f54d4535b4",
 						"exec": [
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
@@ -485,10 +483,7 @@
 							"value": "access_token",
 							"type": "text"
 						}
-					],
-					"options": {
-						"urlencoded": {}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{auth_host}}/connect/revocation",
@@ -509,7 +504,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9e78135e-6e5c-4767-953e-0cb957b1c74d",
 						"exec": [
 							"var responseJson = JSON.parse(responseBody);",
 							"pm.environment.set(\"userToken\", responseJson.access_token);",
@@ -575,10 +569,7 @@
 							"value": "{{userRefreshtoken}}",
 							"type": "text"
 						}
-					],
-					"options": {
-						"urlencoded": {}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{auth_host}}/connect/token",
@@ -599,7 +590,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4f5e3c7d-5ef9-4f28-9096-91ad6b8ab298",
 						"exec": [
 							"var responseJson = JSON.parse(responseBody);",
 							"",
@@ -660,7 +650,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ba7c0293-0d4f-4230-80a8-28b2495107ee",
 						"exec": [
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
@@ -713,7 +702,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "00604c95-2a0b-4707-bfef-bb2e3e52b8ed",
 						"exec": [
 							"const requestedUser = pm.environment.get(\"requestedUser\");",
 							"",
@@ -725,7 +713,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f02e0496-d044-41cb-94b8-7383cfb85344",
 						"exec": [
 							"var responseJson = JSON.parse(responseBody);",
 							"",
@@ -738,15 +725,22 @@
 							"    var username = requestedUser.email;",
 							"    var result = responseJson.items.find(i => {",
 							"        var usernameMatched = i.Content.Headers.To.findIndex(t => t === username) >= 0;",
-							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'Reset password') >= 0;",
+							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'Reset password link') >= 0;",
 							"        return usernameMatched && subjectMatched;",
 							"    });",
 							"    var decodedString = atob(result.Content.Body);",
-							"    var resetUrl = decodedString.match(/[^\"]+\\?.+userId=.+token=.+\\/[^\\\"]+/)[0];",
-							"    ",
-							"    pm.expect(resetUrl).to.be.not.empty;",
 							"",
-							"    var queryStrings = resetUrl.match(/([^\\&?;]+)=([^&\"]+)/gi);",
+							"    var resetPasswordLink = decodedString.match(/[^\"]+Registration\\/ResetPassword[^\\\"]+/)[0];",
+							"    var resetPasswordLinkQuery = resetPasswordLink.split('?')[1];",
+							"",
+							"    pm.expect(resetPasswordLink).to.be.not.empty;",
+							"    pm.expect(resetPasswordLinkQuery).to.be.not.empty;",
+							"  ",
+							"    pm.environment.set(\"resetPasswordLink\", resetPasswordLink);",
+							"    pm.environment.set(\"resetPasswordLinkQuery\", decodeURIComponent(resetPasswordLinkQuery).replace('&amp;','&'));",
+							"",
+							"",
+							"    var queryStrings = resetPasswordLinkQuery.match(/([^\\&?;]+)=([^&\"]+)/gi);",
 							"    var queries = queryStrings.map(q => [ q.split('=')[0], q.split('=')[1] ]);",
 							"    ",
 							"    var resetPasswordUserId = queries.filter(q => q[0] === 'userId')[0][1];",
@@ -755,7 +749,7 @@
 							"    pm.expect(resetPasswordUserId).to.be.not.empty;",
 							"    pm.expect(resetPasswordToken).to.be.not.empty;",
 							"",
-							"    pm.environment.set(\"resetPasswordLink\", resetUrl);     ",
+							"    // pm.environment.set(\"resetPasswordLink\", resetUrl);     ",
 							"    pm.environment.set(\"resetPasswordUserId\", resetPasswordUserId);",
 							"    pm.environment.set(\"resetPasswordToken\", resetPasswordToken);",
 							"});"
@@ -797,7 +791,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f809e0d2-551a-429f-8816-e8f479713b9c",
 						"exec": [
 							"eval(pm.globals.get(\"retryOnFailure\"));",
 							"retryOnFailure(200, 5, 1000);",
@@ -828,7 +821,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"password\": \"{{$randomPassword}}$\",\n    \"token\": \"{{resetPasswordToken}}\",\n    \"userId\": \"{{resetPasswordUserId}}\"\n}",
+					"raw": "{\n    \"password\": \"{{$randomPassword}}$1\",\n    \"token\": \"{{resetPasswordToken}}\",\n    \"userId\": \"{{resetPasswordUserId}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -855,7 +848,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a68e85de-f593-4439-8a05-a41b664a83f1",
 						"exec": [
 							"var jsonResponse = JSON.parse(responseBody);",
 							"pm.environment.set(\"userToken\", jsonResponse.access_token);",
@@ -897,7 +889,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "5bf7f8bd-a2cb-4838-ab02-79c6ac4498ec",
 						"exec": [
 							"const requestedUser = pm.environment.get(\"requestedUser\");",
 							"",
@@ -944,10 +935,7 @@
 							"value": "hardtoguess",
 							"type": "text"
 						}
-					],
-					"options": {
-						"urlencoded": {}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{auth_host}}/connect/token",
@@ -967,7 +955,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "e64c69b2-81b9-470a-bb02-9f1b83177092",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -977,7 +964,6 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "1e74ff5d-4e0c-4d94-8e54-f1ae31655a91",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -987,15 +973,12 @@
 	],
 	"variable": [
 		{
-			"id": "6f0d9582-db82-4c09-8df0-a97e56be55c1",
 			"key": "password",
 			"value": ""
 		},
 		{
-			"id": "704289ef-3264-49eb-8d54-6ca7952ab66c",
 			"key": "username",
 			"value": ""
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
