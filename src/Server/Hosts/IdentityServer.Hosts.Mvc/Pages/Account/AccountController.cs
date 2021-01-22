@@ -43,7 +43,10 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
             if (!commandResult.IsSuccess)
             {
-                ModelState.AddModelError(nameof(model.Validations), "An error occured while logging in. Please try again.");
+                var message = "Invalid credentials. Please try again.";
+                if (commandResult.ErrorCode == LoginErrorCode.UnconfirmedEmail)
+                    message = "User has pending email confirmation. Please try again";
+                ModelState.AddModelError(nameof(model.Validations), message);
                 return View(model);
             }
 

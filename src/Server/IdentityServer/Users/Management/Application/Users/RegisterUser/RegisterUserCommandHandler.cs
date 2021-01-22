@@ -108,7 +108,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             if (!result.Succeeded) return response;
 
             _urlBuilder
-                .Create()
+                .Create(_managementOptions.Routes.BaseUrl)
                 .Path(_managementOptions.Routes.ConfirmUser)
                 .AddQuery("userId", user.Id)
                 .AddQuery("token", encodedToken)

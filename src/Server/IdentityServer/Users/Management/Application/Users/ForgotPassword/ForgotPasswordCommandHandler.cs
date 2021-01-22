@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using IdentityServer.Common;
 using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Management.Application.Abstractions;
@@ -45,7 +46,7 @@ namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
             var encodedToken = Base64UrlEncoder.Encode(token);
 
             _urlBuilder
-                .Create()
+                .Create(_managementOptions.Routes.BaseUrl)
                 .Path(_managementOptions.Routes.ResetPassword)
                 .AddQuery("userId", user.Id)
                 .AddQuery("token", encodedToken)
