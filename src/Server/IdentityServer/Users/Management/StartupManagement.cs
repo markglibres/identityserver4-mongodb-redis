@@ -57,6 +57,8 @@ namespace IdentityServer.Users.Management
             services.AddTransient<ITemplateProvider, EmbeddedResourceTemplateProvider>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
             services.AddTransient<IEmailer, SmtpEmailer>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IUrlBuilder, UrlBuilder>();
 
             services.AddAuthorization(authorizationOptions =>
             {

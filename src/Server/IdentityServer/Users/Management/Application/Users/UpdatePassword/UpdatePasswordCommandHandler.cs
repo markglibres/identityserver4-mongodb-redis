@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.Common;
 using IdentityServer.Users.Authorization.Services;
+using IdentityServer4.Models;
+using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -14,13 +16,16 @@ namespace IdentityServer.Users.Management.Application.Users
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenValidator _tokenValidator;
+        private readonly ITokenService _tokenService;
 
         public UpdatePasswordCommandHandler(
             UserManager<ApplicationUser> userManager,
-            ITokenValidator tokenValidator)
+            ITokenValidator tokenValidator,
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _tokenValidator = tokenValidator;
+            _tokenService = tokenService;
         }
 
         public async Task<UpdatePasswordCommandResult> Handle(UpdatePasswordCommand request,

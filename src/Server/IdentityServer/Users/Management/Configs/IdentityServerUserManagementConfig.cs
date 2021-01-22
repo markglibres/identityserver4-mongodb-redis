@@ -26,6 +26,7 @@ namespace IdentityServer.Users.Management.Configs
     public class RouteConfig
     {
         public string CreateUser { get; set; }
+        public string ConfirmUser { get; set; }
     }
 
     public class EmailConfig

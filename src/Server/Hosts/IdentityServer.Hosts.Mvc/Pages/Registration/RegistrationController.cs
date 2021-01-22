@@ -83,9 +83,6 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             }
 
             var command = _mapper.Map<RegisterUserCommand>(request);
-            command.ConfirmUrlFormatter = (userId, token, returnUrl) =>
-                $"{GetCurrentPath()}/confirm?userId={userId}&token={token}&returnUrl={HttpUtility.UrlEncode(returnUrl)}";
-
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)

@@ -37,7 +37,8 @@ namespace IdentityServer.Hosts.Mvc
                     config.Scope = "users.management";
                     config.Routes = new RouteConfig
                     {
-                        CreateUser = "/Registration/CreateUser"
+                        CreateUser = "/Registration/CreateUser",
+                        ConfirmUser = "/Registration/Confirm"
                     };
                     config.Emails = new Emails
                     {

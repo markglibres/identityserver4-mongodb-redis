@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using IdentityServer.Authorization;
 using IdentityServer.Common;
 using IdentityServer.Users.Authorization.Abstractions;
@@ -30,6 +31,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
         private readonly IApplicationEventPublisher _eventPublisher;
         private readonly ITokenValidator _tokenValidator;
         private readonly IIdentityServerInteractionService _interactionService;
+        private readonly IUrlBuilder _urlBuilder;
 
         private readonly IdentityServerUserManagementConfig _managementOptions;
 
@@ -41,7 +43,8 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             IOptions<IdentityServerConfig> options,
             IApplicationEventPublisher eventPublisher,
             ITokenValidator tokenValidator,
-            IIdentityServerInteractionService interactionService)
+            IIdentityServerInteractionService interactionService,
+            IUrlBuilder urlBuilder)
         {
             _logger = logger;
             _userManager = userManager;
@@ -50,6 +53,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             _eventPublisher = eventPublisher;
             _tokenValidator = tokenValidator;
             _interactionService = interactionService;
+            _urlBuilder = urlBuilder;
             _managementOptions = managementOptions.Value;
         }
 
@@ -93,7 +97,6 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = Base64UrlEncoder.Encode(token);
-            var confirmationUrl = request.ConfirmUrlFormatter?.Invoke(user.Id, encodedToken, request.ReturnUrl);
 
             var response = new RegisterUserCommandResult
             {
@@ -103,10 +106,18 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             };
 
             if (!result.Succeeded) return response;
+
+            _urlBuilder
+                .Create()
+                .Path(_managementOptions.Routes.ConfirmUser)
+                .AddQuery("userId", user.Id)
+                .AddQuery("token", encodedToken)
+                .AddQuery("returnUrl", request.ReturnUrl);
+
             var userRegisteredEvent = new UserRegisteredEvent
             {
                 UserId = user.Id,
-                Url = confirmationUrl
+                Url = _urlBuilder.ToString()
             };
 
             await _eventPublisher.PublishAsync(userRegisteredEvent);

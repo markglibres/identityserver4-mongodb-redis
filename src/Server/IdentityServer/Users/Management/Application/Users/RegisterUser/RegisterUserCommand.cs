@@ -9,9 +9,6 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
         public string Token { get; set; }
         public string Email { get; set; }
         public string PlainTextPassword { get; set; }
-        public ConfirmUrlFormatter ConfirmUrlFormatter { get; set; }
     }
-
-    public delegate string ConfirmUrlFormatter(string userId, string token, string returnUrl = null);
 
 }
