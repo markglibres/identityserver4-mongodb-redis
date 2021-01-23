@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IdentityServer.User.Client.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -12,13 +13,13 @@ namespace IdentityServer.Client.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> LogOff()
         {
-            //await HttpContext.SignOutAsync("Cookies");
-           //await HttpContext.SignOutAsync("oidc");
-            return new SignOutResult(new List<string>
-            {
-                "Cookies",
-                "oidc"
-            });
+            return new LogoutResult();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return new LoginResult();
         }
     }
 }

@@ -87,9 +87,9 @@ namespace IdentityServer.Client.Mvc
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                        "default",
-                        "{controller=Home}/{action=Index}/{id?}")
-                    .RequireAuthorization();
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
+                //.RequireAuthorization();
             });
 
             app.UseCors("All");
