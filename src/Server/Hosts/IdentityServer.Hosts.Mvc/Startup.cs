@@ -2,6 +2,7 @@ using IdentityServer.Authorization.Extensions;
 using IdentityServer.Authorization.Seeders;
 using IdentityServer.Hosts.Mvc.Controllers;
 using IdentityServer.Hosts.Mvc.Resources;
+using IdentityServer.HostServer.Mvc;
 using IdentityServer.Users.Authorization;
 using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Interactions;
@@ -48,7 +49,7 @@ namespace IdentityServer.Hosts.Mvc
                             Subject = "Confirm user registration",
                             TemplateOptions = new EmailTemplateOptions
                             {
-                                File = "~/Pages/Registration/Templates/user-email-confirmation.html",
+                                File = "~/Templates/user-email-confirmation.html",
                                 FileStorageType = FileStorageTypes.Local
                             }
                         },
@@ -62,7 +63,8 @@ namespace IdentityServer.Hosts.Mvc
                             }
                         }
                     };
-                });
+                })
+                .AddIdentityServerUserManagementMvc();
 
             services
                 .AddAuthentication(options =>

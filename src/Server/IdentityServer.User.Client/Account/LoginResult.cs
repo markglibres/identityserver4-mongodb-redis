@@ -8,6 +8,12 @@ namespace IdentityServer.User.Client.Account
 {
     public class LoginResult : ActionResult
     {
+        private readonly string _returnUrl;
+
+        public LoginResult(string returnUrl = "")
+        {
+            _returnUrl = returnUrl;
+        }
         public override async Task ExecuteResultAsync(ActionContext context)
         {
             if (context.HttpContext.User.Identity.IsAuthenticated)
@@ -20,7 +26,10 @@ namespace IdentityServer.User.Client.Account
                 .HttpContext.RequestServices.GetRequiredService<IOptions<AuthenticationOptions>>()
                 .Value;
 
-            await context.HttpContext.ChallengeAsync(options.DefaultChallengeScheme);
+            await context.HttpContext.ChallengeAsync(options.DefaultChallengeScheme, new AuthenticationProperties
+            {
+                RedirectUri = _returnUrl
+            });
         }
     }
 }

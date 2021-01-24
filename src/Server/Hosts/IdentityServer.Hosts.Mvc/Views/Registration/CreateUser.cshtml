@@ -1,3 +1,4 @@
+@using System.Web
 @model CreateUserRequest
 
 <div>
@@ -15,6 +16,8 @@
                             </div>
                             <span asp-validation-for="Validations" class="text-danger"></span>
                             <button class="btn btn-primary" name="button" value="login">Register</button>
+                            <input type="button" class="btn btn-secondary" onclick="window.history.back();" value="Cancel" />
+                            <a href="/registration/forgotpassword?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Forgot Password</a>
                         </form>
                     </div>
                 </div>

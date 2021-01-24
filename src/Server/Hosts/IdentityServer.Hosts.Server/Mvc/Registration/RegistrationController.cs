@@ -59,14 +59,15 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateUser(string token)
+        public async Task<IActionResult> CreateUser(string token, string returnUrl)
         {
             var validationResult = await _tokenValidator.ValidateAccessTokenAsync(token, _options.Scope);
             if (validationResult.IsError) throw new Exception(validationResult.Error);
 
             return View(new CreateUserRequest
             {
-                Token = token
+                Token = token,
+                ReturnUrl = returnUrl
             });
         }
 
