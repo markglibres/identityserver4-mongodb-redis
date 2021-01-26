@@ -4,12 +4,14 @@ using IdentityServer.Authorization.Services;
 using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Common.Repositories;
 using IdentityServer.Common.Repositories.Abstractions;
+using IdentityServer.Users.Management.Configs;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 
 namespace IdentityServer.Authorization.Extensions
@@ -36,7 +38,24 @@ namespace IdentityServer.Authorization.Extensions
                 .AddIdentityServer(options =>
                 {
                     options.IssuerUri = config.Authority;
+
+                    var managementConfig = provider
+                        .GetRequiredService<IOptions<IdentityServerUserManagementConfig>>()
+                        .Value;
+
+                    if(!string.IsNullOrWhiteSpace(managementConfig.UserInteractions.LoginUrl))
+                        options.UserInteraction.LoginUrl = managementConfig.UserInteractions.LoginUrl;
+
+                    if(!string.IsNullOrWhiteSpace(managementConfig.UserInteractions.LogoutUrl))
+                        options.UserInteraction.LogoutUrl = managementConfig.UserInteractions.LogoutUrl;
+
+                    options.UserInteraction.LoginReturnUrlParameter = "returnUrl";
+
                     identityServerOptions?.Invoke(options);
+
+                    options.Discovery.CustomEntries.Add("registration_endpoint",$"~{managementConfig.UserInteractions.CreateUser}");
+                    options.Discovery.CustomEntries.Add("login_endpoint",$"~{options.UserInteraction.LoginUrl}");
+                    options.Discovery.CustomEntries.Add("logout_endpoint",$"~{options.UserInteraction.LogoutUrl}");
                 })
                 .AddMongoResources()
                 .AddMongoClientStore()

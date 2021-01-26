@@ -46,8 +46,8 @@ namespace IdentityServer.Users.Management.Application.Users.ForgotPassword
             var encodedToken = Base64UrlEncoder.Encode(token);
 
             _urlBuilder
-                .Create(_managementOptions.Routes.BaseUrl)
-                .Path(_managementOptions.Routes.ResetPassword)
+                .Create(_managementOptions.UserInteractions.BaseUrl)
+                .Path(_managementOptions.UserInteractions.ResetPassword)
                 .AddQuery("userId", user.Id)
                 .AddQuery("token", encodedToken)
                 .AddQuery("returnUrl", request.ReturnUrl);

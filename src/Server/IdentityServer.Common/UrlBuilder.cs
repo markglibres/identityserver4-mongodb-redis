@@ -6,6 +6,7 @@ namespace IdentityServer.Common
 {
     public class UrlBuilder : IUrlBuilder
     {
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         private UriBuilder _uriBuilder;
 

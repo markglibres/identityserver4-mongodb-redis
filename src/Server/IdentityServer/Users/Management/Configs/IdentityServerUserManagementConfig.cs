@@ -6,14 +6,14 @@ namespace IdentityServer.Users.Management.Configs
     {
         public IdentityServerUserManagementConfig()
         {
-            Routes = new RouteConfig
+            UserInteractions = new UserInteractionsConfig
             {
                 CreateUser = "/Registration/CreateUser"
             };
         }
         public Emails Emails { get; set; }
         public string BaseUrl { get; set; }
-        public RouteConfig Routes { get; set; }
+        public UserInteractionsConfig UserInteractions { get; set; }
         public string Scope { get; set; }
     }
 
@@ -23,12 +23,14 @@ namespace IdentityServer.Users.Management.Configs
         public string Subject { get; set; }
     }
 
-    public class RouteConfig
+    public class UserInteractionsConfig
     {
         public string CreateUser { get; set; }
         public string ConfirmUser { get; set; }
         public string ResetPassword { get; set; }
         public string BaseUrl { get; set; }
+        public string LoginUrl { get; set; }
+        public string LogoutUrl { get; set; }
     }
 
     public class EmailConfig

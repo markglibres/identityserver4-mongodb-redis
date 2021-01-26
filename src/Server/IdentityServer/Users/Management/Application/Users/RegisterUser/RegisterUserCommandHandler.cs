@@ -108,11 +108,12 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
             if (!result.Succeeded) return response;
 
             _urlBuilder
-                .Create(_managementOptions.Routes.BaseUrl)
-                .Path(_managementOptions.Routes.ConfirmUser)
+                .Create(_managementOptions.UserInteractions.BaseUrl)
+                .Path(_managementOptions.UserInteractions.ConfirmUser)
                 .AddQuery("userId", user.Id)
                 .AddQuery("token", encodedToken)
-                .AddQuery("returnUrl", request.ReturnUrl);
+                .AddQuery("returnUrl", request.ReturnUrl)
+                .AddQuery("redirectUrl", request.RedirectUrl);
 
             var userRegisteredEvent = new UserRegisteredEvent
             {

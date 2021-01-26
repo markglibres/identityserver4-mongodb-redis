@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +33,18 @@ namespace IdentityServer.User.Client.Account
                 return;
             };
 
-            schemes.ForEach(async scheme => await context.HttpContext.SignOutAsync(scheme));
+            schemes.ForEach(async scheme =>
+            {
+                try
+                {
+                    await context.HttpContext.SignOutAsync(scheme);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            });
         }
     }
 }

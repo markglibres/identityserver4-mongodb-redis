@@ -1,6 +1,8 @@
 using System;
+using IdentityServer.Common;
 using IdentityServer.User.Client.Registration;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -20,6 +22,7 @@ namespace IdentityServer.User.Client
 
             services.TryAddSingleton(provider => defaultOptions);
             services.AddHttpClient<IUserManagementService, UserManagementService>();
+            services.AddIdentityServerCommon();
 
             return builder;
         }

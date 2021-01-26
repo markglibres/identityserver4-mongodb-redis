@@ -8,14 +8,23 @@ namespace IdentityServer.User.Client.Registration
 {
     public class RegistrationResult : ActionResult
     {
+        private readonly string _returnUrl;
+
+        public RegistrationResult(string returnUrl = "/")
+        {
+            _returnUrl = returnUrl;
+        }
+
         public override async Task ExecuteResultAsync(ActionContext context)
         {
             if (context == null) throw new ArgumentException(nameof(context));
 
+            //await base.ExecuteResultAsync(context);
+
             var userInteractionService =
                 context.HttpContext.RequestServices.GetRequiredService<IUserManagementService>();
 
-            var registrationContext = await userInteractionService.GetRegistrationContext();
+            var registrationContext = await userInteractionService.GetRegistrationContext(_returnUrl);
 
             context.HttpContext.Response.Redirect(registrationContext.RegistrationUrl);
 

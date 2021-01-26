@@ -16,5 +16,6 @@ namespace IdentityServer.Hosts.Mvc.ViewModels
         public string ReturnUrl { get; set; }
         [Required]
         public string ResetPasswordToken { get; set; }
+        public string RedirectUrl { get; set; }
     }
 }

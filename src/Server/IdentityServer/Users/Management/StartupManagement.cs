@@ -58,8 +58,6 @@ namespace IdentityServer.Users.Management
             services.AddTransient<ITemplateProvider, LocalFileTemplateProvider>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
             services.AddTransient<IEmailer, SmtpEmailer>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IUrlBuilder, UrlBuilder>();
 
             services.AddAuthorization(authorizationOptions =>
             {
@@ -67,6 +65,7 @@ namespace IdentityServer.Users.Management
                     policyBuilder => { policyBuilder.RequireScope(Policies.Scopes.UserManagement); });
             });
 
+            services.AddIdentityServerCommon();
             return builder;
         }
 

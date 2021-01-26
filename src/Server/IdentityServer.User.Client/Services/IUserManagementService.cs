@@ -4,6 +4,6 @@ namespace IdentityServer.User.Client.Registration
 {
     public interface IUserManagementService
     {
-        Task<RegistrationContext> GetRegistrationContext();
+        Task<RegistrationContext> GetRegistrationContext(string redirectUrl);
     }
 }
