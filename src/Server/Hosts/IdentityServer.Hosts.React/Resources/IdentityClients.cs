@@ -35,7 +35,7 @@ namespace IdentityServer.Hosts.React.Resources
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
+                    ClientSecrets = {new Secret("secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireConsent = false,
@@ -43,18 +43,18 @@ namespace IdentityServer.Hosts.React.Resources
                     //AllowOfflineAccess = true,
 
                     // where to redirect to after login
-                    RedirectUris = { "http://localhost:5002/signin-oidc", "https://localhost:5002/signin-oidc" },
+                    RedirectUris = {"http://localhost:5002/signin-oidc", "https://localhost:5002/signin-oidc"},
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc", "https://localhost:5002/signout-callback-oidc" },
+                    PostLogoutRedirectUris =
+                        {"http://localhost:5002/signout-callback-oidc", "https://localhost:5002/signout-callback-oidc"},
 
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
-                    },
+                    }
                     //RequirePkce = true
-
                 }
             };
         }

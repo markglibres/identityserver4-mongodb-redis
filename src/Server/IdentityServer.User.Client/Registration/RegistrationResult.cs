@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using IdentityServer.User.Client.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,7 +38,6 @@ namespace IdentityServer.User.Client.Registration
             // sb.Append("</body>");
             // sb.Append("</html>");
             // await response.WriteAsync(sb.ToString());
-
         }
     }
 }

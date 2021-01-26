@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace IdentityServer.Common
+namespace IdentityServer.Common.Extensions
 {
     public static class JsonSerializerSettingsExtensions
     {

@@ -32,5 +32,4 @@ namespace IdentityServer.Hosts.React.Resources
             };
         }
     }
-
 }

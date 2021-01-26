@@ -8,8 +8,8 @@ namespace IdentityServer.Users.Interactions.Application.Accounts.Login
 {
     public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginQueryResult>
     {
-        private readonly IIdentityServerInteractionService _interactionService;
         private readonly IClientStore _clientStore;
+        private readonly IIdentityServerInteractionService _interactionService;
 
         public LoginQueryHandler(IIdentityServerInteractionService interactionService,
             IClientStore clientStore)
@@ -32,7 +32,6 @@ namespace IdentityServer.Users.Interactions.Application.Accounts.Login
             };
 
             return result;
-
         }
     }
 }

@@ -11,6 +11,7 @@ namespace IdentityServer.HostServer.Mvc.ViewModels
 
         [Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]
         public string ConfirmPassword { get; set; }
+
         public string ValidationMessage { get; set; }
     }
 }

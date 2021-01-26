@@ -37,7 +37,6 @@ namespace IdentityServer.Authorization.Seeders
                 },
                 new Client
                 {
-
                     ClientId = "spaService",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =

@@ -4,11 +4,9 @@ using IdentityServer.Hosts.React.Resources;
 using IdentityServer.Users.Authorization;
 using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Interactions;
-using IdentityServer.Users.Management;
 using IdentityServer.Users.Seeders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +28,8 @@ namespace IdentityServer.Hosts.React
         {
             services
                 .AddControllersWithViews()
-                .AddIdentityServerUserInteraction()
-                .AddIdentityServerUserManagement();
+                .AddIdentityServerUserInteraction(config => { config.Scope = "users.management"; })
+                .AddIdentityServerUserInteraction();
 
             services
                 .AddAuthentication(options =>
@@ -84,18 +82,15 @@ namespace IdentityServer.Hosts.React
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    "default",
+                    "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
+                if (env.IsDevelopment()) spa.UseReactDevelopmentServer("start");
             });
         }
     }

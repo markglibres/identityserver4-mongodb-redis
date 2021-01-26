@@ -13,9 +13,9 @@ namespace IdentityServer.User.Client.Services
     public class UserManagementService : IUserManagementService
     {
         private readonly HttpClient _httpClient;
+        private readonly OpenIdConnectOptions _oidc;
         private readonly UserInteractionServiceOptions _options;
         private readonly IUrlBuilder _urlBuilder;
-        private readonly OpenIdConnectOptions _oidc;
 
         public UserManagementService(
             IUrlBuilder urlBuilder,

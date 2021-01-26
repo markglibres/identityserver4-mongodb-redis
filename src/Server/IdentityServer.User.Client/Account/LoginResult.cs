@@ -14,13 +14,16 @@ namespace IdentityServer.User.Client.Account
         {
             _returnUrl = returnUrl;
         }
+
         public override async Task ExecuteResultAsync(ActionContext context)
         {
             if (context.HttpContext.User.Identity.IsAuthenticated)
             {
                 context.HttpContext.Response.Redirect("/");
                 return;
-            };
+            }
+
+            ;
 
             var options = context
                 .HttpContext.RequestServices.GetRequiredService<IOptions<AuthenticationOptions>>()

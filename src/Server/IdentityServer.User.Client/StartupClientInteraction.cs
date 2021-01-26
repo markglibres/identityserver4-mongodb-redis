@@ -1,9 +1,7 @@
 using System;
 using IdentityServer.Common;
-using IdentityServer.User.Client.Registration;
 using IdentityServer.User.Client.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

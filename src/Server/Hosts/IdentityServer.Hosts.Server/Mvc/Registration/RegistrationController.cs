@@ -1,17 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using IdentityServer.Common;
-using IdentityServer.Hosts.Mvc.ViewModels;
 using IdentityServer.HostServer.Mvc.ViewModels;
-using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
-using IdentityServer.Users.Management.Api.Users.ResetPassword;
-using IdentityServer.Users.Management.Api.Users.UpdateProfile;
-using IdentityServer.Users.Management.Application.Users;
-using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
-using IdentityServer.Users.Management.Application.Users.ForgotPassword;
-using IdentityServer.Users.Management.Application.Users.RegisterUser;
-using IdentityServer.Users.Management.Application.Users.ResetPassword;
-using IdentityServer.Users.Management.Configs;
+using IdentityServer.Users.Interactions.Api.Users.ConfirmEmail;
+using IdentityServer.Users.Interactions.Api.Users.ResetPassword;
+using IdentityServer.Users.Interactions.Application.Users.ConfirmEmail;
+using IdentityServer.Users.Interactions.Application.Users.ForgotPassword;
+using IdentityServer.Users.Interactions.Application.Users.RegisterUser;
+using IdentityServer.Users.Interactions.Application.Users.ResetPassword;
+using IdentityServer.Users.Interactions.Application.Users.UpdatePassword;
+using IdentityServer.Users.Interactions.Application.Users.UpdateProfile;
+using IdentityServer.Users.Interactions.Infrastructure.Config;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using MediatR;
@@ -28,12 +27,12 @@ namespace IdentityServer.HostServer.Mvc.Registration
         private readonly IIdentityServerInteractionService _interactionService;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        private readonly IdentityServerUserManagementConfig _options;
+        private readonly IdentityServerUserInteractionConfig _options;
         private readonly ITokenValidator _tokenValidator;
 
         public RegistrationController(IIdentityServerInteractionService interactionService,
             IClientSecretValidator clientSecretValidator,
-            IOptions<IdentityServerUserManagementConfig> options,
+            IOptions<IdentityServerUserInteractionConfig> options,
             ITokenValidator tokenValidator,
             IMapper mapper,
             IMediator mediator)
@@ -50,7 +49,7 @@ namespace IdentityServer.HostServer.Mvc.Registration
         public async Task<IActionResult> Register(string returnUrl)
         {
             var context = await _interactionService.GetAuthorizationContextAsync(returnUrl);
-            if(context == null) throw new Exception("Invalid context");
+            if (context == null) throw new Exception("Invalid context");
 
             return View("CreateUser", new CreateUserModel
             {

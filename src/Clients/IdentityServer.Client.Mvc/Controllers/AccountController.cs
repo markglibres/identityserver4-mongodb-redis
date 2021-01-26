@@ -1,9 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using IdentityServer.User.Client.Account;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Client.Mvc.Controllers

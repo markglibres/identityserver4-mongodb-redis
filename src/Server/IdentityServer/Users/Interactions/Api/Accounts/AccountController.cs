@@ -18,9 +18,9 @@ namespace IdentityServer.Users.Interactions.Api.Accounts
     public class AccountController : ControllerBase
     {
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService<ApplicationUser> _userService;
 
         public AccountController(
@@ -64,8 +64,7 @@ namespace IdentityServer.Users.Interactions.Api.Accounts
 
             return Ok(new
             {
-                PostLogoutRedirectUri = result.PostLogoutRedirectUri,
-                ClientName = result.ClientName
+                result.PostLogoutRedirectUri, result.ClientName
             });
         }
     }

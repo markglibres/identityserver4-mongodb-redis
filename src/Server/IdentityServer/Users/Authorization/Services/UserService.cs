@@ -11,9 +11,9 @@ namespace IdentityServer.Users.Authorization.Services
     public class UserService<T> : IUserService<T>, ISeedService<T>
         where T : IdentityUser
     {
-        private readonly IUserStore<T> _userStore;
-        private readonly IPasswordHasher<T> _passwordHasher;
         private readonly IdentityServerConfig _options;
+        private readonly IPasswordHasher<T> _passwordHasher;
+        private readonly IUserStore<T> _userStore;
 
         public UserService(
             IUserStore<T> userStore,

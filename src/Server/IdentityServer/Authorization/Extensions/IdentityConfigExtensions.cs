@@ -25,6 +25,5 @@ namespace IdentityServer.Authorization.Extensions
 
             return identityServerServerConfig;
         }
-
     }
 }

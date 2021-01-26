@@ -6,7 +6,6 @@ using IdentityServer.Users.Interactions.Application.Accounts.Login;
 using IdentityServer.Users.Interactions.Application.Accounts.Logout;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Hosts.Mvc.Controllers

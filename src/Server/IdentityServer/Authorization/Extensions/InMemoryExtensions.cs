@@ -43,7 +43,7 @@ namespace IdentityServer.Authorization.Extensions
                 .AddIdentityServer(setupIdentityOption)
                 .AddInMemoryResources()
                 .AddInMemoryClients();
-                //.AddIdentityUser<TUser>();
+            //.AddIdentityUser<TUser>();
 
             return builder;
         }

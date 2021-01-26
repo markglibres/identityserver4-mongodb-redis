@@ -1,14 +1,12 @@
 using IdentityServer.Authorization.Extensions;
 using IdentityServer.Authorization.Seeders;
-using IdentityServer.Hosts.Mvc.Controllers;
 using IdentityServer.Hosts.Mvc.Resources;
 using IdentityServer.HostServer.Mvc;
 using IdentityServer.Users.Authorization;
 using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Interactions;
-using IdentityServer.Users.Management;
-using IdentityServer.Users.Management.Application.Abstractions;
-using IdentityServer.Users.Management.Configs;
+using IdentityServer.Users.Interactions.Application.Abstractions;
+using IdentityServer.Users.Interactions.Infrastructure.Config;
 using IdentityServer.Users.Seeders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,8 +30,7 @@ namespace IdentityServer.Hosts.Mvc
         {
             services
                 .AddControllersWithViews()
-                .AddIdentityServerUserInteraction()
-                .AddIdentityServerUserManagement(config =>
+                .AddIdentityServerUserInteraction(config =>
                 {
                     config.Scope = "users.management";
                     config.Emails = new Emails

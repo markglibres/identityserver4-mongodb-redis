@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace IdentityServer.Common
+namespace IdentityServer.Common.Extensions
 {
     public static class SecretExtensions
     {

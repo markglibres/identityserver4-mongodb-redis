@@ -4,7 +4,7 @@ using IdentityServer.Authorization.Services;
 using IdentityServer.Authorization.Services.Abstractions;
 using IdentityServer.Common.Repositories;
 using IdentityServer.Common.Repositories.Abstractions;
-using IdentityServer.Users.Management.Configs;
+using IdentityServer.Users.Interactions.Infrastructure.Config;
 using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -22,7 +22,7 @@ namespace IdentityServer.Authorization.Extensions
             this IServiceCollection services,
             Action<IdentityServerOptions> identityServerOptions = null,
             Func<IServiceProvider, ICorsPolicyService> setupPolicy = null
-            )
+        )
         {
             var config = services.AddIdentityServerConfig();
             services.TryAddTransient(typeof(IIdentityRepository<>), typeof(IdentityMongoRepository<>));
@@ -40,22 +40,23 @@ namespace IdentityServer.Authorization.Extensions
                     options.IssuerUri = config.Authority;
 
                     var managementConfig = provider
-                        .GetRequiredService<IOptions<IdentityServerUserManagementConfig>>()
+                        .GetRequiredService<IOptions<IdentityServerUserInteractionConfig>>()
                         .Value;
 
-                    if(!string.IsNullOrWhiteSpace(managementConfig.UserInteractions.LoginUrl))
-                        options.UserInteraction.LoginUrl = managementConfig.UserInteractions.LoginUrl;
+                    if (!string.IsNullOrWhiteSpace(managementConfig.UserInteractionEndpoints.LoginUrl))
+                        options.UserInteraction.LoginUrl = managementConfig.UserInteractionEndpoints.LoginUrl;
 
-                    if(!string.IsNullOrWhiteSpace(managementConfig.UserInteractions.LogoutUrl))
-                        options.UserInteraction.LogoutUrl = managementConfig.UserInteractions.LogoutUrl;
+                    if (!string.IsNullOrWhiteSpace(managementConfig.UserInteractionEndpoints.LogoutUrl))
+                        options.UserInteraction.LogoutUrl = managementConfig.UserInteractionEndpoints.LogoutUrl;
 
                     options.UserInteraction.LoginReturnUrlParameter = "returnUrl";
 
                     identityServerOptions?.Invoke(options);
 
-                    options.Discovery.CustomEntries.Add("registration_endpoint",$"~{managementConfig.UserInteractions.CreateUser}");
-                    options.Discovery.CustomEntries.Add("login_endpoint",$"~{options.UserInteraction.LoginUrl}");
-                    options.Discovery.CustomEntries.Add("logout_endpoint",$"~{options.UserInteraction.LogoutUrl}");
+                    options.Discovery.CustomEntries.Add("registration_endpoint",
+                        $"~{managementConfig.UserInteractionEndpoints.CreateUser}");
+                    options.Discovery.CustomEntries.Add("login_endpoint", $"~{options.UserInteraction.LoginUrl}");
+                    options.Discovery.CustomEntries.Add("logout_endpoint", $"~{options.UserInteraction.LogoutUrl}");
                 })
                 .AddMongoResources()
                 .AddMongoClientStore()

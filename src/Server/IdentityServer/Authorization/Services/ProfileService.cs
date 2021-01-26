@@ -14,8 +14,8 @@ namespace IdentityServer.Authorization.Services
     public abstract class ProfileService<T> : IProfileService
         where T : IdentityUser
     {
-        protected readonly UserManager<T> UserManager;
         private readonly IdentityServerConfig _options;
+        protected readonly UserManager<T> UserManager;
 
         protected ProfileService(UserManager<T> userManager,
             IOptions<IdentityServerConfig> options)

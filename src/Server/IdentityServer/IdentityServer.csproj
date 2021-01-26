@@ -28,24 +28,28 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Users\Management\Application\Users\Events\ForgotPasswordRequested\Templates\user-forgotpassword-request.html" />
-      <EmbeddedResource Include="Users\Management\Application\Users\Events\UserRegistered\Templates\user-registered-confirmation.html" />
+      <ProjectReference Include="..\IdentityServer.Common\IdentityServer.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Users\Interactions\Application\Users\Events\ForgotPasswordRequested\Templates\user-forgotpassword-request.html" />
+      <EmbeddedResource Include="Users\Interactions\Application\Users\Events\UserRegistered\Templates\user-registered-confirmation.html" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Update="Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommand.cs">
-        <Link>Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommand.cs</Link>
+        <Link>Users\Interactions\Application\Users\UpdatePassword\UpdatePasswordCommand.cs</Link>
       </Compile>
       <Compile Update="Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandResult.cs">
-        <Link>Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandResult.cs</Link>
+        <Link>Users\Interactions\Application\Users\UpdatePassword\UpdatePasswordCommandResult.cs</Link>
       </Compile>
       <Compile Update="Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandHandler.cs">
-        <Link>Users\Management\Application\Users\UpdatePassword\UpdatePasswordCommandHandler.cs</Link>
+        <Link>Users\Interactions\Application\Users\UpdatePassword\UpdatePasswordCommandHandler.cs</Link>
       </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\IdentityServer.Common\IdentityServer.Common.csproj" />
+      <Folder Include="Users\Management" />
     </ItemGroup>
 
 </Project>

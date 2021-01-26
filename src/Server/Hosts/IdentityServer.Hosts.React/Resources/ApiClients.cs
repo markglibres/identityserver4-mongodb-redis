@@ -5,7 +5,6 @@ using IdentityServer4.Models;
 
 namespace IdentityServer.Hosts.React.Resources
 {
-
     public class ApiClients : ISeeder<Client>
     {
         public IEnumerable<Client> GetSeeds()

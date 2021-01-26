@@ -1,5 +1,3 @@
-@using Microsoft.AspNetCore.Mvc.Routing
-@using System.Text.Encodings.Web
 @using System.Web
 @model LoginModel
 <div class="login-page">
@@ -11,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <form asp-route="Login">
-                        <input type="hidden" asp-for="ReturnUrl" />
+                        <input type="hidden" asp-for="ReturnUrl"/>
                         <div class="form-group">
                             <label asp-for="Username"></label>
                             <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
@@ -24,7 +22,7 @@
                             <span asp-validation-for="Validations" class="text-danger"></span>
                         </div>
                         <button class="btn btn-primary" name="button" value="login">Login</button>
-                        <input type="button" class="btn btn-secondary" onclick="window.history.back();" value="Cancel" />
+                        <input type="button" class="btn btn-secondary" onclick="window.history.back();" value="Cancel"/>
                         <a href="/registration/register?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Register</a>
                         <a href="/registration/forgotpassword?ReturnUrl=@(HttpUtility.UrlEncode(Model.ReturnUrl))">Forgot Password</a>
                     </form>

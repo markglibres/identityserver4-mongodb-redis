@@ -1,5 +1,3 @@
-using System;
-
 namespace IdentityServer.Client.Mvc.Models
 {
     public class ErrorViewModel

@@ -1,4 +1,4 @@
-using IdentityServer.Common;
+using IdentityServer.Common.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Users.Authorization.Services

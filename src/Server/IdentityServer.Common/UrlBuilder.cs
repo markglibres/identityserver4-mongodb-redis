@@ -6,7 +6,6 @@ namespace IdentityServer.Common
 {
     public class UrlBuilder : IUrlBuilder
     {
-
         private readonly IHttpContextAccessor _httpContextAccessor;
         private UriBuilder _uriBuilder;
 
@@ -22,6 +21,7 @@ namespace IdentityServer.Common
                 var request = _httpContextAccessor.HttpContext.Request;
                 domain = $"{request.Scheme}://{request.Host}";
             }
+
             _uriBuilder = new UriBuilder(domain);
             return this;
         }
@@ -44,6 +44,5 @@ namespace IdentityServer.Common
         {
             return _uriBuilder.ToString();
         }
-
     }
 }

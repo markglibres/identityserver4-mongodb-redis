@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -17,7 +16,9 @@ namespace IdentityServer.User.Client.Account
             {
                 context.HttpContext.Response.Redirect("/");
                 return;
-            };
+            }
+
+            ;
 
             var schemes = context
                 .HttpContext.RequestServices.GetRequiredService<IOptions<AuthenticationOptions>>()
@@ -31,7 +32,9 @@ namespace IdentityServer.User.Client.Account
             {
                 await context.HttpContext.SignOutAsync();
                 return;
-            };
+            }
+
+            ;
 
             schemes.ForEach(async scheme =>
             {

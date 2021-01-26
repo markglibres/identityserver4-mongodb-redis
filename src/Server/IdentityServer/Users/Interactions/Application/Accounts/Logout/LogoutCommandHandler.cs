@@ -18,14 +18,12 @@ namespace IdentityServer.Users.Interactions.Application.Accounts.Logout
             _interactionService = interactionService;
             _signInManager = signInManager;
         }
+
         public async Task<LogoutCommandResult> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
             var logout = await _interactionService.GetLogoutContextAsync(request.LogoutId);
 
-            if (request.Identity?.IsAuthenticated == true)
-            {
-                await _signInManager.SignOutAsync();
-            }
+            if (request.Identity?.IsAuthenticated == true) await _signInManager.SignOutAsync();
 
             var result = new LogoutCommandResult
             {
@@ -36,7 +34,6 @@ namespace IdentityServer.Users.Interactions.Application.Accounts.Logout
             };
 
             return result;
-
         }
     }
 }
