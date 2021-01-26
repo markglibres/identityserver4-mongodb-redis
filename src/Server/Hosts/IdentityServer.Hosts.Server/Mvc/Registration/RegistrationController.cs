@@ -5,6 +5,7 @@ using IdentityServer.Hosts.Mvc.ViewModels;
 using IdentityServer.HostServer.Mvc.ViewModels;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Api.Users.ResetPassword;
+using IdentityServer.Users.Management.Api.Users.UpdateProfile;
 using IdentityServer.Users.Management.Application.Users;
 using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
 using IdentityServer.Users.Management.Application.Users.ForgotPassword;
@@ -114,15 +115,17 @@ namespace IdentityServer.HostServer.Mvc.Registration
         {
             if (!ModelState.IsValid) return View(request);
 
-            var command = _mapper.Map<UpdatePasswordCommand>(
+            var updatePasswordCommand = _mapper.Map<UpdatePasswordCommand>(
                 request,
                 passwordCommand => passwordCommand.NewPassword = request.Password);
+            var updatePasswordCommandResult = await _mediator.Send(updatePasswordCommand);
 
-            var result = await _mediator.Send(command);
+            var updateProfileCommand = _mapper.Map<UpdateProfileCommand>(request);
+            await _mediator.Send(updateProfileCommand);
 
-            if (result.IsSuccess) return Redirect(request.ReturnUrl);
+            if (updatePasswordCommandResult.IsSuccess) return Redirect(request.ReturnUrl);
 
-            ModelState.AddModelError(nameof(request.Password), string.Join(" ", result.Errors));
+            ModelState.AddModelError(nameof(request.Password), string.Join(" ", updatePasswordCommandResult.Errors));
             return View(request);
         }
 
