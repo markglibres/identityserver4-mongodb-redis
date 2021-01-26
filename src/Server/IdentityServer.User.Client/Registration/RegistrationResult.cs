@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using IdentityServer.User.Client.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +19,6 @@ namespace IdentityServer.User.Client.Registration
         public override async Task ExecuteResultAsync(ActionContext context)
         {
             if (context == null) throw new ArgumentException(nameof(context));
-
-            //await base.ExecuteResultAsync(context);
 
             var userInteractionService =
                 context.HttpContext.RequestServices.GetRequiredService<IUserManagementService>();
