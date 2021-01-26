@@ -8,7 +8,11 @@ namespace IdentityServer.Users.Management.Configs
         {
             UserInteractions = new UserInteractionsConfig
             {
-                CreateUser = "/Registration/CreateUser"
+                CreateUser = "/Registration/CreateUser",
+                ConfirmUser = "/Registration/Confirm",
+                ResetPassword = "/Registration/ResetPassword",
+                LoginUrl = "/Account/Login",
+                LogoutUrl = "/Account/Logout"
             };
         }
         public Emails Emails { get; set; }

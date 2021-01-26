@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServer.Hosts.Mvc.ViewModels
+namespace IdentityServer.HostServer.Mvc.ViewModels
 {
-    public class ForgotPasswordRequest
+    public class ForgotPasswordModel
     {
         [Required] public string Email { get; set; }
         public string ReturnUrl { get; set; }

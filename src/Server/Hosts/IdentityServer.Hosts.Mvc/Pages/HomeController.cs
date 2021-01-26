@@ -1,4 +1,6 @@
 using IdentityServer.Hosts.Mvc.ViewModels;
+using IdentityServer.HostServer.Mvc;
+using IdentityServer.HostServer.Mvc.ViewModels;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 

@@ -36,14 +36,6 @@ namespace IdentityServer.Hosts.Mvc
                 .AddIdentityServerUserManagement(config =>
                 {
                     config.Scope = "users.management";
-                    config.UserInteractions = new UserInteractionsConfig
-                    {
-                        CreateUser = "/Registration/CreateUser",
-                        ConfirmUser = "/Registration/Confirm",
-                        ResetPassword = "/Registration/ResetPassword",
-                        LoginUrl = "/Account/Login",
-                        LogoutUrl = "/Account/Logout"
-                    };
                     config.Emails = new Emails
                     {
                         EmailConfirmation = new EmailConfig

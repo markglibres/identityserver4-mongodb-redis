@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServer.Hosts.Mvc.ViewModels
+namespace IdentityServer.HostServer.Mvc.ViewModels
 {
     public class UpdatePasswordModel
     {

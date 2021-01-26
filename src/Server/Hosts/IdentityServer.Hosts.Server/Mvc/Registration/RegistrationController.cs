@@ -1,11 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using System.Web;
-using HandlebarsDotNet.Helpers;
 using IdentityServer.Common;
 using IdentityServer.Hosts.Mvc.ViewModels;
+using IdentityServer.HostServer.Mvc.ViewModels;
 using IdentityServer.Users.Management.Api.Users.ConfirmEmail;
-using IdentityServer.Users.Management.Api.Users.ForgotPassword;
 using IdentityServer.Users.Management.Api.Users.ResetPassword;
 using IdentityServer.Users.Management.Application.Users;
 using IdentityServer.Users.Management.Application.Users.ConfirmEmail;
@@ -19,10 +17,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using ForgotPasswordRequest = IdentityServer.Hosts.Mvc.ViewModels.ForgotPasswordRequest;
-using ResetPasswordRequest = IdentityServer.Hosts.Mvc.ViewModels.ResetPasswordRequest;
 
-namespace IdentityServer.Hosts.Mvc.Controllers
+namespace IdentityServer.HostServer.Mvc.Registration
 {
     [AllowAnonymous]
     public class RegistrationController : Controller
@@ -52,7 +48,10 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> Register(string returnUrl)
         {
-            return View("CreateUser",new CreateUserRequest
+            var context = await _interactionService.GetAuthorizationContextAsync(returnUrl);
+            if(context == null) throw new Exception("Invalid context");
+
+            return View("CreateUser", new CreateUserModel
             {
                 ReturnUrl = returnUrl
             });
@@ -64,7 +63,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             var validationResult = await _tokenValidator.ValidateAccessTokenAsync(token, _options.Scope);
             if (validationResult.IsError) throw new Exception(validationResult.Error);
 
-            return View(new CreateUserRequest
+            return View(new CreateUserModel
             {
                 Token = token,
                 ReturnUrl = returnUrl
@@ -73,15 +72,9 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(CreateUserRequest request, string button)
+        public async Task<IActionResult> CreateUser(CreateUserModel request, string button)
         {
             if (!ModelState.IsValid) return View(request);
-
-            if (!string.IsNullOrWhiteSpace(request.Token))
-            {
-                var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token, _options.Scope);
-                if (validationResult.IsError) throw new Exception(validationResult.Error);
-            }
 
             var command = _mapper.Map<RegisterUserCommand>(request);
             var result = await _mediator.Send(command);
@@ -99,20 +92,18 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> Confirm(string userId, string token, string returnUrl)
         {
-            var query = new ConfirmEmailQuery { Token = token, UserId = userId, ReturnUrl = returnUrl };
+            var query = new ConfirmEmailQuery {Token = token, UserId = userId, ReturnUrl = returnUrl};
             var result = await _mediator.Send(query);
             var response = _mapper.Map<ConfirmEmailResponse>(result);
 
             if (response.IsSuccess)
-            {
-                return View( "UpdatePassword", new UpdatePasswordModel
+                return View("UpdatePassword", new UpdatePasswordModel
                 {
                     Token = token,
                     ReturnUrl = response.ReturnUrl,
                     UserId = userId,
                     ResetPasswordToken = response.ResetPasswordToken
                 });
-            }
 
             return View("ConfirmError", new ErrorModel {Message = string.Join(" ", response.Errors)});
         }
@@ -133,13 +124,12 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
             ModelState.AddModelError(nameof(request.Password), string.Join(" ", result.Errors));
             return View(request);
-
         }
 
         [HttpGet]
         public async Task<IActionResult> ForgotPassword(string returnUrl)
         {
-            return View("ForgotPassword",new ForgotPasswordRequest
+            return View("ForgotPassword", new ForgotPasswordModel
             {
                 ReturnUrl = returnUrl
             });
@@ -147,26 +137,25 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request, string button)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel request, string button)
         {
             var command = _mapper.Map<ForgotPasswordCommand>(request);
             var result = await _mediator.Send(command);
 
             if (result.IsSuccess)
-                return View("ResetPasswordSent", new ResetPasswordSent
+                return View("ResetPasswordSent", new ResetPasswordSentModel
                 {
                     Email = request.Email
                 });
 
             ModelState.AddModelError(nameof(request.Email), result.Message);
             return View(request);
-
         }
 
         [HttpGet]
         public async Task<IActionResult> ResetPassword(string userId, string token, string returnUrl)
         {
-            return View("ResetPassword",new ResetPasswordRequest
+            return View("ResetPassword", new ResetPasswordModel
             {
                 UserId = userId,
                 Token = token,
@@ -175,7 +164,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel request)
         {
             var command = _mapper.Map<ResetPasswordCommand>(request);
             var result = await _mediator.Send(command);
@@ -197,6 +186,4 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             return $"{Request.Scheme}://{Request.Host}";
         }
     }
-
-
 }

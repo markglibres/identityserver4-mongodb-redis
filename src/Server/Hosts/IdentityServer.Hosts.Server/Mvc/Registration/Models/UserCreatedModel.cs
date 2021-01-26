@@ -1,4 +1,4 @@
-namespace IdentityServer.Hosts.Mvc.ViewModels
+namespace IdentityServer.HostServer.Mvc.ViewModels
 {
     public class UserCreatedModel
     {

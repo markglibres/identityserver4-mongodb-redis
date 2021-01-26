@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServer.Hosts.Mvc.ViewModels
+namespace IdentityServer.HostServer.Mvc.ViewModels
 {
-    public class ResetPasswordRequest
+    public class ResetPasswordModel
     {
         public string UserId { get; set; }
         public string Token { get; set; }
