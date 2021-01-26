@@ -9,7 +9,6 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
         public string Token { get; set; }
         public string Email { get; set; }
         public string PlainTextPassword { get; set; }
-        public string RedirectUrl { get; set; }
     }
 
 }

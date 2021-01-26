@@ -59,7 +59,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateUser(string token, string returnUrl, string redirectUrl)
+        public async Task<IActionResult> CreateUser(string token, string returnUrl)
         {
             var validationResult = await _tokenValidator.ValidateAccessTokenAsync(token, _options.Scope);
             if (validationResult.IsError) throw new Exception(validationResult.Error);
@@ -67,8 +67,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
             return View(new CreateUserRequest
             {
                 Token = token,
-                ReturnUrl = returnUrl,
-                RedirectUrl = redirectUrl
+                ReturnUrl = returnUrl
             });
         }
 
@@ -98,7 +97,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Confirm(string userId, string token, string returnUrl = "", string redirectUrl = "")
+        public async Task<IActionResult> Confirm(string userId, string token, string returnUrl)
         {
             var query = new ConfirmEmailQuery { Token = token, UserId = userId, ReturnUrl = returnUrl };
             var result = await _mediator.Send(query);
@@ -111,8 +110,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
                     Token = token,
                     ReturnUrl = response.ReturnUrl,
                     UserId = userId,
-                    ResetPasswordToken = response.ResetPasswordToken,
-                    RedirectUrl = redirectUrl
+                    ResetPasswordToken = response.ResetPasswordToken
                 });
             }
 
@@ -131,9 +129,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
 
             var result = await _mediator.Send(command);
 
-            var redirectUrl = string.IsNullOrWhiteSpace(request.RedirectUrl) ? request.ReturnUrl : request.RedirectUrl;
-
-            if (result.IsSuccess) return Redirect(redirectUrl);
+            if (result.IsSuccess) return Redirect(request.ReturnUrl);
 
             ModelState.AddModelError(nameof(request.Password), string.Join(" ", result.Errors));
             return View(request);

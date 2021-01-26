@@ -112,8 +112,7 @@ namespace IdentityServer.Users.Management.Application.Users.RegisterUser
                 .Path(_managementOptions.UserInteractions.ConfirmUser)
                 .AddQuery("userId", user.Id)
                 .AddQuery("token", encodedToken)
-                .AddQuery("returnUrl", request.ReturnUrl)
-                .AddQuery("redirectUrl", request.RedirectUrl);
+                .AddQuery("returnUrl", request.ReturnUrl);
 
             var userRegisteredEvent = new UserRegisteredEvent
             {

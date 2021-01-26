@@ -51,7 +51,7 @@ namespace IdentityServer.User.Client.Services
 
             var url = _urlBuilder
                 .Create(registrationUrl)
-                .AddQuery("RedirectUrl", redirectUri)
+                .AddQuery("ReturnUrl", redirectUri)
                 .AddQuery("token", HttpUtility.UrlEncode(tokenResponse.AccessToken))
                 .ToString();
 
