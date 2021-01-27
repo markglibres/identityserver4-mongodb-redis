@@ -55,7 +55,7 @@ namespace IdentityServer.Hosts.Mvc
                         }
                     };
                 })
-                .AddIdentityServerUserManagementMvc();
+                .AddIdentityServerUserInteractionMvc();
 
             services
                 .AddAuthentication(options =>
