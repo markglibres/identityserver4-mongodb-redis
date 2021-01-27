@@ -4,37 +4,49 @@ set -e
 FILEPATH=$(dirname "$0")
 SCRIPTDIR=$(cd "$(dirname "$FILEPATH")"; pwd -P)/$(basename "$FILEPATH")
 
-NUPKGS_PATH=()
-
-cd $SCRIPTDIR
-cd ../../src/Server/IdentityServer
-NUPKGS_PATH=(${NUPKGS_PATH[@]} $(pwd))
-dotnet pack IdentityServer.csproj -c Release --output nupkgs
-git config --local user.email "markglibres@gmail.com"
-git config --local user.name "GitHub Action"
-git add IdentityServer.csproj
-git commit -m "bump version" -a
-
-cd $SCRIPTDIR
-cd ../../src/Server/Hosts/IdentityServer.Hosts.Server
-NUPKGS_PATH=(${NUPKGS_PATH[@]} $(pwd))
-dotnet pack IdentityServer.Hosts.Server.csproj -c Release --output nupkgs
-git config --local user.email "markglibres@gmail.com"
-git config --local user.name "GitHub Action"
-git add IdentityServer.Hosts.Server.csproj
-git commit -m "bump version" -a
-
-cd $SCRIPTDIR
-cd ../../src/Server/IdentityServer.User.Client
-NUPKGS_PATH=(${NUPKGS_PATH[@]} $(pwd))
-dotnet pack IdentityServer.User.Client.csproj -c Release --output nupkgs
-git config --local user.email "markglibres@gmail.com"
-git config --local user.name "GitHub Action"
-git add IdentityServer.User.Client.csproj
-git commit -m "bump version" -a
-
-echo "nuget packages ${NUPKGS_PATH}"
-for value in "${NUPKGS_PATH[@]}"
+VERSION=""
+DIRECTORY=""
+PROJECT=""
+while test $# -gt 0
 do
-     dotnet nuget push $value/nupkgs/*.nupkg --api-key ${NUGET_APIKEY} --source https://api.nuget.org/v3/index.json
+    case "$1"
+    in
+        -v|--version)
+            echo "version"
+            shift
+            if test $# -gt 0
+            then
+                echo "version supplied $1"
+                VERSION=$1
+            fi
+            shift
+            ;;
+        -d|--dir)
+            echo "directory"
+            shift
+            if test $# -gt 0
+            then
+                echo "directory supplied $1"
+                DIRECTORY=$1
+            fi
+            shift
+            ;;
+        -p|--proj)
+            echo "project"
+            shift
+            if test $# -gt 0
+            then
+                echo "project supplied $1"
+                PROJECT=$1
+            fi
+            shift
+            ;;
+        *)
+            shift
+            break;;
+    esac
 done
+
+cd $DIRECTORY
+dotnet pack $PROJECT -c Release --output nupkgs -p:PackageVersion=$VERSION
+dotnet nuget push nupkgs/*.nupkg --api-key ${NUGET_APIKEY} --source https://api.nuget.org/v3/index.json

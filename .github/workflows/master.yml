@@ -9,6 +9,16 @@ on:
       - '.github/workflows/master.yml'
 
 jobs:
+  build-version:
+    name: Create project version
+    runs-on: [ ubuntu-latest ]
+    outputs:
+      version: ${{ steps.build-version.outputs.VERSION }}
+    steps:
+      - name: Set version
+        run: echo '::set-output name=VERSION::1.0.${{ github.run_id }}.${{ github.run_number }}'
+        id: build-version
+
   build-identity:
     name: Build Identity
     runs-on: ubuntu-latest
@@ -62,6 +72,9 @@ jobs:
   nuget:
     name: Publish package to NuGet
     runs-on: [ubuntu-latest]
+    needs: [ build-version ]
+    env:
+      VERSION: '${{ needs.build-version.outputs.version }}'
     #needs: [ functional ]
     #if: false
     steps:
@@ -76,8 +89,18 @@ jobs:
         with:
           dotnet-version: 3.1.301
 
-      - name: Create package and publish
-        run: ./.github/scripts/nuget.sh
+      - name: Create package and publish IdentityServer
+        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer --proj IdentityServer.csproj
+        env:
+          NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
+
+      - name: Create package and publish IdentityServer.Hosts.Server
+        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Hosts/IdentityServer.Hosts.Server --proj IdentityServer.Hosts.Server.csproj
+        env:
+          NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
+
+      - name: Create package and publish IdentityServer.User.Client
+        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer.User.Client --proj IdentityServer.User.Client.csproj
         env:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
@@ -93,11 +116,11 @@ jobs:
 #          git config --local user.email "markglibres@gmail.com"
 #          git config --local user.name "GitHub Action"
 #          git commit -m "bump version" -a
-      - name: Push changes
-        if: ${{ success() }}
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Push changes
+#        if: ${{ success() }}
+#        uses: ad-m/github-push-action@master
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
     name: Publish image to Docker Hub
