@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <PackageId>BizzPo.IdentityServer</PackageId>
-        <Version>1.0.0.24</Version>
+        <Version>1.0.0.25</Version>
         <Authors>Mark Gil Libres</Authors>
         <Company>BizzPo</Company>
     </PropertyGroup>
