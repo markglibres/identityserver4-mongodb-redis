@@ -13,6 +13,7 @@ jobs:
   integrationtests:
     name: Run Integration tests
     runs-on: [ubuntu-latest]
+    if: false
     steps:
       - name: Checkout branch
         uses: actions/checkout@main
@@ -22,7 +23,7 @@ jobs:
 
       - name: Check running containers
         run: docker ps -a
-      
+
       - name: Run integration tests
         run: ./.github/scripts/integration.sh --run
 
