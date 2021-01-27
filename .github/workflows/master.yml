@@ -82,14 +82,19 @@ jobs:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
       - name: Add project version change
+        if: ${{ success() }}
         run: |
-          git add src/IdentityServer/IdentityServer.csproj
+          git add src/Server/IdentityServer/IdentityServer.csproj
+          git add src/Hosts/IdentityServer.Hosts.Server/IdentityServer.Hosts.Server.csproj
+          git add src/Server/IdentityServer.User.Client/IdentityServer.User.Client.csproj
       - name: Commit files
+        if: ${{ success() }}
         run: |
           git config --local user.email "markglibres@gmail.com"
           git config --local user.name "GitHub Action"
           git commit -m "bump version" -a
       - name: Push changes
+        if: ${{ success() }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
