@@ -5,7 +5,7 @@ on:
     branches:
       - 'master'
     paths:
-      - 'src/IdentityServer/**'
+      - 'src/Server/**'
       - '.github/workflows/master.yml'
 
 jobs:
