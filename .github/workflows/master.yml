@@ -71,6 +71,11 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+
       - name: Create package and publish
         run: ./.github/scripts/nuget.sh
         env:
