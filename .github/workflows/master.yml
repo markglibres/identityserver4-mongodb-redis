@@ -95,7 +95,7 @@ jobs:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
       - name: Create package and publish IdentityServer.Hosts.Server
-        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Hosts/IdentityServer.Hosts.Server --proj IdentityServer.Hosts.Server.csproj
+        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Server/Hosts/IdentityServer.Hosts.Server --proj IdentityServer.Hosts.Server.csproj
         env:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
