@@ -89,38 +89,32 @@ jobs:
         with:
           dotnet-version: 3.1.301
 
-      - name: Create package and publish IdentityServer
-        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer --proj IdentityServer.csproj
+      - name: Create package IdentityServer
+        run: ./.github/scripts/nuget.sh --build --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer --proj IdentityServer.csproj
+
+      - name: Create package IdentityServer.Hosts.Server
+        run: ./.github/scripts/nuget.sh --build --version ${{ env.VERSION }} --dir ./src/Server/Hosts/IdentityServer.Hosts.Server --proj IdentityServer.Hosts.Server.csproj
+
+      - name: Create package IdentityServer.User.Client
+        run: ./.github/scripts/nuget.sh --build --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer.User.Client --proj IdentityServer.User.Client.csproj
+
+      - name: Publish IdentityServer
+        if: ${{ success() }}
+        run: ./.github/scripts/nuget.sh --upload --dir ./src/Server/IdentityServer
         env:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
-      - name: Create package and publish IdentityServer.Hosts.Server
-        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Server/Hosts/IdentityServer.Hosts.Server --proj IdentityServer.Hosts.Server.csproj
+      - name: Publish IdentityServer.Hosts.Server
+        if: ${{ success() }}
+        run: ./.github/scripts/nuget.sh --upload --dir ./src/Server/Hosts/IdentityServer.Hosts.Server
         env:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
-      - name: Create package and publish IdentityServer.User.Client
-        run: ./.github/scripts/nuget.sh --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer.User.Client --proj IdentityServer.User.Client.csproj
+      - name: Publish IdentityServer.User.Client
+        if: ${{ success() }}
+        run: ./.github/scripts/nuget.sh --upload --dir ./src/Server/IdentityServer.User.Client
         env:
           NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
-
-#      - name: Add project version change
-#        if: ${{ success() }}
-#        run: |
-#          git add src/Server/IdentityServer/IdentityServer.csproj
-#          git add src/Hosts/IdentityServer.Hosts.Server/IdentityServer.Hosts.Server.csproj
-#          git add src/Server/IdentityServer.User.Client/IdentityServer.User.Client.csproj
-#      - name: Commit files
-#        if: ${{ success() }}
-#        run: |
-#          git config --local user.email "markglibres@gmail.com"
-#          git config --local user.name "GitHub Action"
-#          git commit -m "bump version" -a
-#      - name: Push changes
-#        if: ${{ success() }}
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
     name: Publish image to Docker Hub

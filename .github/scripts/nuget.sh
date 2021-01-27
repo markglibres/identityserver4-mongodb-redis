@@ -7,6 +7,8 @@ SCRIPTDIR=$(cd "$(dirname "$FILEPATH")"; pwd -P)/$(basename "$FILEPATH")
 VERSION=""
 DIRECTORY=""
 PROJECT=""
+UPLOAD=false
+BUILD=false
 while test $# -gt 0
 do
     case "$1"
@@ -41,6 +43,16 @@ do
             fi
             shift
             ;;
+        -u|--upload)
+            echo "run services"
+            UPLOAD=true
+            shift
+            ;;
+        -b|--build)
+            echo "run services"
+            BUILD=true
+            shift
+            ;;
         *)
             shift
             break;;
@@ -48,5 +60,14 @@ do
 done
 
 cd $DIRECTORY
-dotnet pack $PROJECT -c Release --output nupkgs -p:PackageVersion=$VERSION
-dotnet nuget push nupkgs/*.nupkg --api-key ${NUGET_APIKEY} --source https://api.nuget.org/v3/index.json
+
+if [[ $BUILD == true ]]
+then
+  dotnet pack $PROJECT -c Release --output nupkgs -p:PackageVersion=$VERSION
+fi
+
+if [[ $UPLOAD == true ]]
+then
+  dotnet nuget push nupkgs/*.nupkg --api-key ${NUGET_APIKEY} --source https://api.nuget.org/v3/index.json
+fi
+
