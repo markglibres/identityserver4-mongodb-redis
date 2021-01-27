@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\IdentityServer.Common\IdentityServer.Common.csproj" />
+      <ProjectReference Include="..\IdentityServer.Common\IdentityServer.Common.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup>
