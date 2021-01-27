@@ -1,0 +1,984 @@
+{
+	"info": {
+		"_postman_id": "2b5b9cfc-be7c-49fb-b359-7afd70bac9c7",
+		"name": "IdentityServer - User Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Client Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", jsonResponse.access_token);",
+							"pm.environment.set(\"refreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"requestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "users.management",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "mvc",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"eval(pm.globals.get(\"retryOnFailure\"));",
+							"retryOnFailure(200, 5, 1000);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.environment.set(\"requestedUser\", JSON.parse(request.data));",
+							"pm.environment.set(\"registeredUser\", JSON.parse(responseBody));",
+							"pm.environment.set(\"registeredUserId\", JSON.parse(responseBody).id);",
+							"pm.environment.set(\"registeredUserEmail\", JSON.parse(request.data).email);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"plainTextPassword\": \"{{$randomPassword}}$\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/identity/users",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get UnConfirmed User Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);",
+							"pm.collectionVariables.set(\"password\", requestedUser.plainTextPassword);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "myapi.access openid offline_access ",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "spaWeb",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Confirmation Link",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Should contain token\", function() {",
+							"    const requestedUser = pm.environment.get(\"requestedUser\");",
+							"    var username = requestedUser.email;",
+							"    var result = responseJson.items.find(i => {",
+							"        var usernameMatched = i.Content.Headers.To.findIndex(t => t === username) >= 0;",
+							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'Confirm user registration') >= 0;",
+							"        return usernameMatched && subjectMatched;",
+							"    });",
+							"    var decodedString = atob(result.Content.Body);",
+							"",
+							"    var confirmUrl = decodedString.match(/[^\"]+Registration\\/Confirm[^\\\"]+/)[0];",
+							"    var confirmUrlQuery = confirmUrl.split('?')[1];",
+							"",
+							"    pm.expect(confirmUrl).to.be.not.empty;",
+							"    pm.expect(confirmUrlQuery).to.be.not.empty;",
+							"  ",
+							"    pm.environment.set(\"confirmationLink\", confirmUrl);",
+							"    pm.environment.set(\"confirmUrlQuery\", decodeURIComponent(confirmUrlQuery).replace('&amp;','&'));",
+							"        ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{mailhog_url}}/api/v2/search?kind=to&query={{username}}",
+					"host": [
+						"{{mailhog_url}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{username}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{auth_host}}/identity/users/confirm?{{confirmUrlQuery}}",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users",
+						"confirm"
+					],
+					"query": [
+						{
+							"key": "{{confirmUrlQuery}}",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"pm.environment.set(\"userToken\", jsonResponse.access_token);",
+							"pm.environment.set(\"userRefreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"userRequestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"    const scopes = request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    console.log(scopes);",
+							"",
+							"    const expectedResponse = {",
+							"        \"token_type\": \"Bearer\"",
+							"    }",
+							"    pm.expect(responseJson).to.include(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);",
+							"pm.collectionVariables.set(\"password\", requestedUser.plainTextPassword);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline_access ",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "reactWebApp",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "reactWebApp",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "hardtoguess",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "text"
+						},
+						{
+							"key": "token_type_hint",
+							"value": "access_token",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/revocation",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"revocation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"pm.environment.set(\"userToken\", responseJson.access_token);",
+							"pm.environment.set(\"userRefreshtoken\", responseJson.refresh_token);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"",
+							"    const requestedScopes = pm.environment.get(\"userRequestedScopes\");",
+							"    const responseScopes = responseJson.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    ",
+							"    pm.expect(responseScopes).to.have.members(requestedScopes);",
+							"",
+							"    const expectedResponse = {",
+							"        \"token_type\": \"Bearer\"",
+							"    }",
+							"    pm.expect(responseJson).to.include(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "reactWebApp",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{userRefreshtoken}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get UserInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('User schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"sub\": { \"type\": \"string\" },",
+							"        \"tenantId\": { \"type\": \"string\" },",
+							"        \"userId\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{auth_host}}/connect/userinfo",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request Forgot Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{registeredUserEmail}}\",\n    \"resetUrl\": \"http://localhost:80/test?myquery1=1&test=2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/identity/users/forgot",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users",
+						"forgot"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Reset Password Link",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Should contain token\", function() {",
+							"    const requestedUser = pm.environment.get(\"requestedUser\");",
+							"    var username = requestedUser.email;",
+							"    var result = responseJson.items.find(i => {",
+							"        var usernameMatched = i.Content.Headers.To.findIndex(t => t === username) >= 0;",
+							"        var subjectMatched = i.Content.Headers.Subject.findIndex(s => s === 'Reset password link') >= 0;",
+							"        return usernameMatched && subjectMatched;",
+							"    });",
+							"    var decodedString = atob(result.Content.Body);",
+							"",
+							"    var resetPasswordLink = decodedString.match(/[^\"]+Registration\\/ResetPassword[^\\\"]+/)[0];",
+							"    var resetPasswordLinkQuery = resetPasswordLink.split('?')[1];",
+							"",
+							"    pm.expect(resetPasswordLink).to.be.not.empty;",
+							"    pm.expect(resetPasswordLinkQuery).to.be.not.empty;",
+							"  ",
+							"    pm.environment.set(\"resetPasswordLink\", resetPasswordLink);",
+							"    pm.environment.set(\"resetPasswordLinkQuery\", decodeURIComponent(resetPasswordLinkQuery).replace('&amp;','&'));",
+							"",
+							"",
+							"    var queryStrings = resetPasswordLinkQuery.match(/([^\\&?;]+)=([^&\"]+)/gi);",
+							"    var queries = queryStrings.map(q => [ q.split('=')[0], q.split('=')[1] ]);",
+							"    ",
+							"    var resetPasswordUserId = queries.filter(q => q[0] === 'userId')[0][1];",
+							"    var resetPasswordToken = queries.filter(q => q[0] === 'token')[0][1];",
+							"",
+							"    pm.expect(resetPasswordUserId).to.be.not.empty;",
+							"    pm.expect(resetPasswordToken).to.be.not.empty;",
+							"",
+							"    // pm.environment.set(\"resetPasswordLink\", resetUrl);     ",
+							"    pm.environment.set(\"resetPasswordUserId\", resetPasswordUserId);",
+							"    pm.environment.set(\"resetPasswordToken\", resetPasswordToken);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{mailhog_url}}/api/v2/search?kind=to&query={{username}}",
+					"host": [
+						"{{mailhog_url}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{username}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"eval(pm.globals.get(\"retryOnFailure\"));",
+							"retryOnFailure(200, 5, 1000);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.environment.set(\"requestedUserNewPassword\", JSON.parse(request.data).password);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"{{$randomPassword}}$1\",\n    \"token\": \"{{resetPasswordToken}}\",\n    \"userId\": \"{{resetPasswordUserId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/identity/users/reset",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"identity",
+						"users",
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Token With New Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"pm.environment.set(\"userToken\", jsonResponse.access_token);",
+							"pm.environment.set(\"userRefreshtoken\", jsonResponse.refresh_token);",
+							"pm.environment.set(\"userRequestedScopes\", request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0));",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Token schema is valid', function() {",
+							"  const schema = {",
+							"    \"properties\": {",
+							"        \"access_token\": { \"type\": \"string\" },",
+							"        \"expires_in\": { \"type\": \"number\" },",
+							"        \"token_type\": { \"type\": \"string\" },",
+							"        \"refresh_token\": { \"type\": \"string\" },",
+							"        \"scope\": { \"type\": \"string\" }",
+							"    }",
+							"  };",
+							"  pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Token values\", function () {",
+							"    const scopes = request.data.scope.split(' ').filter(value => Object.keys(value).length !== 0);",
+							"    console.log(scopes);",
+							"",
+							"    const expectedResponse = {",
+							"        \"token_type\": \"Bearer\"",
+							"    }",
+							"    pm.expect(responseJson).to.include(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const requestedUser = pm.environment.get(\"requestedUser\");",
+							"",
+							"pm.collectionVariables.set(\"username\", requestedUser.email);",
+							"pm.collectionVariables.set(\"password\", requestedUser.plainTextPassword);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{requestedUserNewPassword}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline_access ",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "reactWebApp",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "hardtoguess",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/token",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		}
+	]
+}

@@ -8,7 +8,7 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
-      - identity
+      - bizzpo
     restart: always
 
   mongodb:
@@ -19,9 +19,30 @@ services:
     ports:
       - 27017:27017
     networks:
-      - identity
+      - bizzpo
+    restart: always
+
+  smtp:
+      image: mailhog/mailhog
+      ports:
+        - "8025:8025"
+        - "1025:1025"
+      restart: on-failure
+      networks:
+        - bizzpo
+
+  eventstore:
+    image: eventstore/eventstore:20.6.0-buster-slim
+    environment:
+      - EVENTSTORE_DEV=true
+      - EVENTSTORE_MEM_DB=true
+    ports:
+      - 1113:1113
+      - 2113:2113
+    networks:
+      - bizzpo
     restart: always
 
 networks:
-    identity:
-        driver: bridge
+  bizzpo:
+      driver: bridge

@@ -1,0 +1,59 @@
+version: '3.4'
+
+services:
+  redis:
+    image: bitnami/redis
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - bizzpo
+    restart: always
+
+  eventstore:
+    image: eventstore/eventstore:20.6.0-buster-slim
+    environment:
+      - EVENTSTORE_DEV=true
+      - EVENTSTORE_MEM_DB=true
+    ports:
+      - 1113:1113
+      - 2113:2113
+    networks:
+      - bizzpo
+    restart: always
+
+  mongodb:
+    image: mongo:4.2.8
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=foobar
+    ports:
+      - 27017:27017
+    networks:
+      - bizzpo
+    restart: always
+
+  # identityworker:
+  #   build:
+  #     context: .
+  #     dockerfile: Identity.Worker/Dockerfile
+  #   image: identityworker
+  #   environment:
+  #     - Environment=dev
+  #     - 'MongoDb__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
+  #     - MongoDb__DefaultDatabase=Identity_Worker
+  #     - EventStoreDb__ConnectionString=https://eventstore:2113
+  #     - EventStoreDb__Name=Identity
+  #     - 'Identity__Mongo__ConnectionString=mongodb://root:foobar@mongodb:27017/?readPreference=primaryPreferred&appname=identityserver'
+  #     - Identity__Redis__ConnectionString=redis
+  #   container_name: identityworker
+  #   ports:
+  #     - 1100:80
+  #   networks:
+  #     - bizzpo
+  #   restart: always
+
+networks:
+    bizzpo:
+        driver: bridge

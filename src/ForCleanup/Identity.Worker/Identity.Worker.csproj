@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UserSecretsId>dotnet-Identity.Worker-60427822-347E-4515-846F-44D0D414D994</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="EventStore.Client" Version="20.6.1" />
+        <PackageReference Include="EventStore.Client.Grpc" Version="20.6.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\IdentityServer.User\IdentityServer.User.csproj" />
+      <ProjectReference Include="..\IdentityServer\IdentityServer.csproj" />
+      <ProjectReference Include="..\Identity\Identity.csproj" />
+    </ItemGroup>
+</Project>
