@@ -3,10 +3,19 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>IdentityServer.HostServer</RootNamespace>
+        <PackageId>BizzPo.IdentityServer.Hosts.Server</PackageId>
+        <PackageVersion>1.0.0.23</PackageVersion>
+        <Authors>Mark Gil Libres</Authors>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\IdentityServer\IdentityServer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MSBump" Version="2.3.2">
+          <PrivateAssets>All</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>
