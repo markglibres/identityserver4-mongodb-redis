@@ -2,9 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <PackageId>BizzPo.IdentityServer.User.Client</PackageId>
-        <PackageVersion>1.0.0.23</PackageVersion>
+        <PackageId>BizzPo.IdentityServer</PackageId>
+        <Version>1.0.0.23</Version>
         <Authors>Mark Gil Libres</Authors>
+        <Company>BizzPo</Company>
     </PropertyGroup>
 
     <ItemGroup>

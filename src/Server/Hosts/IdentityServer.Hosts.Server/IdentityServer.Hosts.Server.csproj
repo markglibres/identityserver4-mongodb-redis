@@ -2,10 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>IdentityServer.HostServer</RootNamespace>
         <PackageId>BizzPo.IdentityServer.Hosts.Server</PackageId>
-        <PackageVersion>1.0.0.23</PackageVersion>
+        <Version>1.0.0.23</Version>
         <Authors>Mark Gil Libres</Authors>
+        <Company>BizzPo</Company>
     </PropertyGroup>
 
     <ItemGroup>
