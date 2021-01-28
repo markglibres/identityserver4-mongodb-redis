@@ -22,6 +22,8 @@ FILES+=("Views/Registration/UpdatePassword.cshtml")
 FILES+=("Views/Registration/UserCreated.cshtml")
 FILES+=("Templates/user-email-confirmation.html")
 FILES+=("Templates/user-resetpassword-link.html")
+FILES+=("Resources/IdentityClients.cs")
+FILES+=("Resources/UsersApi.cs")
 
 for file in "${FILES[@]}"
 do
