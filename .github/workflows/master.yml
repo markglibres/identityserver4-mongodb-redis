@@ -89,6 +89,9 @@ jobs:
         with:
           dotnet-version: 3.1.301
 
+      - name: Create package IdentityServer Common
+        run: ./.github/scripts/nuget.sh --build --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer.Common --proj IdentityServer.Common.csproj
+
       - name: Create package IdentityServer
         run: ./.github/scripts/nuget.sh --build --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer --proj IdentityServer.csproj
 
@@ -97,6 +100,12 @@ jobs:
 
       - name: Create package IdentityServer.User.Client
         run: ./.github/scripts/nuget.sh --build --version ${{ env.VERSION }} --dir ./src/Server/IdentityServer.User.Client --proj IdentityServer.User.Client.csproj
+
+      - name: Publish IdentityServer Common
+        if: ${{ success() }}
+        run: ./.github/scripts/nuget.sh --upload --dir ./src/Server/IdentityServer.Common
+        env:
+          NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
 
       - name: Publish IdentityServer
         if: ${{ success() }}

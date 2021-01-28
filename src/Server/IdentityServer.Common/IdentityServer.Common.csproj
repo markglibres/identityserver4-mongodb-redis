@@ -2,6 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageId>BizzPo.IdentityServer.Common</PackageId>
+        <Version>1.0.1</Version>
+        <Authors>Mark Gil Libres</Authors>
+        <Company>BizzPo</Company>
     </PropertyGroup>
 
     <ItemGroup>
