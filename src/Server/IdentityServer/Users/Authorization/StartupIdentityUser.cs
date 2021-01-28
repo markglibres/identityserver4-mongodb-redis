@@ -20,6 +20,7 @@ namespace IdentityServer.Users.Authorization
 {
     public static class StartupIdentityUser
     {
+        //Move to client.. this is to protect api
         public static AuthenticationBuilder AddIdentityServerUserAuthorization(
             this AuthenticationBuilder builder,
             Action<IdentityAudienceConfig> audienceConfig = null)

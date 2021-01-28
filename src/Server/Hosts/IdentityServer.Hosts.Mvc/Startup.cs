@@ -57,13 +57,11 @@ namespace IdentityServer.Hosts.Mvc
                 })
                 .AddIdentityServerUserInteractionMvc();
 
-            services
-                .AddAuthentication(options =>
+            services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
-                })
-                .AddIdentityServerUserAuthorization();
+                });
 
             services
                 .AddIdentityServerMongoDb()
