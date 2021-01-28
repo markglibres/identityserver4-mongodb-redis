@@ -2,6 +2,7 @@
 set -e
 
 BASE_PATH=https://raw.githubusercontent.com/markglibres/identityserver4-mongodb-redis/master/src/Server/Hosts/IdentityServer.Hosts.Mvc/
+DOCKER_PATH=https://raw.githubusercontent.com/markglibres/identityserver4-mongodb-redis/master/src/docker-compose-db.yaml
 
 mkdir -p ./Views
 touch ./Views/_ViewImports.cshtml
@@ -29,3 +30,5 @@ for file in "${FILES[@]}"
 do
    curl "${BASE_PATH}${file}" --create-dirs --output "./${file}"
 done
+
+curl $DOCKER_PATH --output "./docker-compose-db.yaml"
