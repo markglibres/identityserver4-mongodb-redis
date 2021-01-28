@@ -3,7 +3,11 @@ set -e
 
 BASE_PATH=https://raw.githubusercontent.com/markglibres/identityserver4-mongodb-redis/master/src/Server/Hosts/IdentityServer.Hosts.Mvc/
 
-mkdir -p Views
+mkdir -p ./Views
+touch ./Views/_ViewImports.cshtml
+echo -e "@using IdentityServer.Hosts.Mvc.ViewModels" >> ./Views/_ViewImports.cshtml
+echo -e "@using IdentityServer.HostServer.Mvc.ViewModels" >> ./Views/_ViewImports.cshtml
+echo -e "@using IdentityServer.Hosts.Mvc.Controllers" >> ./Views/_ViewImports.cshtml
 
 FILES=()
 FILES+=("Views/Account/LoggedOut.cshtml")
@@ -17,12 +21,7 @@ FILES+=("Views/Registration/ResetPasswordSent.cshtml")
 FILES+=("Views/Registration/UpdatePassword.cshtml")
 FILES+=("Views/Registration/UserCreated.cshtml")
 
-touch Views/_ViewImports.cshtml
-echo -e "@using IdentityServer.Hosts.Mvc.ViewModels\n" >> Views/_ViewImports.cshtml
-echo -e "@using IdentityServer.HostServer.Mvc.ViewModels\n" >> Views/_ViewImports.cshtml
-echo -e "IdentityServer.Hosts.Mvc.Controllers\n" >> Views/_ViewImports.cshtml
-
 for file in "${FILES[@]}"
 do
-   curl "${BASE_PATH}${file}"  --create-dirs --output ${file}
+   curl "${BASE_PATH}${file}" --create-dirs --output "./${file}"
 done
