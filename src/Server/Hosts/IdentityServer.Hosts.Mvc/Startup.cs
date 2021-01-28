@@ -49,8 +49,8 @@ namespace IdentityServer.Hosts.Mvc
                             Subject = "Reset password link",
                             TemplateOptions = new EmailTemplateOptions
                             {
-                                File = "user-forgotpassword-request.html",
-                                FileStorageType = FileStorageTypes.Embedded
+                                File = "~/Templates/user-resetpassword-link.html",
+                                FileStorageType = FileStorageTypes.Local
                             }
                         }
                     };

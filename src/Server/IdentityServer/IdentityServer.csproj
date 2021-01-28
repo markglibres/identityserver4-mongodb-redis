@@ -45,8 +45,4 @@
       </Compile>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Users\Management" />
-    </ItemGroup>
-
 </Project>

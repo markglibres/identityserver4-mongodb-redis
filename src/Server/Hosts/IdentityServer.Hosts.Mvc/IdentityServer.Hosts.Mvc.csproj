@@ -19,9 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Templates\user-email-confirmation.html">
+      <Content Include="Templates\user-email-confirmation.html">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
+      </Content>
+      <Content Include="Templates\user-resetpassword-link.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
