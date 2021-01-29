@@ -11,7 +11,8 @@
 * use https for server and client apps
 
 #### A. Setup server
-1. Create an empty .Net MVC app
+1. Create an empty .Net MVC app.
+    * use the url https://localhost:5001 for this tutorial, otherwise you need to update the config values in next steps
 2. Within the root directory of the project, execute this script to download the sample views, templates, sample seed users / clients / api resources, and docker compose file (for mongodb, redis and mailhog)
    ```bash
    curl -L https://raw.githubusercontent.com/markglibres/identityserver4-mongodb-redis/master/utils/server_sample.sh | bash
@@ -77,6 +78,7 @@
        })
        .AddIdentityServerUserInteractionMvc();
    ```
+
 9. Configure OpenId
    ```csharp
    services.AddAuthentication(options =>  
