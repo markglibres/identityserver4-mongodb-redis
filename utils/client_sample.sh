@@ -5,7 +5,7 @@ BASE_PATH=https://raw.githubusercontent.com/markglibres/identityserver4-mongodb-
 
 mkdir -p ./Views
 touch ./Views/_ViewImports.cshtml
-echo -e "@using IdentityServer.Client.Mvc" >> ./Views/_ViewImports.cshtml
+echo -e "\n@using IdentityServer.Client.Mvc" >> ./Views/_ViewImports.cshtml
 echo -e "@using IdentityServer.Client.Mvc.Models" >> ./Views/_ViewImports.cshtml
 
 FILES=()

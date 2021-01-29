@@ -6,7 +6,7 @@ DOCKER_PATH=https://raw.githubusercontent.com/markglibres/identityserver4-mongod
 
 mkdir -p ./Views
 touch ./Views/_ViewImports.cshtml
-echo -e "@using IdentityServer.Hosts.Mvc.ViewModels" >> ./Views/_ViewImports.cshtml
+echo -e "\n@using IdentityServer.Hosts.Mvc.ViewModels" >> ./Views/_ViewImports.cshtml
 echo -e "@using IdentityServer.HostServer.Mvc.ViewModels" >> ./Views/_ViewImports.cshtml
 echo -e "@using IdentityServer.Hosts.Mvc.Controllers" >> ./Views/_ViewImports.cshtml
 
