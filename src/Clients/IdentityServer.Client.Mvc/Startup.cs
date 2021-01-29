@@ -24,7 +24,7 @@ namespace IdentityServer.Client.Mvc
             services.AddControllersWithViews();
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            IdentityModelEventSource.ShowPII = true;
+            //IdentityModelEventSource.ShowPII = true;
 
             services.AddAuthentication(options =>
                 {
