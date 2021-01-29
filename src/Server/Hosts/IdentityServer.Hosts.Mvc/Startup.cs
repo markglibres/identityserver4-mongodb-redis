@@ -68,7 +68,7 @@ namespace IdentityServer.Hosts.Mvc
                 .AddRedisCache()
                 .AddDeveloperSigningCredential()
                 .AddIdentityServerUserAuthorization<ApplicationUser, ApplicationRole>()
-                .SeedUsers<ApplicationUser, SeedUsers<ApplicationUser>>()
+                .SeedUsers<ApplicationUser, SeedUser>()
                 .SeedClients<ApiClients>()
                 .SeedClients<IdentityServerClients>()
                 .SeedApiResources<UsersApiResource>()
