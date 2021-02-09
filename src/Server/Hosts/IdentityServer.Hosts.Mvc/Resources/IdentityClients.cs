@@ -57,6 +57,33 @@ namespace IdentityServer.Hosts.Mvc.Resources
                     },
                     //RequirePkce = true
                     AlwaysIncludeUserClaimsInIdToken = true
+                },
+                new Client
+                {
+                    ClientId = "react",
+                    ClientName = "React Client",
+                    ClientSecrets = {new Secret("secret".Sha256())},
+
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    RequireConsent = false,
+                    RequireClientSecret = false,
+                    //AllowOfflineAccess = true,
+
+                    // where to redirect to after login
+                    RedirectUris = {"http://localhost:3000/authentication/callback", "https://localhost:3000/authentication/callback"},
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris =
+                        {"http://localhost:3000/authentication/logout", "https://localhost:3000/authentication/logout"},
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "users.management"
+                    },
+                    //RequirePkce = true
+                    AlwaysIncludeUserClaimsInIdToken = true
                 }
             };
         }
