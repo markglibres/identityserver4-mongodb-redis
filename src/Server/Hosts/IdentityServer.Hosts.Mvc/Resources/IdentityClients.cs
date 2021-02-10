@@ -74,7 +74,11 @@ namespace IdentityServer.Hosts.Mvc.Resources
 
                     // where to redirect to after logout
                     PostLogoutRedirectUris =
-                        {"http://localhost:3000/authentication/logout", "https://localhost:3000/authentication/logout"},
+                    {
+                        "http://localhost:3000",
+                        "http://localhost:3000/authentication/logout",
+                        "https://localhost:3000/authentication/logout"
+                    },
 
                     AllowedScopes = new List<string>
                     {

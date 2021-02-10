@@ -1,5 +1,5 @@
 import React from 'react';
 
-const CustomAuthCallback = () => (<>Auth Callback...</>);
+const CustomAuthCallback = () => (<>User authenticated...please wait while we are loggin you in..</>);
 
 export { CustomAuthCallback };
