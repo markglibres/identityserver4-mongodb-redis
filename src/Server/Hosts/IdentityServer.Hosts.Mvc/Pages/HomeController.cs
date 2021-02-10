@@ -15,7 +15,7 @@ namespace IdentityServer.Hosts.Mvc.Controllers
         public IActionResult Error()
         {
             var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            return View("Error", new ErrorModel {Message = exceptionHandler.Error.Message});
+            return View("Error", new ErrorModel {Message = exceptionHandler?.Error.Message ?? "An error has occured"});
         }
     }
 }

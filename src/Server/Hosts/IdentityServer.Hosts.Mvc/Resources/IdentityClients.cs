@@ -67,7 +67,7 @@ namespace IdentityServer.Hosts.Mvc.Resources
                     AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                     RequireConsent = false,
                     RequireClientSecret = false,
-                    //AllowOfflineAccess = true,
+                    AllowOfflineAccess = true,
 
                     // where to redirect to after login
                     RedirectUris = {"http://localhost:3000/authentication/callback", "https://localhost:3000/authentication/callback"},
