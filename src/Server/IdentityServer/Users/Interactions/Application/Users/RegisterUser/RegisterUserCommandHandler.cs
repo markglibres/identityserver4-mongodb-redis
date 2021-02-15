@@ -11,6 +11,7 @@ using IdentityServer.Users.Authorization.Services;
 using IdentityServer.Users.Interactions.Application.Abstractions;
 using IdentityServer.Users.Interactions.Application.Users.Events.UserRegistered;
 using IdentityServer.Users.Interactions.Infrastructure.Config;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using MediatR;
@@ -63,6 +64,11 @@ namespace IdentityServer.Users.Interactions.Application.Users.RegisterUser
             {
                 var validationResult = await _tokenValidator.ValidateAccessTokenAsync(request.Token);
                 if (validationResult.IsError) throw new DomainException(validationResult.Error);
+
+                if (!validationResult.Client?.RedirectUris.Any(url =>
+                    url.Equals(request.ReturnUrl, StringComparison.OrdinalIgnoreCase)) ?? true)
+                    throw new DomainException($"Invalid return url: {request.ReturnUrl}");
+
             }
             else if (!string.IsNullOrWhiteSpace(request.ReturnUrl))
             {

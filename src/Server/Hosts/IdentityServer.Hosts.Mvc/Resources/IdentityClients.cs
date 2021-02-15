@@ -43,7 +43,13 @@ namespace IdentityServer.Hosts.Mvc.Resources
                     //AllowOfflineAccess = true,
 
                     // where to redirect to after login
-                    RedirectUris = {"http://localhost:5002/signin-oidc", "https://localhost:5002/signin-oidc"},
+                    RedirectUris =
+                    {
+                        "http://localhost:5002/signin-oidc",
+                        "https://localhost:5002/signin-oidc",
+                        "http://localhost:5002/registration/new",
+                        "https://localhost:5002/registration/new"
+                    },
 
                     // where to redirect to after logout
                     PostLogoutRedirectUris =
@@ -70,7 +76,13 @@ namespace IdentityServer.Hosts.Mvc.Resources
                     AllowOfflineAccess = true,
 
                     // where to redirect to after login
-                    RedirectUris = {"http://localhost:3000/authentication/callback", "https://localhost:3000/authentication/callback"},
+                    RedirectUris =
+                    {
+                        "http://localhost:3000/authentication/callback",
+                        "https://localhost:3000/authentication/callback",
+                        "http://localhost:3000/registration/new",
+                        "https://localhost:3000/registration/new"
+                    },
 
                     // where to redirect to after logout
                     PostLogoutRedirectUris =
